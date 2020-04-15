@@ -2,8 +2,9 @@
     "indagine": [
       {
         "titoloIndagine": "",
-        "erogoatore": "",
-        "imgUrl": ""
+        "erogatore": "",
+        "imgUrl": "",
+        "idIndagine": 1234
       }
     ]
 }
