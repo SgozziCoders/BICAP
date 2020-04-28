@@ -6,7 +6,7 @@ public class Questionario {
 	private String titolo;
 	private String qualtricsUrl;
 	private boolean compilato;
-	private List<Istruzione> istruzioni;
+	private List<Informazione> informazioni;
 
 	public Questionario() {
 	}
@@ -17,11 +17,11 @@ public class Questionario {
 	* @param qualtricsUrl
 	* @param compilato
 	*/
-	public Questionario(String titolo, String qualtricsUrl, List<Istruzione> istruzioni) {
+	public Questionario(String titolo, String qualtricsUrl, List<Informazione> informazioni) {
 		super();
 		this.titolo = titolo;
 		this.qualtricsUrl = qualtricsUrl;
-		this.istruzioni = istruzioni;
+		this.informazioni = informazioni;
 	}
 	
 	public String getTitolo() {
@@ -48,12 +48,12 @@ public class Questionario {
 		this.compilato = compilato;
 	}
 
-	public List<Istruzione> getIstruzioni() {
-		return istruzioni;
+	public List<Informazione> getInformazioni() {
+		return informazioni;
 	}
 	
-	public void setIstruzioni(List<Istruzione> istruzioni) {
-		this.istruzioni = istruzioni;
+	public void setInformazioni(List<Informazione> informazioni) {
+		this.informazioni = informazioni;
 	}
 
 }

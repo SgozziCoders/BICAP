@@ -25,4 +25,11 @@ public class IndaginiHeadList {
 		this.indagine = indagine;
 	}
 
+	public IndagineHead getIndagineHeadFromId(int id){
+		for (IndagineHead i: indagine) {
+			if(i.getId() == id)
+				return i;
+		}
+		return null;
+	}
 }

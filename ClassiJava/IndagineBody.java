@@ -6,7 +6,7 @@ public class IndagineBody {
 
 	private IndagineHead head;
 	private String tematica;
-	private List<Istruzione> istruzioni;
+	private List<Informazione> informazioni;
 	private List<Questionario> questionari;
 
 	public IndagineBody() {
@@ -15,14 +15,14 @@ public class IndagineBody {
 	/**
 	* @brief constructor IndagineBody
 	* @param tematica
-	* @param istruzioni
+	* @param informazioni
 	* @param questionari
 	*/
-	public IndagineBody(String tematica, List<Istruzione> istruzioni, List<Questionario> questionari) {
+	public IndagineBody(String tematica, List<Informazione> informazioni, List<Questionario> questionari) {
 		super();
 		this.head = null;
 		this.tematica = tematica;
-		this.istruzioni = istruzioni;
+		this.informazioni = informazioni;
 		this.questionari = questionari;
 	}
 	
@@ -42,12 +42,12 @@ public class IndagineBody {
 		this.tematica = tematica;
 	}
 
-	public List<Istruzione> getIstruzioni() {
-		return istruzioni;
+	public List<Informazione> getInformazioni() {
+		return informazioni;
 	}
 	
-	public void setIstruzioni(List<Istruzione> istruzioni) {
-		this.istruzioni = istruzioni;
+	public void setInformazioni(List<Informazione> informazioni) {
+		this.informazioni = informazioni;
 	}
 	
 	public List<Questionario> getQuestionari() {
