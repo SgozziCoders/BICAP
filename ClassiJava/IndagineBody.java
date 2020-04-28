@@ -1,11 +1,11 @@
-
+package com.example.bicap_model_test;
 import java.util.List;
 
 
 public class IndagineBody {
 
 	private IndagineHead head;
-	private String descrizione;
+	private String tematica;
 	private List<Istruzione> istruzioni;
 	private List<Questionario> questionari;
 
@@ -14,14 +14,14 @@ public class IndagineBody {
 
 	/**
 	* @brief constructor IndagineBody
-	* @param descrizione
+	* @param tematica
 	* @param istruzioni
 	* @param questionari
 	*/
-	public IndagineBody(String descrizione, List<Istruzione> istruzioni, List<Questionario> questionari) {
+	public IndagineBody(String tematica, List<Istruzione> istruzioni, List<Questionario> questionari) {
 		super();
 		this.head = null;
-		this.descrizione = descrizione;
+		this.tematica = tematica;
 		this.istruzioni = istruzioni;
 		this.questionari = questionari;
 	}
@@ -34,12 +34,12 @@ public class IndagineBody {
 		this.head = head;
 	}
 	
-	public String getDescrizione() {
-		return descrizione;
+	public String getTematica() {
+		return tematica;
 	}
 	
-	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
+	public void setTematica(String tematica) {
+		this.tematica = tematica;
 	}
 
 	public List<Istruzione> getIstruzioni() {
@@ -57,6 +57,4 @@ public class IndagineBody {
 	public void setQuestionari(List<Questionario> questionari) {
 		this.questionari = questionari;
 	}
-
-
 }

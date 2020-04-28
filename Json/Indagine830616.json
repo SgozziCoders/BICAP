@@ -1,0 +1,25 @@
+{
+  "tematica": "Indagine riguardante la differenza della percezione tra i colori primari e secondari",
+  "informazioni": [
+    {
+      "nomeFile": "Leggimi.pdf",
+      "fileUrl": "/leggimi.pdf",
+      "tipoFile": "document/pdf",
+      "thumbnailUrl": "/thumb.png"
+    }
+  ],
+  "questionari": [
+    {
+      "titolo": "Questionario RGB",
+      "url": "qualtrics.com/830616",
+      "informazioni": [
+        {
+          "nomeFile": "Tavole.mp4",
+          "fileUrl": "/tavole.mp4",
+          "tipoFile": "video/mp4",
+          "thumbnailUrl": "/thumb.png"
+        }
+      ]
+    }
+  ]
+}

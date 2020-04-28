@@ -1,0 +1,25 @@
+{
+    "tematica": "",
+    "informazioni": [
+      {
+        "nomeFile": "",
+        "fileUrl": "",
+        "tipoFile": "",
+        "thumbnailUrl":  ""
+      }
+    ],
+    "questionari": [
+      {
+        "titolo": "",
+        "url": "",
+        "informazioni": [
+          {
+            "nomeFile": "",
+            "fileUrl": "",
+            "tipoFile": "",
+            "thumbnailUrl": ""
+          }
+        ]
+      }
+    ]
+}
