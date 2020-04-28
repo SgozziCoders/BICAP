@@ -11,7 +11,7 @@
   "questionari": [
     {
       "titolo": "Questionario RGB",
-      "url": "qualtrics.com/830616",
+      "qualtricsUrl": "qualtrics.com/830616",
       "informazioni": [
         {
           "nomeFile": "Tavole.mp4",

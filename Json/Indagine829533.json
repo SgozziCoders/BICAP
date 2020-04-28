@@ -11,7 +11,7 @@
   "questionari": [
     {
       "titolo": "Gustatelo",
-      "url": "qualtrix.composto/gusti"
+      "qualtricsUrl": "qualtrix.composto/gusti"
     }
   ]
 }

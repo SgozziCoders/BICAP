@@ -11,7 +11,7 @@
   "questionari": [
     {
       "titolo": "Oppiacei o cannabinoidi?",
-      "url": "qualtrics.fatto/issimo",
+      "qualtricsUrl": "qualtrics.fatto/issimo",
       "informazioni": [
         {
           "nomeFile": "ASCII_BONG.txt",
