@@ -1,8 +1,12 @@
+package com.example.bicap_model_test;
+import java.util.List;
+
 public class Questionario {
 
 	private String titolo;
 	private String qualtricsUrl;
 	private boolean compilato;
+	private List<Informazione> informazioni;
 
 	public Questionario() {
 	}
@@ -13,10 +17,11 @@ public class Questionario {
 	* @param qualtricsUrl
 	* @param compilato
 	*/
-	public Questionario(String titolo, String qualtricsUrl) {
+	public Questionario(String titolo, String qualtricsUrl, List<Informazione> informazioni) {
 		super();
 		this.titolo = titolo;
 		this.qualtricsUrl = qualtricsUrl;
+		this.informazioni = informazioni;
 	}
 	
 	public String getTitolo() {
@@ -43,5 +48,12 @@ public class Questionario {
 		this.compilato = compilato;
 	}
 
+	public List<Informazione> getInformazioni() {
+		return informazioni;
+	}
+	
+	public void setInformazioni(List<Informazione> informazioni) {
+		this.informazioni = informazioni;
+	}
 
 }

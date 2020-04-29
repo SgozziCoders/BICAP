@@ -1,3 +1,4 @@
+package com.example.bicap_model_test;
 public class IndagineHead {
 
 	private String titoloIndagine;

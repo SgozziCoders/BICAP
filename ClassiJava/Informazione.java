@@ -1,11 +1,12 @@
-
-public class Istruzione {
+package com.example.bicap_model_test;
+public class Informazione {
 
 	private String nomeFile;
 	private String fileUrl;
 	private String tipoFile;
+	private String thumbnailUrl;
 
-	public Istruzione() {
+	public Informazione() {
 	}
 
 	/**
@@ -14,11 +15,12 @@ public class Istruzione {
 	* @param tipoFile
 	* @param fileUrl
 	*/
-	public Istruzione(String nomeFile, String fileUrl, String tipoFile) {
+	public Informazione(String nomeFile, String fileUrl, String tipoFile, String thumbnailUrl) {
 		super();
 		this.nomeFile = nomeFile;
 		this.fileUrl = fileUrl;
 		this.tipoFile = tipoFile;
+		this.thumbnailUrl = thumbnailUrl;
 	}
 	
 	public String getNomeFile() {
@@ -28,8 +30,7 @@ public class Istruzione {
 	public void setNomeFile(String nomeFile) {
 		this.nomeFile = nomeFile;
 	}
-	
-	
+
 	public String getFileUrl() {
 		return fileUrl;
 	}
@@ -46,4 +47,11 @@ public class Istruzione {
 		this.tipoFile = tipoFile;
 	}
 
+	public String getThumbnailUrl(){
+		return thumbnailUrl;
+	}
+
+	public void setThumbnailUrl(String thumbnailUrl){
+		this.thumbnailUrl = thumbnailUrl;
+	}
 }

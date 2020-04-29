@@ -1,12 +1,12 @@
-
+package com.example.bicap_model_test;
 import java.util.List;
 
 
 public class IndagineBody {
 
 	private IndagineHead head;
-	private String descrizione;
-	private List<Istruzione> istruzioni;
+	private String tematica;
+	private List<Informazione> informazioni;
 	private List<Questionario> questionari;
 
 	public IndagineBody() {
@@ -14,15 +14,15 @@ public class IndagineBody {
 
 	/**
 	* @brief constructor IndagineBody
-	* @param descrizione
-	* @param istruzioni
+	* @param tematica
+	* @param informazioni
 	* @param questionari
 	*/
-	public IndagineBody(String descrizione, List<Istruzione> istruzioni, List<Questionario> questionari) {
+	public IndagineBody(String tematica, List<Informazione> informazioni, List<Questionario> questionari) {
 		super();
 		this.head = null;
-		this.descrizione = descrizione;
-		this.istruzioni = istruzioni;
+		this.tematica = tematica;
+		this.informazioni = informazioni;
 		this.questionari = questionari;
 	}
 	
@@ -34,20 +34,20 @@ public class IndagineBody {
 		this.head = head;
 	}
 	
-	public String getDescrizione() {
-		return descrizione;
+	public String getTematica() {
+		return tematica;
 	}
 	
-	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
+	public void setTematica(String tematica) {
+		this.tematica = tematica;
 	}
 
-	public List<Istruzione> getIstruzioni() {
-		return istruzioni;
+	public List<Informazione> getInformazioni() {
+		return informazioni;
 	}
 	
-	public void setIstruzioni(List<Istruzione> istruzioni) {
-		this.istruzioni = istruzioni;
+	public void setInformazioni(List<Informazione> informazioni) {
+		this.informazioni = informazioni;
 	}
 	
 	public List<Questionario> getQuestionari() {
@@ -57,6 +57,4 @@ public class IndagineBody {
 	public void setQuestionari(List<Questionario> questionari) {
 		this.questionari = questionari;
 	}
-
-
 }

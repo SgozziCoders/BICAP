@@ -1,0 +1,17 @@
+{
+  "tematica": "Gusti e sapori durante l'influenza",
+  "informazioni": [
+    {
+      "nomeFile": "Frutti.avi",
+      "fileUrl": "/frutti.avi",
+      "tipoFile": "video/avi",
+      "thumbnailUrl": "/thumb.png"
+    }
+  ],
+  "questionari": [
+    {
+      "titolo": "Gustatelo",
+      "qualtricsUrl": "qualtrix.composto/gusti"
+    }
+  ]
+}

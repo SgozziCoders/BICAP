@@ -1,0 +1,25 @@
+{
+  "tematica": "Indagine riguardante l'uso delle droghe nei giovani tra i 18 e i 21 anni",
+  "informazioni": [
+    {
+      "nomeFile": "ASMR.mp3",
+      "fileUrl": "/asmr.mp3",
+      "tipoFile": "audio/mp3",
+      "thumbnailUrl": "/thumb.png"
+    }
+  ],
+  "questionari": [
+    {
+      "titolo": "Oppiacei o cannabinoidi?",
+      "qualtricsUrl": "qualtrics.fatto/issimo",
+      "informazioni": [
+        {
+          "nomeFile": "ASCII_BONG.txt",
+          "fileUrl": "/ascii_bong.txt",
+          "tipoFile": "testo/txt",
+          "thumbnailUrl": "/thumb.png"
+        }
+      ]
+    }
+  ]
+}
