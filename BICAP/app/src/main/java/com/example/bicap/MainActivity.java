@@ -1,5 +1,6 @@
 package com.example.bicap;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,7 +8,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,5 +59,28 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
         Intent intent = new Intent(MainActivity.this, IndagineActivity.class);
         intent.putExtra("Indagine", indagineHead);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.bicap_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item1:
+                //Intent contattaci = new Intent(MainActivity.this, Contattaci.class);
+                //startActivity(contattaci);
+                return true;
+            case R.id.item2:
+                Intent about = new Intent(MainActivity.this, About.class);
+                startActivity(about);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
