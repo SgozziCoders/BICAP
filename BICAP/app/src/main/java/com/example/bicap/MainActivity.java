@@ -4,18 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.widget.LinearLayout;
 
-import com.google.gson.Gson;
-
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IndagineAdapter.OnCardListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,29 +24,35 @@ public class MainActivity extends AppCompatActivity {
         rv.setHasFixedSize(true); // Se si è certi che le dimensioni del RecyclerView non cambieranno, è possibile aggiungere la seguente stringa per migliorare le prestazioni:
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
         rv.setLayoutManager(llm);
-
-        LinearLayout mainLinearLayout = (LinearLayout)findViewById(R.id.mainLinearLayout);
-
-
 
         IndaginiHeadList indaginiHeadList = getIndaginiHeadList();
 
-        RVAdapter adapter = new RVAdapter(indaginiHeadList.getHeads());
+        IndagineAdapter adapter = new IndagineAdapter(indaginiHeadList.getHeads(), this);
         rv.setAdapter(adapter);
     }
 
-
+    //PROVVISORIO
     public IndaginiHeadList getIndaginiHeadList(){
         IndaginiHeadList indaginiHeadList = new IndaginiHeadList();
         List<IndagineHead> lista = new ArrayList<IndagineHead>();
 
         lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
-        lista.add(new IndagineHead("Colori","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
+        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
         lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/misc/navbar.svg?3", 830075));
 
         indaginiHeadList.setHeads(lista);
 
         return indaginiHeadList;
+    }
+
+    @Override
+    public void onCardClick(int position) {
+        String titolo = getIndaginiHeadList().getHeads().get(position).getTitoloIndagine(); //PROVVISORIO
+        IndagineHead indagineHead = getIndaginiHeadList().getHeads().get(position);
+        Intent intent = new Intent(MainActivity.this, IndagineActivity.class);
+        intent.putExtra("Indagine", indagineHead);
+        startActivity(intent);
     }
 }
