@@ -2,6 +2,7 @@ package com.example.bicap;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,6 +10,10 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.sql.Time;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -18,6 +23,19 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         setSplashScreenAnimation();
         setVersionText();
+        openMainActivity();
+    }
+
+    private void openMainActivity() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, 3000);
     }
 
     private void setSplashScreenAnimation(){
