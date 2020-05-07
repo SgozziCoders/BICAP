@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.bicap">
-
+    package="com.example.bicap"
+    xmlns:tools="http://schemas.android.com/tools">
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:label="@string/app_name"
+        tools:ignore="LockedOrientationActivity">
         <activity
             android:name=".AboutActivity"
             android:label="@string/about"/>
@@ -17,7 +19,7 @@
             android:label="@string/home"/>
         <activity
             android:name=".SplashScreenActivity"
-            android:screenOrientation="locked"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
