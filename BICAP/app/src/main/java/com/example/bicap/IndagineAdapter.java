@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 
@@ -40,7 +42,13 @@ public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.Indagi
     public void onBindViewHolder(@NonNull IndagineViewHolder holder, int position) {
         holder.titoloTextView.setText(indagini.get(position).getTitoloIndagine());
         holder.erogatoreTextView.setText(indagini.get(position).getErogatore());
-        //IndagineViewHolder.indagineImageView.setImageResource(indagini.get(i).getImgUrl());
+
+        //https://stackoverflow.com/questions/32136973/how-to-get-a-context-in-a-recycler-view-adapter
+        Glide.with(holder.indagineImageView.getContext())
+                .load(indagini.get(position).getImgUrl())
+                .centerCrop()
+                .placeholder(R.drawable.square_avatar_rounded)
+                .into(holder.indagineImageView);
     }
 
     @Override

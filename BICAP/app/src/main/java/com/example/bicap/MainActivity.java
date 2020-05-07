@@ -39,16 +39,16 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
         IndaginiHeadList indaginiHeadList = new IndaginiHeadList();
         List<IndagineHead> lista = new ArrayList<IndagineHead>();
 
-        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
-        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
-        lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/misc/navbar.svg?3", 830075));
-        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
-        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
-        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
-        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
-        lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/misc/navbar.svg?3", 830075));
-        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
-        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
+        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/avatars/default2.jpg", 830616));
+        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/avatars/default2.jpg", 829533));
+        lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/avatars/default2.jpg", 830075));
+        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/avatars/default2.jpg", 830616));
+        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/avatars/default2.jpg", 829533));
+        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/avatars/default2.jpg", 830616));
+        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/avatars/default2.jpg", 829533));
+        lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/avatars/default2.jpg", 830075));
+        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/avatars/default2.jpg", 830616));
+        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/avatars/default2.jpg", 829533));
 
 
         indaginiHeadList.setHeads(lista);

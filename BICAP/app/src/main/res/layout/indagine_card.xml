@@ -50,8 +50,8 @@
 
             <ImageView
                 android:id="@+id/indagineImageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="112dp"
+                android:layout_height="112dp"
                 android:padding="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
