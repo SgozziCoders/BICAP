@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">BICAP</string>
+    <string name="home">Home</string>
+    <string name="about">About</string>
     <string name="version">Versione</string>
+    <string name="rate">Votaci</string>
+    <string name="mail">bicap.unimib+support@gmail.com</string>
+    <string name="website">https://psicologia.unimib.it/</string>
+    <string name="description">
+        By the same illusion which lifts the horizon of the sea to the level of the spectator on a
+        hillside, the sable cloud beneath was dished out, and the car seemed to float in the middle
+        of an immense dark sphere, whose upper half was…
+    </string>
+    <string name="tematica">Tematica</string>
+    <string name="informazioni">Informazioni</string>
+    <string name="termina_button">Termina Indagine</string>
 </resources>

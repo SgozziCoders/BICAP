@@ -11,7 +11,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.sql.Time;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -50,7 +49,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void setVersionText(){
-        TextView versionTextView = (TextView) findViewById(R.id.versionTextView);
+        TextView versionTextView = (TextView) findViewById(R.id.versionSplashTextView);
         try {
             PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
             String version = pInfo.versionName;

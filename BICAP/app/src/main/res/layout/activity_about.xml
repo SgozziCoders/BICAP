@@ -5,37 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
-    tools:context=".About">
+    tools:context=".AboutActivity">
 
     <ImageView
-        android:id="@+id/web"
+        android:id="@+id/webImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
         android:src="@drawable/web_icon"
-        app:layout_constraintStart_toStartOf="@+id/textView_info"
-        app:layout_constraintTop_toBottomOf="@+id/textView_info" />
+        app:layout_constraintStart_toStartOf="@+id/infoTextView"
+        app:layout_constraintTop_toBottomOf="@+id/infoTextView" />
 
     <ImageView
-        android:id="@+id/email"
+        android:id="@+id/emailImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:src="@drawable/mail_icon"
-        app:layout_constraintStart_toStartOf="@+id/web"
-        app:layout_constraintTop_toBottomOf="@+id/web" />
+        app:layout_constraintStart_toStartOf="@+id/webImageView"
+        app:layout_constraintTop_toBottomOf="@+id/webImageView" />
 
     <ImageView
-        android:id="@+id/rate"
+        android:id="@+id/starImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:src="@drawable/star_icon"
-        app:layout_constraintStart_toStartOf="@+id/email"
-        app:layout_constraintTop_toBottomOf="@+id/email" />
+        app:layout_constraintStart_toStartOf="@+id/emailImageView"
+        app:layout_constraintTop_toBottomOf="@+id/emailImageView" />
 
     <ImageView
-        android:id="@+id/logo_about"
+        android:id="@+id/aboutImageView"
         android:layout_width="176dp"
         android:layout_height="87dp"
         android:layout_marginStart="26dp"
@@ -46,18 +46,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_versione"
-        android:layout_width="99dp"
-        android:layout_height="20dp"
+        android:id="@+id/versionAboutTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
         android:layout_marginEnd="26dp"
         android:layout_marginRight="26dp"
-        android:text="Versione 1.0.0"
+        android:text="@string/version"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView_info"
+        android:id="@+id/infoTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
@@ -65,14 +65,14 @@
         android:layout_marginTop="28dp"
         android:layout_marginEnd="26dp"
         android:layout_marginRight="26dp"
-        android:text="By the same illusion which lifts the horizon of the sea to the level of the spectator on a hillside, the sable cloud beneath was dished out, and the car seemed to float in the middle of an immense dark sphere, whose upper half was…"
+        android:text="@string/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.535"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <TextView
-        android:id="@+id/textView_web"
+        android:id="@+id/webTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -80,9 +80,9 @@
         android:layout_marginTop="32dp"
         android:autoLink="web"
         android:clickable="true"
-        android:text="https://psicologia.unimib.it/"
-        app:layout_constraintStart_toEndOf="@+id/web"
-        app:layout_constraintTop_toBottomOf="@+id/textView_info" />
+        android:text="@string/website"
+        app:layout_constraintStart_toEndOf="@+id/webImageView"
+        app:layout_constraintTop_toBottomOf="@+id/infoTextView" />
 
     <TextView
         android:id="@+id/textView_email"
@@ -93,19 +93,19 @@
         android:layout_marginTop="36dp"
         android:autoLink="email"
         android:clickable="true"
-        android:text="bicap.unimib+support@gmail.com"
-        app:layout_constraintStart_toEndOf="@+id/email"
-        app:layout_constraintTop_toBottomOf="@+id/textView_web" />
+        android:text="@string/mail"
+        app:layout_constraintStart_toEndOf="@+id/emailImageView"
+        app:layout_constraintTop_toBottomOf="@+id/webTextView" />
 
     <TextView
-        android:id="@+id/textView_rate"
+        android:id="@+id/rateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="40dp"
-        android:text="Rate Us"
-        app:layout_constraintStart_toEndOf="@+id/rate"
+        android:text="@string/rate"
+        app:layout_constraintStart_toEndOf="@+id/starImageView"
         app:layout_constraintTop_toBottomOf="@+id/textView_email" />
 
     <View

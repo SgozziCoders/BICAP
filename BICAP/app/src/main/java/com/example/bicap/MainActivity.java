@@ -1,18 +1,14 @@
 package com.example.bicap;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
         setContentView(R.layout.activity_main);
 
         //https://code.tutsplus.com/it/tutorials/getting-started-with-recyclerview-and-cardview-on-android--cms-23465
-        RecyclerView rv = (RecyclerView)findViewById(R.id.rv);
+        RecyclerView rv = (RecyclerView)findViewById(R.id.indaginiRecycleView);
         rv.setHasFixedSize(true); // Se si è certi che le dimensioni del RecyclerView non cambieranno, è possibile aggiungere la seguente stringa per migliorare le prestazioni:
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
@@ -46,6 +42,14 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
         lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
         lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
         lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/misc/navbar.svg?3", 830075));
+        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
+        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
+        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
+        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
+        lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/misc/navbar.svg?3", 830075));
+        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/misc/navbar.svg?3", 830616));
+        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/misc/navbar.svg?3", 829533));
+
 
         indaginiHeadList.setHeads(lista);
 
@@ -54,11 +58,11 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
 
     @Override
     public void onCardClick(int position) {
-        String titolo = getIndaginiHeadList().getHeads().get(position).getTitoloIndagine(); //PROVVISORIO
-        IndagineHead indagineHead = getIndaginiHeadList().getHeads().get(position);
-        Intent intent = new Intent(MainActivity.this, IndagineActivity.class);
-        intent.putExtra("Indagine", indagineHead);
-        startActivity(intent);
+            String titolo = getIndaginiHeadList().getHeads().get(position).getTitoloIndagine(); //PROVVISORIO
+            IndagineHead indagineHead = getIndaginiHeadList().getHeads().get(position);
+            Intent intent = new Intent(MainActivity.this, IndagineActivity.class);
+            intent.putExtra("Indagine", indagineHead);
+            startActivity(intent);
     }
 
     @Override
@@ -76,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
                 //startActivity(contattaci);
                 return true;
             case R.id.item2:
-                Intent about = new Intent(MainActivity.this, About.class);
+                Intent about = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(about);
                 return true;
             default:

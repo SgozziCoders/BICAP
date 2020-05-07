@@ -11,8 +11,8 @@ public class IndagineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_indagine);
+
         IndagineHead indagineHead = getIntent().getParcelableExtra("Indagine");
-        TextView titoloTextView = findViewById(R.id.titoloIndagineTextView);
-        titoloTextView.setText(indagineHead.getTitoloIndagine());
+        this.setTitle(indagineHead.getTitoloIndagine());
     }
 }
