@@ -1,12 +1,16 @@
 package com.example.bicap;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -82,6 +86,9 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         thread.start();
     }
 
+
+
+
     private String downloadFile(String url){
         try {
             URL u = new URL(url);
@@ -93,12 +100,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             byte[] buffer = new byte[1024];
             int length;
 
-            FileOutputStream fos = new FileOutputStream(new File( Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/informazione2.pdf"));
+            String PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/informazione2.pdf";
+            FileOutputStream fos = new FileOutputStream(new File( PATH ));
             while ((length = dis.read(buffer))>0) {
                 fos.write(buffer, 0, length);
             }
-            return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/informazione.pdf";
-
+            return PATH;
         } catch (MalformedURLException mue) {
             Log.e("SYNC getUpdate", "malformed url error", mue);
             return null;
