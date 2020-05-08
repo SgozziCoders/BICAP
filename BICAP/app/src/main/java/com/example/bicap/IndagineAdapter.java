@@ -19,16 +19,16 @@ import java.util.List;
 public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.IndagineViewHolder>{
 
     private OnCardListener onCardListener;
-    private List<IndagineHead> indagini;
+    private IndaginiHeadList indaginiHeadList;
 
-    IndagineAdapter(List<IndagineHead> indagini, OnCardListener onCardListener){
-        this.indagini = indagini;
+    IndagineAdapter(IndaginiHeadList indaginiHeadList, OnCardListener onCardListener){
+        this.indaginiHeadList = indaginiHeadList;
         this.onCardListener = onCardListener;
     }
 
     @Override
     public int getItemCount() {
-        return indagini.size();
+        return indaginiHeadList.getHeads().size();
     }
 
     @Override
@@ -40,12 +40,12 @@ public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.Indagi
 
     @Override
     public void onBindViewHolder(@NonNull IndagineViewHolder holder, int position) {
-        holder.titoloTextView.setText(indagini.get(position).getTitoloIndagine());
-        holder.erogatoreTextView.setText(indagini.get(position).getErogatore());
+        holder.titoloTextView.setText(indaginiHeadList.getHeads().get(position).getTitoloIndagine());
+        holder.erogatoreTextView.setText(indaginiHeadList.getHeads().get(position).getErogatore());
 
         //https://stackoverflow.com/questions/32136973/how-to-get-a-context-in-a-recycler-view-adapter
         Glide.with(holder.indagineImageView.getContext())
-                .load(indagini.get(position).getImgUrl())
+                .load(indaginiHeadList.getHeads().get(position).getImgUrl())
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
                 .into(holder.indagineImageView);

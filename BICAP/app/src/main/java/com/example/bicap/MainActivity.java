@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
 
         IndaginiHeadList indaginiHeadList = getIndaginiHeadList();
 
-        IndagineAdapter adapter = new IndagineAdapter(indaginiHeadList.getHeads(), this);
+        IndagineAdapter adapter = new IndagineAdapter(indaginiHeadList, this);
         rv.setAdapter(adapter);
     }
 
