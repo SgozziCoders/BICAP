@@ -19,14 +19,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp">
 
-            <ImageButton
+            <Button
                 android:id="@+id/expandImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00FFFFFF"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_expand_more"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_expand_more" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/titoloQuestionarioTextView"
@@ -38,7 +37,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/exandableView"
+                android:id="@+id/expandableView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"

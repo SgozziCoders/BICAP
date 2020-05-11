@@ -3,6 +3,7 @@ package com.example.bicap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -50,7 +51,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
 
     public static class QuestionarioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView titoloQuestionarioTextView;
-        ImageButton expandButton;
+        Button expandButton;
         CardView cardView;
         ConstraintLayout expandableView;
         OnQuestionarioCardListener onQuestionarioCardListener;
@@ -58,9 +59,9 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         public QuestionarioViewHolder(View itemView, OnQuestionarioCardListener onQuestionarioCardListener){
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.questionarioCardView);
-            expandableView = (ConstraintLayout) itemView.findViewById(R.id.exandableView);
+            expandableView = (ConstraintLayout) itemView.findViewById(R.id.expandableView);
             titoloQuestionarioTextView = (TextView) itemView.findViewById(R.id.titoloQuestionarioTextView);
-            expandButton = (ImageButton) itemView.findViewById(R.id.expandImageButton);
+            expandButton = (Button) itemView.findViewById(R.id.expandImageButton);
             expandButton.setOnClickListener(this);
         }
 
@@ -69,10 +70,12 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
             if (expandableView.getVisibility()==View.GONE){
                 TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
                 expandableView.setVisibility(View.VISIBLE);
+                expandButton.setBackgroundResource(R.drawable.ic_expand_less);
 
             } else {
                 TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
                 expandableView.setVisibility(View.GONE);
+                expandButton.setBackgroundResource(R.drawable.ic_expand_more);
 
             }
         }
