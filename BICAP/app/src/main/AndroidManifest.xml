@@ -20,7 +20,8 @@
             android:name=".AboutActivity"
             android:label="@string/about"/>
         <activity
-            android:name=".IndagineActivity"/>
+            android:name=".IndagineActivity">
+        </activity>
         <activity android:name=".MainActivity"
             android:label="@string/home"/>
         <activity

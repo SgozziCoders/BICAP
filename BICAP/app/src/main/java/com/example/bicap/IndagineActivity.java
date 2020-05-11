@@ -75,7 +75,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             @Override
             public void run() {
                 try  {
-                    String file_path = downloadFile("http://www.lia.deis.unibo.it/Staff/LucaFoschini/htmlDocs/resources/laTex/scrivereTesiConLaTeX.pdf");
+                    //http://www.lia.deis.unibo.it/Staff/LucaFoschini/htmlDocs/resources/laTex/scrivereTesiConLaTeX.pdf
+                    String file_path = downloadFile("https://image.shutterstock.com/image-photo/butterfly-grass-on-meadow-night-260nw-1111729556.jpg");
                     openFile(file_path);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -85,8 +86,6 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
         thread.start();
     }
-
-
 
 
     private String downloadFile(String url){
@@ -100,7 +99,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             byte[] buffer = new byte[1024];
             int length;
 
-            String PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/informazione2.pdf";
+            String PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/informazione2.png";
             FileOutputStream fos = new FileOutputStream(new File( PATH ));
             while ((length = dis.read(buffer))>0) {
                 fos.write(buffer, 0, length);
@@ -119,7 +118,14 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
     private void openFile(String filename){
-        File file = new File(filename);
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
+        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        sendIntent.setDataAndType(Uri.parse(filename),"image/*");
+        startActivity(sendIntent);
+
+
+
+        /*File file = new File(filename);
         Intent target = new Intent(Intent.ACTION_VIEW);
         target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         //Uri uri = FileProvider.getUriForFile(IndagineActivity.this, this.getApplicationContext().getPackageName() + ".provider", file);
@@ -127,10 +133,11 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         Intent intent = Intent.createChooser(target, "Apri con");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             startActivity(intent);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, "NOOOO SI SGHEEEE", Toast.LENGTH_LONG).show();
-        }
+        }*/
     }
 }
