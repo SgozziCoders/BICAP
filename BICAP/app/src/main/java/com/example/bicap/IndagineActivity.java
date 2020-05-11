@@ -53,7 +53,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
         //================QUESTIONARI=====================
         RecyclerView rvQuestionari = (RecyclerView) findViewById(R.id.questionariRecycleView);
-        //rvQuestionari.setNestedScrollingEnabled(false);
+        rvQuestionari.setNestedScrollingEnabled(false);
 
         LinearLayoutManager llmQuestionari = new LinearLayoutManager(this);
         llmQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
