@@ -29,7 +29,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener{
+public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener, QuestionarioAdapter.OnQuestionarioCardListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +50,34 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
         InformazioneAdapter adapter = new InformazioneAdapter(informazioneList, this);
         rv.setAdapter(adapter);
+
+        //================QUESTIONARI=====================
+        RecyclerView rvQuestionari = (RecyclerView) findViewById(R.id.questionariRecycleView);
+        //rvQuestionari.setNestedScrollingEnabled(false);
+
+        LinearLayoutManager llmQuestionari = new LinearLayoutManager(this);
+        llmQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
+        rvQuestionari.setLayoutManager(llmQuestionari);
+
+        List<Questionario> questionarioList = getQuestionariList();
+
+        QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(questionarioList, this);
+        rvQuestionari.setAdapter(questionarioAdapter);
+
+    }
+
+    private List<Questionario> getQuestionariList() {
+        List<Questionario> lista = new ArrayList<>();
+
+        lista.add(new Questionario("QUESTIONARIO A", "url", null));
+        lista.add(new Questionario("QUESTIONARIO B", "url", null));
+        lista.add(new Questionario("QUESTIONARIO C", "url", null));
+        lista.add(new Questionario("QUESTIONARIO D", "url", null));
+        lista.add(new Questionario("QUESTIONARIO E", "url", null));
+        lista.add(new Questionario("QUESTIONARIO F", "url", null));
+        lista.add(new Questionario("QUESTIONARIO G", "url", null));
+
+        return lista;
     }
 
     private List<Informazione> getInformazioniList() {
@@ -87,6 +115,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         thread.start();
     }
 
+    @Override
+    public void onQuestionarioCardClick(int position) {
+        //-------------
+    }
 
     private String downloadFile(String url){
         try {
@@ -140,4 +172,6 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             Toast.makeText(this, "NOOOO SI SGHEEEE", Toast.LENGTH_LONG).show();
         }*/
     }
+
+
 }
