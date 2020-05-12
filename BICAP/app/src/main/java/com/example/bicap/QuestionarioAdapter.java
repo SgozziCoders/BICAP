@@ -18,6 +18,7 @@ import java.util.List;
 
 public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapter.QuestionarioViewHolder>{
 
+    //Il custom listener non serve più, l'evento di click viene gestito dal ViewHolder
     private OnQuestionarioCardListener onQuestionarioCardListener;
     private List<Questionario> questionarioList;
 
