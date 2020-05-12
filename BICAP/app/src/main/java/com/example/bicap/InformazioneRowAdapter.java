@@ -23,9 +23,9 @@ public class InformazioneRowAdapter extends RecyclerView.Adapter<InformazioneRow
     @NonNull
     @Override
     public InformazioneRowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.questionario_card, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.info_row, viewGroup, false);
         InformazioneRowViewHolder irvh = new InformazioneRowViewHolder(v);
-        return null;
+        return irvh;
     }
 
     @Override
