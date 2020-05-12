@@ -10,10 +10,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.JsonReader;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +68,8 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
         }
     }
     //PROVVISORIO
-    public IndaginiHeadList getIndaginiHeadList(){
+    public IndaginiHeadList getIndaginiHeadList() {
+/*
         IndaginiHeadList indaginiHeadList = new IndaginiHeadList();
         List<IndagineHead> lista = new ArrayList<IndagineHead>();
 
@@ -78,13 +86,20 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
 
 
         indaginiHeadList.setHeads(lista);
-
-        return indaginiHeadList;
+*/
+        try {
+            String PATH = getApplicationInfo().dataDir + "/listaIndagini.json";
+            Gson gson = new Gson();
+            BufferedReader br = new BufferedReader(new FileReader(PATH));
+            IndaginiHeadList indaginiHeadList = gson.fromJson(br, IndaginiHeadList.class);
+            return indaginiHeadList;
+        } catch (Exception ex){
+            return  null;
+        }
     }
 
     @Override
     public void onCardClick(int position) {
-            String titolo = getIndaginiHeadList().getHeads().get(position).getTitoloIndagine(); //PROVVISORIO
             IndagineHead indagineHead = getIndaginiHeadList().getHeads().get(position);
             Intent intent = new Intent(MainActivity.this, IndagineActivity.class);
             intent.putExtra("Indagine", indagineHead);

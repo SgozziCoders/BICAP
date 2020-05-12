@@ -48,7 +48,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 3000);
+        }, 1000);
     }
 
     private void setSplashScreenAnimation() {
@@ -84,7 +84,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             byte[] buffer = new byte[1024];
             int length;
 
-            String PATH = Environment.getDataDirectory() + "/listaIndagini.json";
+            String PATH = getApplicationInfo().dataDir + "/listaIndagini.json";
             FileOutputStream fos = new FileOutputStream(new File( PATH ));
             while ((length = dis.read(buffer))>0) {
                 fos.write(buffer, 0, length);

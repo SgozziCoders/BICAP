@@ -9,18 +9,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -34,11 +40,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_indagine);
+        new Asyn_DownLoadFile().execute(null, null, null);
 
-        //IndagineHead indagineHead = getIntent().getParcelableExtra("Indagine");
-        //this.setTitle(indagineHead.getTitoloIndagine());
+    }
 
+    private void loadLista(IndagineBody indagineBody){
+        this.setTitle(indagineBody.getHead().getTitoloIndagine());
         RecyclerView rv = (RecyclerView)findViewById(R.id.infoScrollRecycleView);
         rv.setHasFixedSize(true);
 
@@ -46,12 +53,11 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         llm.setOrientation(LinearLayoutManager.HORIZONTAL);
         rv.setLayoutManager(llm);
 
-        List<Informazione> informazioneList = getInformazioniList();
-
-        InformazioneAdapter adapter = new InformazioneAdapter(informazioneList, this);
+        InformazioneAdapter adapter = new InformazioneAdapter(indagineBody.getInformazioni(), this);
         rv.setAdapter(adapter);
+    }
 
-        //================QUESTIONARI=====================
+    private  void loadQuestionari(IndagineBody indagineBody){
         RecyclerView rvQuestionari = (RecyclerView) findViewById(R.id.questionariRecycleView);
         rvQuestionari.setNestedScrollingEnabled(false);
 
@@ -59,60 +65,50 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         llmQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
         rvQuestionari.setLayoutManager(llmQuestionari);
 
-        List<Questionario> questionarioList = getQuestionariList();
-
-        QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(questionarioList, this, this);
+        QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(), this, this);
         rvQuestionari.setAdapter(questionarioAdapter);
-
     }
 
-    private List<Questionario> getQuestionariList() {
-        List<Questionario> lista = new ArrayList<>();
+    private IndagineBody getIndagineBody(IndagineHead indagineHead) {
+        int id = indagineHead.getId();
+        String fileName = "Indagine" + id + ".json";
+        String url = "https://raw.githubusercontent.com/SgozziCoders/BICAP/master/Json/" + fileName;
+        String path = getApplicationInfo().dataDir + "/" +fileName;
 
-        lista.add(new Questionario("Questionario A", "url", null));
-        lista.add(new Questionario("Questionario B", "url", null));
-        lista.add(new Questionario("Questionario C", "url", null));
-        lista.add(new Questionario("Questionario D", "url", null));
+        downloadFile(url, path);
 
-        return lista;
-    }
-
-    private List<Informazione> getInformazioniList() {
-        List<Informazione> lista = new ArrayList<>();
-
-        lista.add(new Informazione("Informazione.pdf", "url_file", "document/pdf", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.mp3", "url_file", "audio/mp3", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.txt", "url_file", "document/txt", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.avi", "url_file", "video/avi", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.txt", "url_file", "document/txt", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.mp4", "url_file", "document/pdf", "https://mangadex.org/images/avatars/default2.jpg"));
-
-        return lista;
+        try {
+            Gson gson = new Gson();
+            BufferedReader br = new BufferedReader(new FileReader(path));
+            IndagineBody indagineBody = gson.fromJson(br, IndagineBody.class);
+            return indagineBody;
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public void onInfoCardClick(int position) {
-        Toast.makeText(this, getInformazioniList().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
-
-
+        //Toast.makeText(this, getInformazioniList().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
         Thread thread = new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try  {
                     //http://www.lia.deis.unibo.it/Staff/LucaFoschini/htmlDocs/resources/laTex/scrivereTesiConLaTeX.pdf
-                    String file_path = downloadFile("https://image.shutterstock.com/image-photo/butterfly-grass-on-meadow-night-260nw-1111729556.jpg");
+                    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/informazione2.png";
+                    String file_path = downloadFile("https://image.shutterstock.com/image-photo/butterfly-grass-on-meadow-night-260nw-1111729556.jpg", path);
                     openFile(file_path);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
-
         thread.start();
     }
 
-    private String downloadFile(String url){
+    private String downloadFile(String url, String path){
         try {
             URL u = new URL(url);
             URLConnection urlcon = u.openConnection();
@@ -123,12 +119,11 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             byte[] buffer = new byte[1024];
             int length;
 
-            String PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/informazione2.png";
-            FileOutputStream fos = new FileOutputStream(new File( PATH ));
+            FileOutputStream fos = new FileOutputStream(new File( path ));
             while ((length = dis.read(buffer))>0) {
                 fos.write(buffer, 0, length);
             }
-            return PATH;
+            return path;
         } catch (MalformedURLException mue) {
             Log.e("SYNC getUpdate", "malformed url error", mue);
             return null;
@@ -137,6 +132,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             return null;
         } catch (SecurityException se) {
             Log.e("SYNC getUpdate", "security error", se);
+            return null;
+        } catch (Exception ex) {
             return null;
         }
     }
@@ -165,9 +162,29 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         }*/
     }
 
-
     @Override
     public void OnInfoRowClick(int position) {
         Toast.makeText(this, "Click infoRow", Toast.LENGTH_LONG).show();
+    }
+
+    private class Asyn_DownLoadFile extends AsyncTask<Void, Void, Void> {
+        private IndagineBody indagineBody;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            IndagineHead indagineHead = getIntent().getParcelableExtra("Indagine");
+            indagineBody = getIndagineBody(indagineHead);
+            indagineBody.setHead(indagineHead);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            setContentView(R.layout.activity_indagine);
+            loadLista(indagineBody);
+            loadQuestionari(indagineBody);
+        }
+
     }
 }
