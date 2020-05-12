@@ -29,7 +29,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener, QuestionarioAdapter.OnQuestionarioCardListener {
+public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener, InformazioneRowAdapter.OnInformazioneRowListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +61,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
         List<Questionario> questionarioList = getQuestionariList();
 
-        QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(questionarioList, this);
+        QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(questionarioList, this, this);
         rvQuestionari.setAdapter(questionarioAdapter);
 
     }
@@ -113,11 +113,6 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         });
 
         thread.start();
-    }
-
-    @Override
-    public void onQuestionarioCardClick(int position) {
-        //-------------
     }
 
     private String downloadFile(String url){
@@ -174,4 +169,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
 
+    @Override
+    public void OnInfoRowClick(int position) {
+        Toast.makeText(this, "Click infoRow", Toast.LENGTH_LONG).show();
+    }
 }

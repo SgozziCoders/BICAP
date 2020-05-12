@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,20 +22,21 @@ import java.util.List;
 public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapter.QuestionarioViewHolder>{
 
     //Il custom listener non serve più, l'evento di click viene gestito dal ViewHolder
-    private OnQuestionarioCardListener onQuestionarioCardListener;
     private List<Questionario> questionarioList;
     private Context context;
+    private InformazioneRowAdapter.OnInformazioneRowListener onInformazioneRowListener;
 
-    QuestionarioAdapter(List<Questionario> questionarioList, Context context){
+    QuestionarioAdapter(List<Questionario> questionarioList, Context context, InformazioneRowAdapter.OnInformazioneRowListener onInformazioneRowListener){
         this.questionarioList = questionarioList;
         this.context = context;
+        this.onInformazioneRowListener = onInformazioneRowListener;
     }
 
     @NonNull
     @Override
     public QuestionarioViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.questionario_card, viewGroup, false);
-        QuestionarioViewHolder ivh = new QuestionarioViewHolder(v, onQuestionarioCardListener);
+        QuestionarioViewHolder ivh = new QuestionarioViewHolder(v);
         return ivh;
     }
 
@@ -48,7 +50,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         holder.infoListRecyclerView.setLayoutManager(llmInfoListLayoutManager);
 
         List<Informazione> informazioneList = getInformazioniList();
-        InformazioneRowAdapter informazioneRowAdapter = new InformazioneRowAdapter(informazioneList);
+        InformazioneRowAdapter informazioneRowAdapter = new InformazioneRowAdapter(informazioneList, onInformazioneRowListener);
         holder.infoListRecyclerView.setAdapter(informazioneRowAdapter);
     }
 
@@ -68,9 +70,8 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         CardView cardView;
         ConstraintLayout expandableView;
         RecyclerView infoListRecyclerView;
-        OnQuestionarioCardListener onQuestionarioCardListener;
 
-        public QuestionarioViewHolder(View itemView, OnQuestionarioCardListener onQuestionarioCardListener){
+        public QuestionarioViewHolder(View itemView){
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.questionarioCardView);
             expandableView = (ConstraintLayout) itemView.findViewById(R.id.expandableView);

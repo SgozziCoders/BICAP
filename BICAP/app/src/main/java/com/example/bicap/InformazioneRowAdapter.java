@@ -15,16 +15,18 @@ import java.util.List;
 public class InformazioneRowAdapter extends RecyclerView.Adapter<InformazioneRowAdapter.InformazioneRowViewHolder> {
 
     private List<Informazione> informazioneList;
+    private OnInformazioneRowListener onInformazioneRowListener;
 
-    InformazioneRowAdapter(List<Informazione> informazioneList){
+    InformazioneRowAdapter(List<Informazione> informazioneList, OnInformazioneRowListener onInformazioneRowListener){
         this.informazioneList = informazioneList;
+        this.onInformazioneRowListener = onInformazioneRowListener;
     }
 
     @NonNull
     @Override
     public InformazioneRowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.info_row, viewGroup, false);
-        InformazioneRowViewHolder irvh = new InformazioneRowViewHolder(v);
+        InformazioneRowViewHolder irvh = new InformazioneRowViewHolder(v, onInformazioneRowListener);
         return irvh;
     }
 
@@ -47,20 +49,24 @@ public class InformazioneRowAdapter extends RecyclerView.Adapter<InformazioneRow
     public class InformazioneRowViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView infoTextView;
         ImageView iconImageView;
+        OnInformazioneRowListener onInformazioneRowListener;
 
-        public InformazioneRowViewHolder(@NonNull View itemView) {
+        public InformazioneRowViewHolder(@NonNull View itemView, OnInformazioneRowListener onInformazioneRowListener) {
             super(itemView);
             infoTextView = (TextView) itemView.findViewById(R.id.infoTextView);
             iconImageView = (ImageView) itemView.findViewById(R.id.iconImageView);
+            this.onInformazioneRowListener = onInformazioneRowListener;
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            //Probabile utilizzo di un custom click listener che gestisce il download e l'apertura del file
+            onInformazioneRowListener.OnInfoRowClick(getAdapterPosition());
         }
     }
 
-    
+    public interface OnInformazioneRowListener{
+        public void OnInfoRowClick(int position);
+    }
 
 }
