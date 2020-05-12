@@ -1,5 +1,6 @@
 package com.example.bicap;
 
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,27 @@ public class InformazioneRowAdapter extends RecyclerView.Adapter<InformazioneRow
     @Override
     public void onBindViewHolder(@NonNull InformazioneRowViewHolder holder, int position) {
         holder.infoTextView.setText(informazioneList.get(position).getNomeFile());
+        setIconImage(informazioneList.get(position).getTipoFile(), holder.iconImageView);
+    }
+
+    private void setIconImage(String tipoFile, ImageView iconImageView) {
+        String temp = tipoFile.split("/")[0];
+        switch(temp){
+            case "application":
+                iconImageView.setImageResource(R.drawable.pdf_icon2);
+                break;
+            case "video":
+                iconImageView.setImageResource(R.drawable.video_icon);
+                break;
+            case "audio":
+                iconImageView.setImageResource(R.drawable.audio_icon);
+                break;
+            case "text":
+                iconImageView.setImageResource(R.drawable.text_icon);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

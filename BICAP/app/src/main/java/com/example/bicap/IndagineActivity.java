@@ -69,13 +69,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private List<Questionario> getQuestionariList() {
         List<Questionario> lista = new ArrayList<>();
 
-        lista.add(new Questionario("QUESTIONARIO A", "url", null));
-        lista.add(new Questionario("QUESTIONARIO B", "url", null));
-        lista.add(new Questionario("QUESTIONARIO C", "url", null));
-        lista.add(new Questionario("QUESTIONARIO D", "url", null));
-        lista.add(new Questionario("QUESTIONARIO E", "url", null));
-        lista.add(new Questionario("QUESTIONARIO F", "url", null));
-        lista.add(new Questionario("QUESTIONARIO G", "url", null));
+        lista.add(new Questionario("Questionario A", "url", null));
+        lista.add(new Questionario("Questionario B", "url", null));
+        lista.add(new Questionario("Questionario C", "url", null));
+        lista.add(new Questionario("Questionario D", "url", null));
 
         return lista;
     }

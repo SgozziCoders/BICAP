@@ -105,12 +105,12 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
     private List<Informazione> getInformazioniList() {
         List<Informazione> lista = new ArrayList<>();
 
-        lista.add(new Informazione("Informazione.pdf", "url_file", "document/pdf", "https://mangadex.org/images/avatars/default2.jpg"));
+        lista.add(new Informazione("Informazione.pdf", "url_file", "application/pdf", "https://mangadex.org/images/avatars/default2.jpg"));
         lista.add(new Informazione("Informazione.mp3", "url_file", "audio/mp3", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.txt", "url_file", "document/txt", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.avi", "url_file", "video/avi", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.txt", "url_file", "document/txt", "https://mangadex.org/images/avatars/default2.jpg"));
-        lista.add(new Informazione("Informazione.mp4", "url_file", "document/pdf", "https://mangadex.org/images/avatars/default2.jpg"));
+        lista.add(new Informazione("Informazione.txt", "url_file", "text/plain", "https://mangadex.org/images/avatars/default2.jpg"));
+        lista.add(new Informazione("Informazione.avi", "url_file", "video/mp3", "https://mangadex.org/images/avatars/default2.jpg"));
+        lista.add(new Informazione("Informazione.pdf", "url_file", "application/pdf", "https://mangadex.org/images/avatars/default2.jpg"));
+        lista.add(new Informazione("Informazione.text", "url_file", "text/plain", "https://mangadex.org/images/avatars/default2.jpg"));
 
         return lista;
     }
