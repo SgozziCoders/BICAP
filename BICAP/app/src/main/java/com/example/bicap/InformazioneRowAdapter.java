@@ -60,4 +60,7 @@ public class InformazioneRowAdapter extends RecyclerView.Adapter<InformazioneRow
             //Probabile utilizzo di un custom click listener che gestisce il download e l'apertura del file
         }
     }
+
+    
+
 }
