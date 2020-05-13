@@ -49,9 +49,11 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         llmInfoListLayoutManager.setOrientation(RecyclerView.VERTICAL);
         holder.infoListRecyclerView.setLayoutManager(llmInfoListLayoutManager);
 
-        List<Informazione> informazioneList = getInformazioniList();
+        List<Informazione> informazioneList = questionarioList.get(position).getInformazioni();
+        if(informazioneList != null) {
         InformazioneRowAdapter informazioneRowAdapter = new InformazioneRowAdapter(informazioneList, onInformazioneRowListener);
         holder.infoListRecyclerView.setAdapter(informazioneRowAdapter);
+        }
     }
 
     @Override
@@ -102,7 +104,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
     }
 
     //Provvisiorio
-    private List<Informazione> getInformazioniList() {
+/*    private List<Informazione> getInformazioniList() {
         List<Informazione> lista = new ArrayList<>();
 
         lista.add(new Informazione("Informazione.pdf", "url_file", "application/pdf", "https://mangadex.org/images/avatars/default2.jpg"));
@@ -113,5 +115,5 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         lista.add(new Informazione("Informazione.text", "url_file", "text/plain", "https://mangadex.org/images/avatars/default2.jpg"));
 
         return lista;
-    }
+    }*/
 }

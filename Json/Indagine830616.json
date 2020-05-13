@@ -3,9 +3,27 @@
   "informazioni": [
     {
       "nomeFile": "Leggimi.pdf",
-      "fileUrl": "/leggimi.pdf",
-      "tipoFile": "document/pdf",
-      "thumbnailUrl": "/thumb.png"
+      "fileUrl": "http://files.bicap.quarzo.stream/830616/informazioni/Leggimi.pdf",
+      "tipoFile": "application/pdf",
+      "thumbnailUrl": "http://files.bicap.quarzo.stream/830616/informazioni/thumbLeggimipdf.png"
+    },
+    {
+      "nomeFile": "Video.mp4",
+      "fileUrl": "http://files.bicap.quarzo.stream/830616/informazioni/Video.mp4",
+      "tipoFile": "video/mp4",
+      "thumbnailUrl": "http://files.bicap.quarzo.stream/830616/informazioni/thumbVideomp4.png"
+    },
+    {
+      "nomeFile": "Audio.mp3",
+      "fileUrl": "http://files.bicap.quarzo.stream/830616/informazioni/Audio.mp3",
+      "tipoFile": "audio/mpeg",
+      "thumbnailUrl": "http://files.bicap.quarzo.stream/830616/informazioni/thumbAudiomp3.png"
+    },
+    {
+      "nomeFile": "Testo.txt",
+      "fileUrl": "http://files.bicap.quarzo.stream/830616/informazioni/Testo.txt",
+      "tipoFile": "audio/mpeg",
+      "thumbnailUrl": "http://files.bicap.quarzo.stream/830616/informazioni/thumbTestotxt.png"
     }
   ],
   "questionari": [
@@ -14,10 +32,28 @@
       "qualtricsUrl": "qualtrics.com/830616",
       "informazioni": [
         {
-          "nomeFile": "Tavole.mp4",
-          "fileUrl": "/tavole.mp4",
+          "nomeFile": "Leggimi.pdf",
+          "fileUrl": "http://files.bicap.quarzo.stream/830616/Questionario_RGB/informazioni/Leggimi.pdf",
+          "tipoFile": "application/pdf",
+          "thumbnailUrl": "http://files.bicap.quarzo.stream/830616/Questionario_RGB/informazioni/thumbLeggimipdf.png"
+        },
+        {
+          "nomeFile": "Video.mp4",
+          "fileUrl": "http://files.bicap.quarzo.stream/830616/Questionario_RGB/informazioni/Video.mp4",
           "tipoFile": "video/mp4",
-          "thumbnailUrl": "/thumb.png"
+          "thumbnailUrl": "http://files.bicap.quarzo.stream/830616/Questionario_RGB/informazioni/thumbVideomp4.png"
+        },
+        {
+          "nomeFile": "Audio.mp3",
+          "fileUrl": "http://files.bicap.quarzo.stream/830616/Questionario_RGB/informazioni/Audio.mp3",
+          "tipoFile": "audio/mpeg",
+          "thumbnailUrl": "http://files.bicap.quarzo.stream/830616/Questionario_RGB/informazioni/thumbAudiomp3.png"
+        },
+        {
+          "nomeFile": "Testo.txt",
+          "fileUrl": "http://files.bicap.quarzo.stream/830616/Questionario_RGB/informazioni/Testo.txt",
+          "tipoFile": "audio/mpeg",
+          "thumbnailUrl": "http://files.bicap.quarzo.stream/830616/Questionario_RGB/informazioni/thumbTestotxt.png"
         }
       ]
     }

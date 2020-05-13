@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.JsonReader;
@@ -117,9 +119,22 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
-                //Intent contattaci = new Intent(MainActivity.this, Contattaci.class);
-                //startActivity(contattaci);
-                return true;
+                PackageInfo pInfo = null;
+                try {
+                    //https://stackoverflow.com/questions/42491652/send-mail-intent-extra-email-does-not-work
+                    pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                    String version = pInfo.versionName;
+
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("message/rfc822");
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"receiver@gmail.com"});
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "[Bicap" + version + "]");
+                    startActivity(intent);
+                    return true;
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                    return false;
+                }
             case R.id.item2:
                 Intent about = new Intent(MainActivity.this, AboutActivity.class);
                 startActivity(about);

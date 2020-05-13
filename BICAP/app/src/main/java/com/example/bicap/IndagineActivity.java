@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener, InformazioneRowAdapter.OnInformazioneRowListener {
-
+    private IndagineBody indagineBody;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,15 +46,20 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     private void loadLista(IndagineBody indagineBody){
         this.setTitle(indagineBody.getHead().getTitoloIndagine());
-        RecyclerView rv = (RecyclerView)findViewById(R.id.infoScrollRecycleView);
-        rv.setHasFixedSize(true);
+        TextView mTestoTematica = (TextView)findViewById(R.id.descrizioneTextView);
+        mTestoTematica.setText(indagineBody.getTematica());
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.HORIZONTAL);
-        rv.setLayoutManager(llm);
+        if(indagineBody.getInformazioni() != null) {
+            RecyclerView rv = (RecyclerView) findViewById(R.id.infoScrollRecycleView);
+            rv.setHasFixedSize(true);
 
-        InformazioneAdapter adapter = new InformazioneAdapter(indagineBody.getInformazioni(), this);
-        rv.setAdapter(adapter);
+            LinearLayoutManager llm = new LinearLayoutManager(this);
+            llm.setOrientation(LinearLayoutManager.HORIZONTAL);
+            rv.setLayoutManager(llm);
+
+            InformazioneAdapter adapter = new InformazioneAdapter(indagineBody.getInformazioni(), this);
+            rv.setAdapter(adapter);
+        }
     }
 
     private  void loadQuestionari(IndagineBody indagineBody){
@@ -72,7 +77,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private IndagineBody getIndagineBody(IndagineHead indagineHead) {
         int id = indagineHead.getId();
         String fileName = "Indagine" + id + ".json";
-        String url = "https://raw.githubusercontent.com/SgozziCoders/BICAP/master/Json/" + fileName;
+        //String url = "https://raw.githubusercontent.com/SgozziCoders/BICAP/master/Json/" + fileName;
+        String url = "http://files.bicap.quarzo.stream/"+ indagineHead.getId() + "/indagine.json";
         String path = getApplicationInfo().dataDir + "/" +fileName;
 
         downloadFile(url, path);
@@ -91,8 +97,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     @Override
     public void onInfoCardClick(int position) {
         //Toast.makeText(this, getInformazioniList().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, indagineBody.getInformazioni().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
         Thread thread = new Thread(new Runnable() {
-
             @Override
             public void run() {
                 try  {
@@ -168,7 +174,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
     private class Asyn_DownLoadFile extends AsyncTask<Void, Void, Void> {
-        private IndagineBody indagineBody;
+
 
         @Override
         protected Void doInBackground(Void... voids) {
@@ -185,6 +191,5 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             loadLista(indagineBody);
             loadQuestionari(indagineBody);
         }
-
     }
 }

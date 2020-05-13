@@ -48,7 +48,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, 1000);
+        }, 1500);
     }
 
     private void setSplashScreenAnimation() {
@@ -75,7 +75,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     public void downLoadFile() {
         try {
-            String url = "https://raw.githubusercontent.com/SgozziCoders/BICAP/master/Json/listaIndagini.json";
+            //String url = "https://raw.githubusercontent.com/SgozziCoders/BICAP/master/Json/listaIndagini.json";
+            String url = "http://files.bicap.quarzo.stream/listaIndagini.json";
             URL u = new URL(url);
             URLConnection urlcon = u.openConnection();
             InputStream is = urlcon.getInputStream();
