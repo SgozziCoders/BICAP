@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,7 +36,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener, InformazioneRowAdapter.OnInformazioneRowListener {
+public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
+        InformazioneRowAdapter.OnInformazioneRowListener, QuestionarioAdapter.OnSubmitClickListener {
     private IndagineBody indagineBody;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,9 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
             InformazioneAdapter adapter = new InformazioneAdapter(indagineBody.getInformazioni(), this);
             rv.setAdapter(adapter);
+        }else{
+            TextView infoTextView = (TextView) findViewById(R.id.informazioniTextView);
+            infoTextView.setVisibility(View.GONE);
         }
     }
 
@@ -70,7 +75,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         llmQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
         rvQuestionari.setLayoutManager(llmQuestionari);
 
-        QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(), this, this);
+        QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(),
+                this, this, this);
         rvQuestionari.setAdapter(questionarioAdapter);
     }
 
@@ -171,6 +177,14 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     @Override
     public void OnInfoRowClick(int position) {
         Toast.makeText(this, "Click infoRow", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void OnSubmitClick(int position) {
+        Intent webViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
+        //webViewIntent.putExtra("URL", indagineBody.getQuestionari().get(position).getQualtricsUrl());
+        webViewIntent.putExtra("URL", "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
+        startActivity(webViewIntent);
     }
 
     private class Asyn_DownLoadFile extends AsyncTask<Void, Void, Void> {

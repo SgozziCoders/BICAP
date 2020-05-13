@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
 
                     Intent intent = new Intent(Intent.ACTION_SEND);
                     intent.setType("message/rfc822");
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"receiver@gmail.com"});
+                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"bicap.unimib+support@gmail.com"});
                     intent.putExtra(Intent.EXTRA_SUBJECT, "[Bicap" + version + "]");
                     startActivity(intent);
                     return true;

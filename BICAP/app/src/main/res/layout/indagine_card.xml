@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingTop="16dp"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/model_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
