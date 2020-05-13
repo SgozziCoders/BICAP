@@ -3,6 +3,8 @@ package com.example.bicap;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +23,7 @@ import androidx.transition.TransitionManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapter.QuestionarioViewHolder>{
+public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapter.QuestionarioViewHolder> {
 
     private List<Questionario> questionarioList;
     private Context context;

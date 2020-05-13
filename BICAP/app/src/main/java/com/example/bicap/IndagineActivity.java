@@ -1,17 +1,11 @@
 package com.example.bicap;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,20 +27,19 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         InformazioneRowAdapter.OnInformazioneRowListener, QuestionarioAdapter.OnSubmitClickListener {
     private IndagineBody indagineBody;
+    private static Bundle stat;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         new Asyn_DownLoadFile().execute(null, null, null);
-
     }
 
-    private void loadLista(IndagineBody indagineBody){
+    private void loadInformazioniScroll(IndagineBody indagineBody){
         this.setTitle(indagineBody.getHead().getTitoloIndagine());
         TextView mTestoTematica = (TextView)findViewById(R.id.descrizioneTextView);
         mTestoTematica.setText(indagineBody.getTematica());
@@ -202,7 +195,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             setContentView(R.layout.activity_indagine);
-            loadLista(indagineBody);
+            loadInformazioniScroll(indagineBody);
             loadQuestionari(indagineBody);
         }
     }

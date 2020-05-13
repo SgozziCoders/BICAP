@@ -22,7 +22,8 @@
         <activity
             android:name=".AboutActivity"
             android:label="@string/about" />
-        <activity android:name=".IndagineActivity"></activity>
+        <activity android:name=".IndagineActivity"
+            android:configChanges="orientation|screenSize"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/home" />
