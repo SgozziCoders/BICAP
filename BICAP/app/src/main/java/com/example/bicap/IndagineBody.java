@@ -1,8 +1,11 @@
 package com.example.bicap;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 
-public class IndagineBody {
+public class IndagineBody implements Parcelable {
 
 	private IndagineHead head;
 	private String tematica;
@@ -25,7 +28,24 @@ public class IndagineBody {
 		this.informazioni = informazioni;
 		this.questionari = questionari;
 	}
-	
+
+	protected IndagineBody(Parcel in) {
+		head = in.readParcelable(IndagineHead.class.getClassLoader());
+		tematica = in.readString();
+	}
+
+	public static final Creator<IndagineBody> CREATOR = new Creator<IndagineBody>() {
+		@Override
+		public IndagineBody createFromParcel(Parcel in) {
+			return new IndagineBody(in);
+		}
+
+		@Override
+		public IndagineBody[] newArray(int size) {
+			return new IndagineBody[size];
+		}
+	};
+
 	public IndagineHead getHead() {
 		return head;
 	}
@@ -56,5 +76,16 @@ public class IndagineBody {
 	
 	public void setQuestionari(List<Questionario> questionari) {
 		this.questionari = questionari;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeParcelable(head, flags);
+		dest.writeString(tematica);
 	}
 }

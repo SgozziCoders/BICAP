@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -31,12 +32,47 @@ import java.net.URLConnection;
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         InformazioneRowAdapter.OnInformazioneRowListener, QuestionarioAdapter.OnSubmitClickListener {
     private IndagineBody indagineBody;
-    private static Bundle stat;
+    private RecyclerView questionariRecyclerView;
+    private static String INDAGINE_BODY_STATE = "indagine_body_state";
+    private static Bundle global_stat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        questionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
+        if(savedInstanceState != null){
+            global_stat = savedInstanceState;
+        }
         new Asyn_DownLoadFile().execute(null, null, null);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(INDAGINE_BODY_STATE, indagineBody);
+    }
+
+    private class Asyn_DownLoadFile extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            IndagineHead indagineHead = getIntent().getParcelableExtra("Indagine");
+            if(global_stat != null){
+                indagineBody = global_stat.getParcelable(INDAGINE_BODY_STATE);
+            }else{
+                indagineBody = getIndagineBody(indagineHead);
+            }
+            indagineBody.setHead(indagineHead);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            setContentView(R.layout.activity_indagine);
+            loadInformazioniScroll(indagineBody);
+            loadQuestionari(indagineBody);
+        }
     }
 
     private void loadInformazioniScroll(IndagineBody indagineBody){
@@ -61,23 +97,22 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
     private  void loadQuestionari(IndagineBody indagineBody){
-        RecyclerView rvQuestionari = (RecyclerView) findViewById(R.id.questionariRecycleView);
-        rvQuestionari.setNestedScrollingEnabled(false);
-
+        questionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
+        questionariRecyclerView.setNestedScrollingEnabled(false);
         LinearLayoutManager llmQuestionari = new LinearLayoutManager(this);
         llmQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
-        rvQuestionari.setLayoutManager(llmQuestionari);
+        questionariRecyclerView.setLayoutManager(llmQuestionari);
 
         QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(),
                 this, this, this);
-        rvQuestionari.setAdapter(questionarioAdapter);
+        questionariRecyclerView.setAdapter(questionarioAdapter);
     }
 
     private IndagineBody getIndagineBody(IndagineHead indagineHead) {
         int id = indagineHead.getId();
         String fileName = "Indagine" + id + ".json";
         //String url = "https://raw.githubusercontent.com/SgozziCoders/BICAP/master/Json/" + fileName;
-        String url = "http://files.bicap.quarzo.stream/"+ indagineHead.getId() + "/indagine.json";
+        String url = "https://files.bicap.quarzo.stream/"+ indagineHead.getId() + "/indagine.json";
         String path = getApplicationInfo().dataDir + "/" +fileName;
 
         downloadFile(url, path);
@@ -111,6 +146,19 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             }
         });
         thread.start();
+    }
+
+    @Override
+    public void OnInfoRowClick(int position) {
+        Toast.makeText(this, "Click infoRow", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void OnSubmitClick(int position) {
+        Intent webViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
+        //webViewIntent.putExtra("URL", indagineBody.getQuestionari().get(position).getQualtricsUrl());
+        webViewIntent.putExtra("URL", "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
+        startActivity(webViewIntent);
     }
 
     private String downloadFile(String url, String path){
@@ -167,36 +215,5 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         }*/
     }
 
-    @Override
-    public void OnInfoRowClick(int position) {
-        Toast.makeText(this, "Click infoRow", Toast.LENGTH_LONG).show();
-    }
 
-    @Override
-    public void OnSubmitClick(int position) {
-        Intent webViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
-        //webViewIntent.putExtra("URL", indagineBody.getQuestionari().get(position).getQualtricsUrl());
-        webViewIntent.putExtra("URL", "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
-        startActivity(webViewIntent);
-    }
-
-    private class Asyn_DownLoadFile extends AsyncTask<Void, Void, Void> {
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            IndagineHead indagineHead = getIntent().getParcelableExtra("Indagine");
-            indagineBody = getIndagineBody(indagineHead);
-            indagineBody.setHead(indagineHead);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            setContentView(R.layout.activity_indagine);
-            loadInformazioniScroll(indagineBody);
-            loadQuestionari(indagineBody);
-        }
-    }
 }
