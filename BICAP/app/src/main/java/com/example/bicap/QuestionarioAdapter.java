@@ -26,17 +26,20 @@ import java.util.List;
 public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapter.QuestionarioViewHolder> {
 
     private List<Questionario> questionarioList;
+    private List<ParcelableBoolean> cardsVisibility;
     private Context context;
     private InformazioneRowAdapter.OnInformazioneRowListener onInformazioneRowListener;
     private OnSubmitClickListener onSubmitClickListener;
 
     QuestionarioAdapter(List<Questionario> questionarioList, Context context,
                         InformazioneRowAdapter.OnInformazioneRowListener onInformazioneRowListener,
-                        OnSubmitClickListener onSubmitClickListener){
+                        OnSubmitClickListener onSubmitClickListener,
+                        List<ParcelableBoolean> cardsVisibility){
         this.questionarioList = questionarioList;
         this.context = context;
         this.onInformazioneRowListener = onInformazioneRowListener;
         this.onSubmitClickListener = onSubmitClickListener;
+        this.cardsVisibility = cardsVisibility;
     }
 
     @NonNull
@@ -52,6 +55,10 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
     public void onBindViewHolder(@NonNull QuestionarioViewHolder holder, int position) {
         holder.titoloQuestionarioTextView.setText(questionarioList.get(position).getTitolo());
         holder.infoListRecyclerView.setNestedScrollingEnabled(false);
+        if(cardsVisibility.size() > 0 && cardsVisibility.get(position).getKey()){
+            holder.expandableView.setVisibility(View.VISIBLE);
+            holder.expandButton.setBackgroundResource(R.drawable.ic_expand_less);
+        }
 
         LinearLayoutManager llmInfoListLayoutManager = new LinearLayoutManager(context);
         llmInfoListLayoutManager.setOrientation(RecyclerView.VERTICAL);

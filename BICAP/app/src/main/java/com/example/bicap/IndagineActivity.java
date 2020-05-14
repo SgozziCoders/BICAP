@@ -2,6 +2,7 @@ package com.example.bicap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,11 +29,15 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         InformazioneRowAdapter.OnInformazioneRowListener, QuestionarioAdapter.OnSubmitClickListener {
     private IndagineBody indagineBody;
+    private ArrayList<ParcelableBoolean> questionariVisibilityList;
     private RecyclerView questionariRecyclerView;
+    private static String VISIBILITY_CARDS__STATE = "visibility_cards_state";
     private static String INDAGINE_BODY_STATE = "indagine_body_state";
     private static Bundle global_stat;
 
@@ -42,14 +47,38 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         questionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
         if(savedInstanceState != null){
             global_stat = savedInstanceState;
+        }else{
+            questionariVisibilityList = new ArrayList<ParcelableBoolean>();
         }
         new Asyn_DownLoadFile().execute(null, null, null);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if(global_stat != null){
+            questionariVisibilityList = global_stat.getParcelableArrayList(VISIBILITY_CARDS__STATE);
+        }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(INDAGINE_BODY_STATE, indagineBody);
+        questionariVisibilityList.clear();
+        int count = questionariRecyclerView.getAdapter().getItemCount();
+        View v;
+        ConstraintLayout cl;
+        for(int i = 0; i < count; i++){
+            v = questionariRecyclerView.findViewHolderForAdapterPosition(i).itemView;
+            cl = (ConstraintLayout) v.findViewById(R.id.expandableView);
+            if(cl.getVisibility() == View.GONE){
+                questionariVisibilityList.add(new ParcelableBoolean(false));
+            }else{
+                questionariVisibilityList.add(new ParcelableBoolean(true));
+            }
+        }
+        outState.putParcelableArrayList(VISIBILITY_CARDS__STATE, questionariVisibilityList);
     }
 
     private class Asyn_DownLoadFile extends AsyncTask<Void, Void, Void> {
@@ -73,6 +102,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             loadInformazioniScroll(indagineBody);
             loadQuestionari(indagineBody);
         }
+    }
+
+    private void restoreCardVisibility(List<Boolean> visibilityList){
+
     }
 
     private void loadInformazioniScroll(IndagineBody indagineBody){
@@ -104,7 +137,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         questionariRecyclerView.setLayoutManager(llmQuestionari);
 
         QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(),
-                this, this, this);
+                this, this, this, questionariVisibilityList);
+
         questionariRecyclerView.setAdapter(questionarioAdapter);
     }
 
@@ -129,7 +163,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
     @Override
-    public void onInfoCardClick(int position) {
+    public void onInfoCardClick(final int position) {
         //Toast.makeText(this, getInformazioniList().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
         Toast.makeText(this, indagineBody.getInformazioni().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
         Thread thread = new Thread(new Runnable() {
@@ -137,9 +171,9 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             public void run() {
                 try  {
                     //http://www.lia.deis.unibo.it/Staff/LucaFoschini/htmlDocs/resources/laTex/scrivereTesiConLaTeX.pdf
-                    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/informazione2.png";
-                    String file_path = downloadFile("https://image.shutterstock.com/image-photo/butterfly-grass-on-meadow-night-260nw-1111729556.jpg", path);
-                    openFile(file_path);
+                    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + indagineBody.getInformazioni().get(position).getNomeFile();
+                    String file_path = downloadFile(indagineBody.getInformazioni().get(position).getFileUrl(), path);
+                    openFile(file_path, indagineBody.getInformazioni().get(position).getTipoFile());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -165,11 +199,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         try {
             URL u = new URL(url);
             URLConnection urlcon = u.openConnection();
+            int contentLength = urlcon.getContentLength();
             InputStream is = urlcon.getInputStream();
 
             DataInputStream dis = new DataInputStream(is);
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[contentLength];
             int length;
 
             FileOutputStream fos = new FileOutputStream(new File( path ));
@@ -191,19 +226,19 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         }
     }
 
-    private void openFile(String filename){
+    private void openFile(String path, String mime){
         Intent sendIntent = new Intent(Intent.ACTION_VIEW);
         sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        sendIntent.setDataAndType(Uri.parse(filename),"image/*");
+        sendIntent.setDataAndType(Uri.parse(path),mime);
         startActivity(sendIntent);
 
 
 
-        /*File file = new File(filename);
+        /*File file = new File(path);
         Intent target = new Intent(Intent.ACTION_VIEW);
         target.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         //Uri uri = FileProvider.getUriForFile(IndagineActivity.this, this.getApplicationContext().getPackageName() + ".provider", file);
-        target.setDataAndType(Uri.parse(filename),"application/pdf");
+        target.setDataAndType(Uri.parse(path),"application/pdf");
         target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
         Intent intent = Intent.createChooser(target, "Apri con");
