@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -23,4 +25,24 @@ public class WebViewActivity extends AppCompatActivity {
         mWebview.loadUrl(getIntent().getExtras().getString("URL"));
         //mWebview.loadUrl("http://www.google.com/");
     }
+
+    @Override
+    public void onBackPressed() {
+        WebView mWebview = findViewById(R.id.qualtricsWebView);
+        if (mWebview.canGoBack()) {
+            mWebview.goBack();
+        }else{
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.dialog_message)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            WebViewActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_no, null)
+                    .show();
+        }
+    }
+
 }

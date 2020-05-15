@@ -14,4 +14,7 @@
     <string name="tematica">Tematica</string>
     <string name="informazioni">Informazioni</string>
     <string name="termina_button">Termina Indagine</string>
+    <string name="dialog_message">Sei sicuro di voler uscire? Tutti i progressi non salvati andranno perduti</string>
+    <string name="dialog_yes">Sì</string>
+    <string name="dialog_no">No</string>
 </resources>
