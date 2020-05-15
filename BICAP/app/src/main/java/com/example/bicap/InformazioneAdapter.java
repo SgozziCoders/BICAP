@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import org.w3c.dom.Text;
 
@@ -43,6 +44,7 @@ public class InformazioneAdapter extends RecyclerView.Adapter<InformazioneAdapte
                 .load(informazioneList.get(position).getThumbnailUrl())
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
+                .signature(new ObjectKey(informazioneList.get(position).getultimaModifica()))
                 .into(holder.informazioneImageView);
     }
 

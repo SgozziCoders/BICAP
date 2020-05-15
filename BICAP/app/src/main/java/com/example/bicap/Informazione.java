@@ -5,6 +5,7 @@ public class Informazione {
 	private String fileUrl;
 	private String tipoFile;
 	private String thumbnailUrl;
+	private String ultimaModifica;
 
 	public Informazione() {
 	}
@@ -15,12 +16,13 @@ public class Informazione {
 	* @param tipoFile
 	* @param fileUrl
 	*/
-	public Informazione(String nomeFile, String fileUrl, String tipoFile, String thumbnailUrl) {
+	public Informazione(String nomeFile, String fileUrl, String tipoFile, String thumbnailUrl, String ultimaModifica) {
 		super();
 		this.nomeFile = nomeFile;
 		this.fileUrl = fileUrl;
 		this.tipoFile = tipoFile;
 		this.thumbnailUrl = thumbnailUrl;
+		this.ultimaModifica = ultimaModifica;
 	}
 	
 	public String getNomeFile() {
@@ -53,5 +55,13 @@ public class Informazione {
 
 	public void setThumbnailUrl(String thumbnailUrl){
 		this.thumbnailUrl = thumbnailUrl;
+	}
+
+	public String getultimaModifica() {
+		return ultimaModifica;
+	}
+
+	public void setEultimaModifica(String ultimaModifica) {
+		this.ultimaModifica = ultimaModifica;
 	}
 }

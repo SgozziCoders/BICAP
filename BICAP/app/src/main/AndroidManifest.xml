@@ -18,12 +18,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".WebViewActivity"></activity>
+        <activity android:name=".WebViewActivity"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".AboutActivity"
             android:label="@string/about" />
-        <activity android:name=".IndagineActivity"
-            ></activity>
+        <activity android:name=".IndagineActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/home" />

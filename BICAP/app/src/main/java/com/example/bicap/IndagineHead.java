@@ -9,6 +9,7 @@ public class IndagineHead implements Parcelable{
 	private String erogatore;
 	private String imgUrl;
 	private int idIndagine;
+	private String ultimaModifica;
 	
 	public IndagineHead() {
 	}
@@ -20,12 +21,13 @@ public class IndagineHead implements Parcelable{
 	* @param imgUrl
 	* @param id
 	*/
-	public IndagineHead(String titoloIndagine, String erogatore, String imgUrl, int idIndagine) {
+	public IndagineHead(String titoloIndagine, String erogatore, String imgUrl, int idIndagine, String ultimaModifica) {
 		super();
 		this.titoloIndagine = titoloIndagine;
 		this.erogatore = erogatore;
 		this.imgUrl = imgUrl;
 		this.idIndagine = idIndagine;
+		this.ultimaModifica = ultimaModifica;
 	}
 
 	protected IndagineHead(Parcel in) {
@@ -36,6 +38,20 @@ public class IndagineHead implements Parcelable{
 	}
 
 	//Aggiunto da Android Studio
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(titoloIndagine);
+		dest.writeString(erogatore);
+		dest.writeString(imgUrl);
+		dest.writeInt(idIndagine);
+		dest.writeString(ultimaModifica);
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
 	public static final Creator<IndagineHead> CREATOR = new Creator<IndagineHead>() {
 		@Override
 		public IndagineHead createFromParcel(Parcel in) {
@@ -80,18 +96,12 @@ public class IndagineHead implements Parcelable{
 		this.idIndagine = id;
 	}
 
-	//Aggiunto da Android Studio
-	@Override
-	public int describeContents() {
-		return 0;
+	public String getultimaModifica() {
+		return ultimaModifica;
 	}
 
-	//Aggiunto da Android Studio
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(titoloIndagine);
-		dest.writeString(erogatore);
-		dest.writeString(imgUrl);
-		dest.writeInt(idIndagine);
+	public void setEultimaModifica(String ultimaModifica) {
+		this.ultimaModifica = ultimaModifica;
 	}
+
 }

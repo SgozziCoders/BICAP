@@ -4,7 +4,8 @@
         "titoloIndagine": "",
         "erogatore": "",
         "imgUrl": "",
-        "idIndagine": 1234
+        "idIndagine": 1234,
+        "ultimaModifica": ""
       }
     ]
 }
