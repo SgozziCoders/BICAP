@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
-        InformazioneRowAdapter.OnInformazioneRowListener, QuestionarioAdapter.OnSubmitClickListener {
+        QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver {
     private IndagineBody indagineBody;
     private ArrayList<ParcelableBoolean> questionariVisibilityList;
     private RecyclerView questionariRecyclerView;
@@ -103,11 +103,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             loadQuestionari(indagineBody);
         }
     }
-
-    private void restoreCardVisibility(List<Boolean> visibilityList){
-
-    }
-
+    
     private void loadInformazioniScroll(IndagineBody indagineBody){
         this.setTitle(indagineBody.getHead().getTitoloIndagine());
         TextView mTestoTematica = (TextView)findViewById(R.id.descrizioneTextView);
@@ -160,39 +156,6 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             ex.printStackTrace();
             return null;
         }
-    }
-
-    @Override
-    public void onInfoCardClick(final int position) {
-        //Toast.makeText(this, getInformazioniList().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
-        Toast.makeText(this, indagineBody.getInformazioni().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try  {
-                    //http://www.lia.deis.unibo.it/Staff/LucaFoschini/htmlDocs/resources/laTex/scrivereTesiConLaTeX.pdf
-                    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + indagineBody.getInformazioni().get(position).getNomeFile();
-                    String file_path = downloadFile(indagineBody.getInformazioni().get(position).getFileUrl(), path);
-                    openFile(file_path, indagineBody.getInformazioni().get(position).getTipoFile());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
-    }
-
-    @Override
-    public void OnInfoRowClick(int position) {
-        Toast.makeText(this, "Click infoRow", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void OnSubmitClick(int position) {
-        Intent webViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
-        //webViewIntent.putExtra("URL", indagineBody.getQuestionari().get(position).getQualtricsUrl());
-        webViewIntent.putExtra("URL", "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
-        startActivity(webViewIntent);
     }
 
     private String downloadFile(String url, String path){
@@ -249,6 +212,41 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             Toast.makeText(this, "NOOOO SI SGHEEEE", Toast.LENGTH_LONG).show();
         }*/
     }
+
+    @Override
+    public void onInfoCardClick(final int position) {
+        //Toast.makeText(this, getInformazioniList().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, indagineBody.getInformazioni().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try  {
+                    //http://www.lia.deis.unibo.it/Staff/LucaFoschini/htmlDocs/resources/laTex/scrivereTesiConLaTeX.pdf
+                    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + indagineBody.getInformazioni().get(position).getNomeFile();
+                    String file_path = downloadFile(indagineBody.getInformazioni().get(position).getFileUrl(), path);
+                    openFile(file_path, indagineBody.getInformazioni().get(position).getTipoFile());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+    }
+
+    @Override
+    public void OnReciveClick(int questionarioPosition, int infoPosition) {
+        Toast.makeText(this, "Questionario " + questionarioPosition + ", info: " + infoPosition, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void OnSubmitClick(int position) {
+        Intent webViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
+        //webViewIntent.putExtra("URL", indagineBody.getQuestionari().get(position).getQualtricsUrl());
+        webViewIntent.putExtra("URL", "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
+        startActivity(webViewIntent);
+    }
+
+
 
 
 }

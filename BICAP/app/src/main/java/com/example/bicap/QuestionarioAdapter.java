@@ -29,16 +29,18 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
     private List<ParcelableBoolean> cardsVisibility;
     private Context context;
     private InformazioneRowAdapter.OnInformazioneRowListener onInformazioneRowListener;
+    private InformazioneRowReciver informazioneRowReciver;
     private OnSubmitClickListener onSubmitClickListener;
 
     QuestionarioAdapter(List<Questionario> questionarioList, Context context,
-                        InformazioneRowAdapter.OnInformazioneRowListener onInformazioneRowListener,
                         OnSubmitClickListener onSubmitClickListener,
+                        InformazioneRowReciver informazioneRowReciver,
                         List<ParcelableBoolean> cardsVisibility){
         this.questionarioList = questionarioList;
         this.context = context;
-        this.onInformazioneRowListener = onInformazioneRowListener;
+        //this.onInformazioneRowListener = onInformazioneRowListener;
         this.onSubmitClickListener = onSubmitClickListener;
+        this.informazioneRowReciver = informazioneRowReciver;
         this.cardsVisibility = cardsVisibility;
     }
 
@@ -46,7 +48,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
     @Override
     public QuestionarioViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.questionario_card, viewGroup, false);
-        QuestionarioViewHolder ivh = new QuestionarioViewHolder(v, onSubmitClickListener);
+        QuestionarioViewHolder ivh = new QuestionarioViewHolder(v, onSubmitClickListener, informazioneRowReciver);
         return ivh;
     }
 
@@ -77,7 +79,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
 
         List<Informazione> informazioneList = questionarioList.get(position).getInformazioni();
         if(informazioneList != null) {
-            InformazioneRowAdapter informazioneRowAdapter = new InformazioneRowAdapter(informazioneList, onInformazioneRowListener);
+            InformazioneRowAdapter informazioneRowAdapter = new InformazioneRowAdapter(informazioneList, holder);
             holder.infoListRecyclerView.setAdapter(informazioneRowAdapter);
         }
     }
@@ -92,15 +94,20 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public static class QuestionarioViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+
+    public static class QuestionarioViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, InformazioneRowAdapter.OnInformazioneRowListener{
         TextView titoloQuestionarioTextView;
         Button expandButton, submitButton;
         CardView cardView;
         ConstraintLayout expandableView;
         RecyclerView infoListRecyclerView;
         OnSubmitClickListener onSubmitClickListener;
+        InformazioneRowReciver informazioneRowReciver;
 
-        public QuestionarioViewHolder(View itemView, OnSubmitClickListener onSubmitClickListener){
+        public QuestionarioViewHolder(View itemView, OnSubmitClickListener onSubmitClickListener,
+                                      InformazioneRowReciver informazioneRowReciver){
             super(itemView);
             this.onSubmitClickListener = onSubmitClickListener;
             cardView = (CardView) itemView.findViewById(R.id.questionarioCardView);
@@ -109,6 +116,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
             titoloQuestionarioTextView = (TextView) itemView.findViewById(R.id.titoloQuestionarioTextView);
             expandButton = (Button) itemView.findViewById(R.id.expandImageButton);
             infoListRecyclerView = (RecyclerView) itemView.findViewById(R.id.infoListRecyclerView);
+            this.informazioneRowReciver = informazioneRowReciver;
             expandButton.setOnClickListener(this);
             submitButton.setOnClickListener(this);
         }
@@ -130,7 +138,6 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
                         TransitionManager.beginDelayedTransition(cardView, new AutoTransition());
                         expandableView.setVisibility(View.GONE);
                         expandButton.setBackgroundResource(R.drawable.ic_expand_more);
-
                     }
                     break;
                 default:
@@ -138,10 +145,21 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
             }
 
         }
+
+        @Override
+        public void OnInfoRowClick(int position) {
+            //Richiama il metodo OnClickRecive passando la
+            //posizione del questionario
+            informazioneRowReciver.OnReciveClick(getAdapterPosition(), position);
+        }
     }
 
     public interface OnSubmitClickListener{
         public void OnSubmitClick(int position);
+    }
+
+    public interface InformazioneRowReciver{
+        public void OnReciveClick(int questionarioPosition, int infoPosition);
     }
 
 
