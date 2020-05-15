@@ -1,12 +1,16 @@
 package com.example.bicap;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +18,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,8 +42,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private IndagineBody indagineBody;
     private ArrayList<ParcelableBoolean> questionariVisibilityList;
     private RecyclerView questionariRecyclerView;
-    private static String VISIBILITY_CARDS__STATE = "visibility_cards_state";
-    private static String INDAGINE_BODY_STATE = "indagine_body_state";
+    private static final int WEB_ACTIVITY_REQUEST_CODE = 1;
+    private static final String VISIBILITY_CARDS__STATE = "visibility_cards_state";
+    private static final String INDAGINE_BODY_STATE = "indagine_body_state";
+    private static final String URL = "url";
+    private static final String TITOLO_QUESTIONARIO = "titolo_questionario";
+    private static final String QUESTIONARIO_POSITION = "questionario_position";
     private static Bundle global_stat;
 
     @Override
@@ -79,6 +88,34 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             }
         }
         outState.putParcelableArrayList(VISIBILITY_CARDS__STATE, questionariVisibilityList);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case(WEB_ACTIVITY_REQUEST_CODE) :
+                if(resultCode == Activity.RESULT_OK){
+                    //Aggiornamento dello stato del questionario x
+                    Toast.makeText(this, "indagineBody.getInformazioni().get(position).getNomeFile()", Toast.LENGTH_LONG).show();
+                    int questionarioPosition = data.getExtras().getInt(QUESTIONARIO_POSITION);
+                    indagineBody.getQuestionari().get(questionarioPosition).setCompilato(true);
+                    if(questionariRecyclerView.getAdapter().getItemCount() != questionarioPosition + 1){
+                        View v = questionariRecyclerView.findViewHolderForAdapterPosition(questionarioPosition + 1).itemView;
+                        Button submitButton = (Button) v.findViewById(R.id.submitButton);
+                        submitButton.setEnabled(true);
+                        submitButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmit);
+                    }else{
+                        //Attiviamo termina indagine
+                        Button submitAllButton = (Button) findViewById(R.id.submitAllButton);
+                        submitAllButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmitIndagine);
+                        submitAllButton.setBackgroundResource(R.color.colorPrimary);
+                        submitAllButton.setEnabled(true);
+                        submitAllButton.setClickable(true);
+                    }
+
+                }
+        }
     }
 
     private class Asyn_DownLoadFile extends AsyncTask<Void, Void, Void> {
@@ -257,7 +294,9 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     public void OnSubmitClick(int position) {
         Intent webViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
         //webViewIntent.putExtra("URL", indagineBody.getQuestionari().get(position).getQualtricsUrl());
-        webViewIntent.putExtra("URL", "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
-        startActivity(webViewIntent);
+        webViewIntent.putExtra(URL, "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
+        webViewIntent.putExtra(TITOLO_QUESTIONARIO, indagineBody.getQuestionari().get(position).getTitolo());
+        webViewIntent.putExtra(QUESTIONARIO_POSITION, position);
+        startActivityForResult(webViewIntent, WEB_ACTIVITY_REQUEST_CODE);
     }
 }

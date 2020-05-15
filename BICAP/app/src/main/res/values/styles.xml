@@ -32,4 +32,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="EnableSubmit" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="DisableSubmit" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/colorDisabled</item>
+    </style>
+
+    <style name="EnableSubmitIndagine" parent="@style/Widget.AppCompat.Button">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <style name="DisableSubmitIndagine" parent="@style/Widget.AppCompat.Button">
+        <item name="android:textColor">#707070</item>
+    </style>
+
 </resources>

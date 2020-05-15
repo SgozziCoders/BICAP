@@ -23,7 +23,7 @@ public class Questionario {
 		this.qualtricsUrl = qualtricsUrl;
 		this.informazioni = informazioni;
 	}
-	
+
 	public String getTitolo() {
 		return titolo;
 	}

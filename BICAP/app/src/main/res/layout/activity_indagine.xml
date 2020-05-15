@@ -76,6 +76,7 @@
 
             <Button
                 android:id="@+id/submitAllButton"
+                style="@style/DisableSubmitIndagine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -84,10 +85,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="16dp"
-                android:background="@color/colorPrimary"
-                android:clickable="true"
+                android:clickable="false"
                 android:text="@string/termina_button"
-                android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/questionariRecycleView"

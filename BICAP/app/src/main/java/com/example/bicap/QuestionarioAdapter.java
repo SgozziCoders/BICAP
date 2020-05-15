@@ -67,7 +67,8 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
 
         if(position == 0){
             holder.submitButton.setEnabled(true);
-            holder.submitButton.setTextColor(Color.parseColor("#A3214A")); //Brutto ma funzionante
+            holder.submitButton.setTextAppearance(context, R.style.EnableSubmit);
+            //holder.submitButton.setTextColor(Color.parseColor("#A3214A")); //Brutto ma funzionante
         }
 
         if(position > 0){
