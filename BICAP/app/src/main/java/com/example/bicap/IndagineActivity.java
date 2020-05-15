@@ -103,7 +103,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             loadQuestionari(indagineBody);
         }
     }
-    
+
     private void loadInformazioniScroll(IndagineBody indagineBody){
         this.setTitle(indagineBody.getHead().getTitoloIndagine());
         TextView mTestoTematica = (TextView)findViewById(R.id.descrizioneTextView);
@@ -216,7 +216,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     @Override
     public void onInfoCardClick(final int position) {
         //Toast.makeText(this, getInformazioniList().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
-        Toast.makeText(this, indagineBody.getInformazioni().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, indagineBody.getInformazioni().get(position).getNomeFile(), Toast.LENGTH_LONG).show();
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -234,8 +234,23 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
     @Override
-    public void OnReciveClick(int questionarioPosition, int infoPosition) {
+    public void OnReciveClick(final int questionarioPosition, final int infoPosition) {
         Toast.makeText(this, "Questionario " + questionarioPosition + ", info: " + infoPosition, Toast.LENGTH_LONG).show();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try  {
+                    //http://www.lia.deis.unibo.it/Staff/LucaFoschini/htmlDocs/resources/laTex/scrivereTesiConLaTeX.pdf
+                    Informazione info = indagineBody.getQuestionari().get(questionarioPosition).getInformazioni().get(infoPosition);
+                    String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + info.getNomeFile();
+                    String file_path = downloadFile(info.getFileUrl(), path);
+                    openFile(file_path, info.getTipoFile());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     @Override
@@ -245,8 +260,4 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         webViewIntent.putExtra("URL", "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
         startActivity(webViewIntent);
     }
-
-
-
-
 }
