@@ -38,7 +38,6 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
                         List<ParcelableBoolean> cardsVisibility){
         this.questionarioList = questionarioList;
         this.context = context;
-        //this.onInformazioneRowListener = onInformazioneRowListener;
         this.onSubmitClickListener = onSubmitClickListener;
         this.informazioneRowReciver = informazioneRowReciver;
         this.cardsVisibility = cardsVisibility;
