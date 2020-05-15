@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.Indagi
                 .load(indaginiHeadList.getHeads().get(position).getImgUrl())
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
+                .signature(new ObjectKey(indaginiHeadList.getHeads().get(position).getultimaModifica()))
                 .into(holder.indagineImageView);
     }
 
