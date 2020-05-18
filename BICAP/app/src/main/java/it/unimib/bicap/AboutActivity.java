@@ -1,4 +1,4 @@
-package com.example.bicap;
+package it.unimib.bicap;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import com.example.bicap.R;
 
 public class AboutActivity extends AppCompatActivity {
 

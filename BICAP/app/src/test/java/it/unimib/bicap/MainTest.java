@@ -1,4 +1,4 @@
-package com.example.bicap;
+package it.unimib.bicap;
 
 import java.io.IOException;
 import java.util.*;
@@ -6,6 +6,10 @@ import org.junit.Test;
 import com.google.gson.*;
 import java.net.URL;
 import java.net.URLConnection;
+
+import it.unimib.bicap.model.IndagineBody;
+import it.unimib.bicap.model.IndaginiHeadList;
+
 import static org.junit.Assert.*;
 
 

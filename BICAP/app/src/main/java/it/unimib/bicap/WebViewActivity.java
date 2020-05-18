@@ -1,23 +1,20 @@
-package com.example.bicap;
+package it.unimib.bicap;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
+
+import com.example.bicap.R;
+
+import it.unimib.bicap.utils.Constants;
 
 public class WebViewActivity extends AppCompatActivity{
-
-    private static final String QUESTIONARIO_POSITION = "questionario_position";
-    private static final String TITOLO_QUESTIONARIO = "titolo_questionario";
     private static String questionarioUrl;
     private static int questionarioPosition;
 
@@ -26,8 +23,8 @@ public class WebViewActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         questionarioUrl = getIntent().getExtras().getString("url");
-        this.setTitle(getIntent().getExtras().getString(TITOLO_QUESTIONARIO));
-        questionarioPosition = getIntent().getExtras().getInt(QUESTIONARIO_POSITION);
+        this.setTitle(getIntent().getExtras().getString(Constants.TITOLO_QUESTIONARIO));
+        questionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION);
         WebView mWebview = findViewById(R.id.qualtricsWebView);
         mWebview.getSettings().setJavaScriptEnabled(true); // enable javascript
         mWebview.setWebViewClient(new QuestionarioWebClient());
@@ -65,7 +62,7 @@ public class WebViewActivity extends AppCompatActivity{
                 //Questionario terminato
                 Intent resultIntent = new Intent();
                 setResult(Activity.RESULT_OK, resultIntent);
-                resultIntent.putExtra(QUESTIONARIO_POSITION, questionarioPosition);
+                resultIntent.putExtra(Constants.QUESTIONARIO_POSITION, questionarioPosition);
                 finish();
             }
         }

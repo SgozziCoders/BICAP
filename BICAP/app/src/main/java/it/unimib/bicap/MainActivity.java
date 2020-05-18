@@ -1,4 +1,4 @@
-package com.example.bicap;
+package it.unimib.bicap;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -10,21 +10,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.JsonReader;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.example.bicap.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
+
+import it.unimib.bicap.adapter.IndagineAdapter;
+import it.unimib.bicap.model.IndagineHead;
+import it.unimib.bicap.model.IndaginiHeadList;
 
 public class MainActivity extends AppCompatActivity implements IndagineAdapter.OnCardListener {
 

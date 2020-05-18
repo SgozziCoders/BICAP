@@ -1,4 +1,4 @@
-package com.example.bicap;
+package it.unimib.bicap.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,17 +11,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
-
-import org.w3c.dom.Text;
+import com.example.bicap.R;
 
 import java.util.List;
+
+import it.unimib.bicap.model.Informazione;
 
 public class InformazioneAdapter extends RecyclerView.Adapter<InformazioneAdapter.InformazioneViewHolder> {
 
     private OnInfoCardListener onInfoCardListener;
     private List<Informazione> informazioneList;
 
-    InformazioneAdapter(List<Informazione> informazioneList, OnInfoCardListener onInfoCardListener){
+    public InformazioneAdapter(List<Informazione> informazioneList, OnInfoCardListener onInfoCardListener){
         this.informazioneList = informazioneList;
         this.onInfoCardListener = onInfoCardListener;
     }

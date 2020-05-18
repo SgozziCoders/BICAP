@@ -1,15 +1,10 @@
-package com.example.bicap;
+package it.unimib.bicap.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,8 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
-import java.util.ArrayList;
+import com.example.bicap.R;
+
 import java.util.List;
+
+import it.unimib.bicap.utils.ParcelableBoolean;
+import it.unimib.bicap.model.Informazione;
+import it.unimib.bicap.model.Questionario;
 
 public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapter.QuestionarioViewHolder> {
 
@@ -32,7 +32,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
     private InformazioneRowReciver informazioneRowReciver;
     private OnSubmitClickListener onSubmitClickListener;
 
-    QuestionarioAdapter(List<Questionario> questionarioList, Context context,
+    public QuestionarioAdapter(List<Questionario> questionarioList, Context context,
                         OnSubmitClickListener onSubmitClickListener,
                         InformazioneRowReciver informazioneRowReciver,
                         List<ParcelableBoolean> cardsVisibility){
@@ -74,6 +74,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         if(position > 0){
             if(questionarioList.get(position - 1).isCompilato()){
                 holder.submitButton.setEnabled(true);
+                holder.submitButton.setTextAppearance(context, R.style.EnableSubmit);
             }
         }
 

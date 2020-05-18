@@ -1,4 +1,4 @@
-package com.example.bicap;
+package it.unimib.bicap.utils;
 
 import android.os.Parcel;
 import android.os.Parcelable;

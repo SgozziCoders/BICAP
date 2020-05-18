@@ -1,32 +1,31 @@
-package com.example.bicap;
+package it.unimib.bicap;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.bicap.R;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import it.unimib.bicap.utils.FileManager;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -73,37 +72,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-    public void downLoadFile() {
-        try {
-            //String url = "https://raw.githubusercontent.com/SgozziCoders/BICAP/master/Json/listaIndagini.json";
-            String url = "https://files.bicap.quarzo.stream/listaIndagini.json";
-            URL u = new URL(url);
-            URLConnection urlcon = u.openConnection();
-            InputStream is = urlcon.getInputStream();
-
-            DataInputStream dis = new DataInputStream(is);
-            byte[] buffer = new byte[1024];
-            int length;
-
-            String PATH = getApplicationInfo().dataDir + "/listaIndagini.json";
-            FileOutputStream fos = new FileOutputStream(new File( PATH ));
-            while ((length = dis.read(buffer))>0) {
-                fos.write(buffer, 0, length);
-            }
-        } catch (IOException ioe) {
-            Log.e("SYNC getUpdate", "io error", ioe);
-        } catch (SecurityException se) {
-            Log.e("SYNC getUpdate", "security error", se);
-        }
-    }
-
     private class Asyn_SplashScreenDownLoadFile extends AsyncTask<Void, Void, Void> {
 
 
         @Override
         protected Void doInBackground(Void... voids) {
             //Controllare se il telefono è connesso ad internet
-            downLoadFile();
+            String url = "https://files.bicap.quarzo.stream/listaIndagini.json";
+            String path = getApplicationInfo().dataDir + "/listaIndagini.json";
+            FileManager.downloadFile(url, path);
             return null;
         }
 

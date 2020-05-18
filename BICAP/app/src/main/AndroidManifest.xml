@@ -18,18 +18,18 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".WebViewActivity"
+        <activity android:name="it.unimib.bicap.WebViewActivity"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".AboutActivity"
+            android:name="it.unimib.bicap.AboutActivity"
             android:label="@string/about" />
-        <activity android:name=".IndagineActivity" />
+        <activity android:name="it.unimib.bicap.IndagineActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name="it.unimib.bicap.MainActivity"
             android:label="@string/home" />
         <activity
-            android:name=".SplashScreenActivity"
+            android:name="it.unimib.bicap.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>

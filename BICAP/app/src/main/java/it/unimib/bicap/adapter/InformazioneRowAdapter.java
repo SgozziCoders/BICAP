@@ -1,24 +1,26 @@
-package com.example.bicap;
+package it.unimib.bicap.adapter;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.bicap.R;
+
 import java.util.List;
+
+import it.unimib.bicap.model.Informazione;
 
 public class InformazioneRowAdapter extends RecyclerView.Adapter<InformazioneRowAdapter.InformazioneRowViewHolder> {
 
     private List<Informazione> informazioneList;
     private OnInformazioneRowListener onInformazioneRowListener;
 
-    InformazioneRowAdapter(List<Informazione> informazioneList, OnInformazioneRowListener onInformazioneRowListener){
+    public InformazioneRowAdapter(List<Informazione> informazioneList, OnInformazioneRowListener onInformazioneRowListener){
         this.informazioneList = informazioneList;
         this.onInformazioneRowListener = onInformazioneRowListener;
     }

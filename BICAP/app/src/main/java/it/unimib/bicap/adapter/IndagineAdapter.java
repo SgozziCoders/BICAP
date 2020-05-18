@@ -1,6 +1,5 @@
-package com.example.bicap;
+package it.unimib.bicap.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
+import com.example.bicap.R;
 
-import java.util.List;
+import it.unimib.bicap.model.IndaginiHeadList;
 
 
 public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.IndagineViewHolder>{
@@ -22,7 +22,7 @@ public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.Indagi
     private OnCardListener onCardListener;
     private IndaginiHeadList indaginiHeadList;
 
-    IndagineAdapter(IndaginiHeadList indaginiHeadList, OnCardListener onCardListener){
+    public IndagineAdapter(IndaginiHeadList indaginiHeadList, OnCardListener onCardListener){
         this.indaginiHeadList = indaginiHeadList;
         this.onCardListener = onCardListener;
     }

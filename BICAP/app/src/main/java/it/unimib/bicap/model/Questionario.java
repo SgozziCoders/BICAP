@@ -1,4 +1,4 @@
-package com.example.bicap;
+package it.unimib.bicap.model;
 import java.util.List;
 
 public class Questionario {

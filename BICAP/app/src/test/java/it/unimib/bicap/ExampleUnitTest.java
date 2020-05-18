@@ -1,4 +1,4 @@
-package com.example.bicap;
+package it.unimib.bicap;
 
 import org.junit.Test;
 

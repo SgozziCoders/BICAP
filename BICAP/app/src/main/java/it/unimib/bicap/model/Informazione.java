@@ -1,4 +1,4 @@
-package com.example.bicap;
+package it.unimib.bicap.model;
 public class Informazione {
 
 	private String nomeFile;
