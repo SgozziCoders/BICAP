@@ -35,19 +35,19 @@ import it.unimib.bicap.utils.ParcelableBoolean;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver {
-    private IndagineBody indagineBody;
-    private ArrayList<ParcelableBoolean> questionariVisibilityList;
-    private RecyclerView questionariRecyclerView;
+    private IndagineBody mIndagineBody;
+    private ArrayList<ParcelableBoolean> mQuestionariVisibilityList;
+    private RecyclerView mQuestionariRecyclerView;
     private static Bundle global_stat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        questionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
+        mQuestionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
         if(savedInstanceState != null){
             global_stat = savedInstanceState;
         }else{
-            questionariVisibilityList = new ArrayList<ParcelableBoolean>();
+            mQuestionariVisibilityList = new ArrayList<ParcelableBoolean>();
         }
         new Asyn_LoadAll().execute(null, null, null);
     }
@@ -56,28 +56,28 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if(global_stat != null){
-            questionariVisibilityList = global_stat.getParcelableArrayList(Constants.VISIBILITY_CARDS__STATE);
+            mQuestionariVisibilityList = global_stat.getParcelableArrayList(Constants.VISIBILITY_CARDS__STATE);
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.INDAGINE_BODY_STATE, indagineBody);
-        questionariVisibilityList.clear();
-        int count = questionariRecyclerView.getAdapter().getItemCount();
-        View v;
-        ConstraintLayout cl;
-        for(int i = 0; i < count; i++){
-            v = questionariRecyclerView.findViewHolderForAdapterPosition(i).itemView;
-            cl = (ConstraintLayout) v.findViewById(R.id.expandableView);
-            if(cl.getVisibility() == View.GONE){
-                questionariVisibilityList.add(new ParcelableBoolean(false));
+        outState.putParcelable(Constants.INDAGINE_BODY_STATE, mIndagineBody);
+        mQuestionariVisibilityList.clear();
+        int mCount = mQuestionariRecyclerView.getAdapter().getItemCount();
+        View mView;
+        ConstraintLayout mConstraintLayout;
+        for(int i = 0; i < mCount; i++){
+            mView = mQuestionariRecyclerView.findViewHolderForAdapterPosition(i).itemView;
+            mConstraintLayout = (ConstraintLayout) mView.findViewById(R.id.expandableView);
+            if(mConstraintLayout.getVisibility() == View.GONE){
+                mQuestionariVisibilityList.add(new ParcelableBoolean(false));
             }else{
-                questionariVisibilityList.add(new ParcelableBoolean(true));
+                mQuestionariVisibilityList.add(new ParcelableBoolean(true));
             }
         }
-        outState.putParcelableArrayList(Constants.VISIBILITY_CARDS__STATE, questionariVisibilityList);
+        outState.putParcelableArrayList(Constants.VISIBILITY_CARDS__STATE, mQuestionariVisibilityList);
     }
 
     @Override
@@ -88,20 +88,20 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                 if(resultCode == Activity.RESULT_OK){
                     //Aggiornamento dello stato del questionario x
                     //Toast.makeText(this, "indagineBody.getInformazioni().get(position).getNomeFile()", Toast.LENGTH_LONG).show();
-                    int questionarioPosition = data.getExtras().getInt(Constants.QUESTIONARIO_POSITION);
-                    indagineBody.getQuestionari().get(questionarioPosition).setCompilato(true);
-                    if(questionariRecyclerView.getAdapter().getItemCount() != questionarioPosition + 1){
-                        View v = questionariRecyclerView.findViewHolderForAdapterPosition(questionarioPosition + 1).itemView;
-                        Button submitButton = (Button) v.findViewById(R.id.submitButton);
-                        submitButton.setEnabled(true);
-                        submitButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmit);
+                    int mQuestionarioPosition = data.getExtras().getInt(Constants.QUESTIONARIO_POSITION);
+                    mIndagineBody.getQuestionari().get(mQuestionarioPosition).setCompilato(true);
+                    if(mQuestionariRecyclerView.getAdapter().getItemCount() != mQuestionarioPosition + 1){
+                        View mView = mQuestionariRecyclerView.findViewHolderForAdapterPosition(mQuestionarioPosition + 1).itemView;
+                        Button mSubmitButton = (Button) mView.findViewById(R.id.submitButton);
+                        mSubmitButton.setEnabled(true);
+                        mSubmitButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmit);
                     }else{
                         //Attiviamo termina indagine se è stato compilato l'ultimo questionario
-                        Button submitAllButton = (Button) findViewById(R.id.submitAllButton);
-                        submitAllButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmitIndagine);
-                        submitAllButton.setBackgroundResource(R.color.colorPrimary);
-                        submitAllButton.setEnabled(true);
-                        submitAllButton.setClickable(true);
+                        Button mSubmitAllButton = (Button) findViewById(R.id.submitAllButton);
+                        mSubmitAllButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmitIndagine);
+                        mSubmitAllButton.setBackgroundResource(R.color.colorPrimary);
+                        mSubmitAllButton.setEnabled(true);
+                        mSubmitAllButton.setClickable(true);
                     }
                 }
         }
@@ -111,13 +111,13 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
         @Override
         protected Void doInBackground(Void... voids) {
-            IndagineHead indagineHead = getIntent().getParcelableExtra("Indagine");
+            IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
             if(global_stat != null){
-                indagineBody = global_stat.getParcelable(Constants.INDAGINE_BODY_STATE);
+                mIndagineBody = global_stat.getParcelable(Constants.INDAGINE_BODY_STATE);
             }else{
-                indagineBody = getIndagineBody(indagineHead);
+                mIndagineBody = getIndagineBody(mIndagineHead);
             }
-            indagineBody.setHead(indagineHead);
+            mIndagineBody.setHead(mIndagineHead);
             return null;
         }
 
@@ -125,22 +125,20 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             setContentView(R.layout.activity_indagine);
-            loadInformazioniScroll(indagineBody);
-            loadQuestionari(indagineBody);
+            loadInformazioniScroll(mIndagineBody);
+            loadQuestionari(mIndagineBody);
             setEneableSubmitAll();
         }
     }
 
-
-
     private void setEneableSubmitAll(){
-        int count = indagineBody.getQuestionari().size() - 1;
-        if(indagineBody.getQuestionari().get(count).isCompilato()){
-            Button submitAllButton = (Button) findViewById(R.id.submitAllButton);
-            submitAllButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmitIndagine);
-            submitAllButton.setBackgroundResource(R.color.colorPrimary);
-            submitAllButton.setEnabled(true);
-            submitAllButton.setClickable(true);
+        int mCount = mIndagineBody.getQuestionari().size() - 1;
+        if(mIndagineBody.getQuestionari().get(mCount).isCompilato()){
+            Button mSubmitAllButton = (Button) findViewById(R.id.submitAllButton);
+            mSubmitAllButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmitIndagine);
+            mSubmitAllButton.setBackgroundResource(R.color.colorPrimary);
+            mSubmitAllButton.setEnabled(true);
+            mSubmitAllButton.setClickable(true);
         }
     }
 
@@ -150,48 +148,45 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         mTestoTematica.setText(indagineBody.getTematica());
 
         if(indagineBody.getInformazioni() != null) {
-            RecyclerView rv = (RecyclerView) findViewById(R.id.infoScrollRecycleView);
-            rv.setHasFixedSize(true);
+            RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.infoScrollRecycleView);
+            mRecyclerView.setHasFixedSize(true);
 
-            LinearLayoutManager llm = new LinearLayoutManager(this);
-            llm.setOrientation(LinearLayoutManager.HORIZONTAL);
-            rv.setLayoutManager(llm);
+            LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+            mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-            InformazioneAdapter adapter = new InformazioneAdapter(indagineBody.getInformazioni(), this);
-            rv.setAdapter(adapter);
+            InformazioneAdapter mAdapter = new InformazioneAdapter(indagineBody.getInformazioni(), this);
+            mRecyclerView.setAdapter(mAdapter);
         }else{
-            TextView infoTextView = (TextView) findViewById(R.id.informazioniTextView);
-            infoTextView.setVisibility(View.GONE);
+            TextView mInfoTextView = (TextView) findViewById(R.id.informazioniTextView);
+            mInfoTextView.setVisibility(View.GONE);
         }
     }
 
     private  void loadQuestionari(IndagineBody indagineBody){
-        questionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
-        questionariRecyclerView.setNestedScrollingEnabled(false);
-        LinearLayoutManager llmQuestionari = new LinearLayoutManager(this);
-        llmQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
-        questionariRecyclerView.setLayoutManager(llmQuestionari);
+        mQuestionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
+        mQuestionariRecyclerView.setNestedScrollingEnabled(false);
+        LinearLayoutManager mLinearLayoutManagerQuestionari = new LinearLayoutManager(this);
+        mLinearLayoutManagerQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
+        mQuestionariRecyclerView.setLayoutManager(mLinearLayoutManagerQuestionari);
 
-        QuestionarioAdapter questionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(),
-                this, this, this, questionariVisibilityList);
-
-        questionariRecyclerView.setAdapter(questionarioAdapter);
+        QuestionarioAdapter mQuestionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(),
+                this, this, this, mQuestionariVisibilityList);
+        mQuestionariRecyclerView.setAdapter(mQuestionarioAdapter);
     }
 
     private IndagineBody getIndagineBody(IndagineHead indagineHead) {
-        int id = indagineHead.getId();
-        String fileName = "Indagine" + id + ".json";
-        //String url = "https://raw.githubusercontent.com/SgozziCoders/BICAP/master/Json/" + fileName;
-        String url = "https://files.bicap.quarzo.stream/"+ indagineHead.getId() + "/indagine.json";
-        String path = getApplicationInfo().dataDir + "/" +fileName;
+        int mId = indagineHead.getId();
+        String mFileName = "Indagine" + mId + ".json";
+        String mUrl = "https://files.bicap.quarzo.stream/"+ indagineHead.getId() + "/indagine.json";
+        String mPath = getApplicationInfo().dataDir + "/" +mFileName;
 
-        FileManager.downloadFile(url, path);
+        FileManager.downloadFile(mUrl, mPath);
 
         try {
-            Gson gson = new Gson();
-            BufferedReader br = new BufferedReader(new FileReader(path));
-            IndagineBody indagineBody = gson.fromJson(br, IndagineBody.class);
-            return indagineBody;
+            BufferedReader mBufferedReader = new BufferedReader(new FileReader(mPath));
+            IndagineBody mIndagineBody = new Gson().fromJson(mBufferedReader, IndagineBody.class);
+            return mIndagineBody;
         }catch (Exception ex){
             ex.printStackTrace();
             return null;
@@ -200,28 +195,27 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     @Override
     public void onInfoCardClick(final int position) {
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + indagineBody.getInformazioni().get(position).getNomeFile();
-        String url = indagineBody.getInformazioni().get(position).getFileUrl();
-        String mime = indagineBody.getInformazioni().get(position).getTipoFile();
-        new Asyn_OpenFile(url, path, mime, this).execute();
+        String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mIndagineBody.getInformazioni().get(position).getNomeFile();
+        String mUrl = mIndagineBody.getInformazioni().get(position).getFileUrl();
+        String mMime = mIndagineBody.getInformazioni().get(position).getTipoFile();
+        new Asyn_OpenFile(mUrl, mPath, mMime, this).execute();
     }
 
     @Override
     public void OnReciveClick(final int questionarioPosition, final int infoPosition) {
-        Informazione info = indagineBody.getQuestionari().get(questionarioPosition).getInformazioni().get(infoPosition);
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + info.getNomeFile();
-        String url = info.getFileUrl();
-        String mime = info.getTipoFile();
-        new Asyn_OpenFile(url, path, mime, this).execute();
+        Informazione mInfo = mIndagineBody.getQuestionari().get(questionarioPosition).getInformazioni().get(infoPosition);
+        String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mInfo.getNomeFile();
+        String mUrl = mInfo.getFileUrl();
+        String mMime = mInfo.getTipoFile();
+        new Asyn_OpenFile(mUrl, mPath, mMime, this).execute();
     }
 
     @Override
     public void OnSubmitClick(int position) {
-        Intent webViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
-        //webViewIntent.putExtra("URL", indagineBody.getQuestionari().get(position).getQualtricsUrl());
-        webViewIntent.putExtra(Constants.URL, "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
-        webViewIntent.putExtra(Constants.TITOLO_QUESTIONARIO, indagineBody.getQuestionari().get(position).getTitolo());
-        webViewIntent.putExtra(Constants.QUESTIONARIO_POSITION, position);
-        startActivityForResult(webViewIntent, Constants.WEB_ACTIVITY_REQUEST_CODE);
+        Intent mWebViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
+        mWebViewIntent.putExtra(Constants.URL, "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
+        mWebViewIntent.putExtra(Constants.TITOLO_QUESTIONARIO, mIndagineBody.getQuestionari().get(position).getTitolo());
+        mWebViewIntent.putExtra(Constants.QUESTIONARIO_POSITION, position);
+        startActivityForResult(mWebViewIntent, Constants.WEB_ACTIVITY_REQUEST_CODE);
     }
 }

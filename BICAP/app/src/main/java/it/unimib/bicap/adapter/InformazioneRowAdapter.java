@@ -17,26 +17,25 @@ import it.unimib.bicap.model.Informazione;
 
 public class InformazioneRowAdapter extends RecyclerView.Adapter<InformazioneRowAdapter.InformazioneRowViewHolder> {
 
-    private List<Informazione> informazioneList;
-    private OnInformazioneRowListener onInformazioneRowListener;
+    private List<Informazione> mInformazioneList;
+    private OnInformazioneRowListener mOnInformazioneRowListener;
 
-    public InformazioneRowAdapter(List<Informazione> informazioneList, OnInformazioneRowListener onInformazioneRowListener){
-        this.informazioneList = informazioneList;
-        this.onInformazioneRowListener = onInformazioneRowListener;
+    public InformazioneRowAdapter(List<Informazione> mInformazioneList, OnInformazioneRowListener mOnInformazioneRowListener){
+        this.mInformazioneList = mInformazioneList;
+        this.mOnInformazioneRowListener = mOnInformazioneRowListener;
     }
 
     @NonNull
     @Override
     public InformazioneRowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.info_row, viewGroup, false);
-        InformazioneRowViewHolder irvh = new InformazioneRowViewHolder(v, onInformazioneRowListener);
-        return irvh;
+        View mView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.info_row, viewGroup, false);
+        return new InformazioneRowViewHolder(mView, mOnInformazioneRowListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull InformazioneRowViewHolder holder, int position) {
-        holder.infoTextView.setText(informazioneList.get(position).getNomeFile());
-        setIconImage(informazioneList.get(position).getTipoFile(), holder.iconImageView);
+        holder.mInfoTextView.setText(mInformazioneList.get(position).getNomeFile());
+        setIconImage(mInformazioneList.get(position).getTipoFile(), holder.mIconImageView);
     }
 
     private void setIconImage(String tipoFile, ImageView iconImageView) {
@@ -66,26 +65,26 @@ public class InformazioneRowAdapter extends RecyclerView.Adapter<InformazioneRow
 
     @Override
     public int getItemCount() {
-        return informazioneList.size();
+        return mInformazioneList.size();
     }
 
 
     public class InformazioneRowViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView infoTextView;
-        ImageView iconImageView;
-        OnInformazioneRowListener onInformazioneRowListener;
+        TextView mInfoTextView;
+        ImageView mIconImageView;
+        OnInformazioneRowListener mOnInformazioneRowListener;
 
-        public InformazioneRowViewHolder(@NonNull View itemView, OnInformazioneRowListener onInformazioneRowListener) {
+        public InformazioneRowViewHolder(@NonNull View itemView, OnInformazioneRowListener mOnInformazioneRowListener) {
             super(itemView);
-            infoTextView = (TextView) itemView.findViewById(R.id.infoTextView);
-            iconImageView = (ImageView) itemView.findViewById(R.id.iconImageView);
-            this.onInformazioneRowListener = onInformazioneRowListener;
+            mInfoTextView = (TextView) itemView.findViewById(R.id.infoTextView);
+            mIconImageView = (ImageView) itemView.findViewById(R.id.iconImageView);
+            this.mOnInformazioneRowListener = mOnInformazioneRowListener;
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            onInformazioneRowListener.OnInfoRowClick(getAdapterPosition());
+            mOnInformazioneRowListener.OnInfoRowClick(getAdapterPosition());
         }
     }
 

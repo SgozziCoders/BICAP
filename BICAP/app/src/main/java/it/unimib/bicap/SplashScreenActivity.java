@@ -39,34 +39,34 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void openMainActivity() {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        Timer mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                startActivity(intent);
+                Intent mIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                startActivity(mIntent);
                 finish();
             }
         }, 1500);
     }
 
     private void setSplashScreenAnimation() {
-        ImageView bImageView = (ImageView) findViewById(R.id.bImageView);
-        ImageView icapImageView = (ImageView) findViewById(R.id.icapImageView);
-        Animation bAnimation = AnimationUtils.loadAnimation(this, R.anim.b_animation);
-        bAnimation.setFillAfter(true);
-        Animation icapAnimation = AnimationUtils.loadAnimation(this, R.anim.icap_animation);
-        icapAnimation.setFillAfter(true);
-        bImageView.setAnimation(bAnimation);
-        icapImageView.setAnimation(icapAnimation);
+        ImageView mBImageView = (ImageView) findViewById(R.id.bImageView);
+        ImageView mIcapImageView = (ImageView) findViewById(R.id.icapImageView);
+        Animation mBAnimation = AnimationUtils.loadAnimation(this, R.anim.b_animation);
+        mBAnimation.setFillAfter(true);
+        Animation mIcapAnimation = AnimationUtils.loadAnimation(this, R.anim.icap_animation);
+        mIcapAnimation.setFillAfter(true);
+        mBImageView.setAnimation(mBAnimation);
+        mIcapImageView.setAnimation(mIcapAnimation);
     }
 
     private void setVersionText() {
-        TextView versionTextView = (TextView) findViewById(R.id.versionSplashTextView);
+        TextView mVersionTextView = (TextView) findViewById(R.id.versionSplashTextView);
         try {
-            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            versionTextView.setText(versionTextView.getText() + " " + version);
+            PackageInfo mPackageInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            String mVersion = mPackageInfo.versionName;
+            mVersionTextView.setText(mVersionTextView.getText() + " " + mVersion);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -78,15 +78,14 @@ public class SplashScreenActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             //Controllare se il telefono è connesso ad internet
-            String url = "https://files.bicap.quarzo.stream/listaIndagini.json";
-            String path = getApplicationInfo().dataDir + "/listaIndagini.json";
-            FileManager.downloadFile(url, path);
+            String mUrl = "https://files.bicap.quarzo.stream/listaIndagini.json";
+            String mPath = getApplicationInfo().dataDir + "/listaIndagini.json";
+            FileManager.downloadFile(mUrl, mPath);
             return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
-            // TODO Auto-generated method stub
             super.onPostExecute(result);
             openMainActivity();
         }

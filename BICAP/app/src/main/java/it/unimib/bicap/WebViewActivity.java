@@ -15,20 +15,20 @@ import com.example.bicap.R;
 import it.unimib.bicap.utils.Constants;
 
 public class WebViewActivity extends AppCompatActivity{
-    private static String questionarioUrl;
-    private static int questionarioPosition;
+    private static String mQuestionarioUrl;
+    private static int mQuestionarioPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-        questionarioUrl = getIntent().getExtras().getString("url");
+        mQuestionarioUrl = getIntent().getExtras().getString("url");
         this.setTitle(getIntent().getExtras().getString(Constants.TITOLO_QUESTIONARIO));
-        questionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION);
+        mQuestionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION);
         WebView mWebview = findViewById(R.id.qualtricsWebView);
         mWebview.getSettings().setJavaScriptEnabled(true); // enable javascript
         mWebview.setWebViewClient(new QuestionarioWebClient());
-        mWebview.loadUrl(questionarioUrl);
+        mWebview.loadUrl(mQuestionarioUrl);
         mWebview.loadUrl("http://www.google.com/");
     }
 
@@ -58,11 +58,11 @@ public class WebViewActivity extends AppCompatActivity{
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            if(url != questionarioUrl){
+            if(url != mQuestionarioUrl){
                 //Questionario terminato
                 Intent resultIntent = new Intent();
                 setResult(Activity.RESULT_OK, resultIntent);
-                resultIntent.putExtra(Constants.QUESTIONARIO_POSITION, questionarioPosition);
+                resultIntent.putExtra(Constants.QUESTIONARIO_POSITION, mQuestionarioPosition);
                 finish();
             }
         }

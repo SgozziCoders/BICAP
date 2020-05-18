@@ -19,34 +19,33 @@ import it.unimib.bicap.model.Informazione;
 
 public class InformazioneAdapter extends RecyclerView.Adapter<InformazioneAdapter.InformazioneViewHolder> {
 
-    private OnInfoCardListener onInfoCardListener;
-    private List<Informazione> informazioneList;
+    private OnInfoCardListener mOnInfoCardListener;
+    private List<Informazione> mInformazioneList;
 
-    public InformazioneAdapter(List<Informazione> informazioneList, OnInfoCardListener onInfoCardListener){
-        this.informazioneList = informazioneList;
-        this.onInfoCardListener = onInfoCardListener;
+    public InformazioneAdapter(List<Informazione> mInformazioneList, OnInfoCardListener mOnInfoCardListener){
+        this.mInformazioneList = mInformazioneList;
+        this.mOnInfoCardListener = mOnInfoCardListener;
     }
 
     @Override
     public int getItemCount(){
-        return informazioneList.size();
+        return mInformazioneList.size();
     }
 
     @Override
     public InformazioneViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.square_info_card, viewGroup, false);
-        InformazioneViewHolder ivh = new InformazioneViewHolder(v, onInfoCardListener);
-        return ivh;
+        View mView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.square_info_card, viewGroup, false);
+        return new InformazioneViewHolder(mView, mOnInfoCardListener);
     }
 
     public void onBindViewHolder(@NonNull InformazioneViewHolder holder, int position) {
-        holder.informazioneTextView.setText(informazioneList.get(position).getNomeFile());
-        Glide.with(holder.informazioneImageView.getContext())
-                .load(informazioneList.get(position).getThumbnailUrl())
+        holder.mInformazioneTextView.setText(mInformazioneList.get(position).getNomeFile());
+        Glide.with(holder.mInformazioneImageView.getContext())
+                .load(mInformazioneList.get(position).getThumbnailUrl())
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
-                .signature(new ObjectKey(informazioneList.get(position).getultimaModifica()))
-                .into(holder.informazioneImageView);
+                .signature(new ObjectKey(mInformazioneList.get(position).getultimaModifica()))
+                .into(holder.mInformazioneImageView);
     }
 
     @Override
@@ -55,21 +54,21 @@ public class InformazioneAdapter extends RecyclerView.Adapter<InformazioneAdapte
     }
 
     public static class InformazioneViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        ImageView informazioneImageView;
-        TextView informazioneTextView;
-        OnInfoCardListener onInfoCardListener;
+        ImageView mInformazioneImageView;
+        TextView mInformazioneTextView;
+        OnInfoCardListener mOnInfoCardListener;
 
-        public InformazioneViewHolder(View itemView, OnInfoCardListener onInfoCardListener){
+        public InformazioneViewHolder(View itemView, OnInfoCardListener mOnInfoCardListener){
             super(itemView);
-            informazioneImageView = (ImageView) itemView.findViewById(R.id.informazioneImageView);
-            informazioneTextView = (TextView) itemView.findViewById(R.id.informazioneTextView);
-            this.onInfoCardListener = onInfoCardListener;
+            mInformazioneImageView = (ImageView) itemView.findViewById(R.id.informazioneImageView);
+            mInformazioneTextView = (TextView) itemView.findViewById(R.id.informazioneTextView);
+            this.mOnInfoCardListener = mOnInfoCardListener;
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            onInfoCardListener.onInfoCardClick(getAdapterPosition());
+            mOnInfoCardListener.onInfoCardClick(getAdapterPosition());
         }
     }
 

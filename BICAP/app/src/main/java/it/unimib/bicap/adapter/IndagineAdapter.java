@@ -19,38 +19,36 @@ import it.unimib.bicap.model.IndaginiHeadList;
 
 public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.IndagineViewHolder>{
 
-    private OnCardListener onCardListener;
-    private IndaginiHeadList indaginiHeadList;
+    private OnCardListener mOnCardListener;
+    private IndaginiHeadList mindaginiHeadList;
 
     public IndagineAdapter(IndaginiHeadList indaginiHeadList, OnCardListener onCardListener){
-        this.indaginiHeadList = indaginiHeadList;
-        this.onCardListener = onCardListener;
+        this.mindaginiHeadList = indaginiHeadList;
+        this.mOnCardListener = onCardListener;
     }
 
     @Override
     public int getItemCount() {
-        return indaginiHeadList.getHeads().size();
+        return mindaginiHeadList.getHeads().size();
     }
 
     @Override
     public IndagineViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.indagine_card, viewGroup, false);
-        IndagineViewHolder ivh = new IndagineViewHolder(v, onCardListener);
-        return ivh;
+        View mView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.indagine_card, viewGroup, false);
+        return new IndagineViewHolder(mView, mOnCardListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull IndagineViewHolder holder, int position) {
-        holder.titoloTextView.setText(indaginiHeadList.getHeads().get(position).getTitoloIndagine());
-        holder.erogatoreTextView.setText(indaginiHeadList.getHeads().get(position).getErogatore());
+        holder.mTitoloTextView.setText(mindaginiHeadList.getHeads().get(position).getTitoloIndagine());
+        holder.mErogatoreTextView.setText(mindaginiHeadList.getHeads().get(position).getErogatore());
 
-        //https://stackoverflow.com/questions/32136973/how-to-get-a-context-in-a-recycler-view-adapter
-        Glide.with(holder.indagineImageView.getContext())
-                .load(indaginiHeadList.getHeads().get(position).getImgUrl())
+        Glide.with(holder.mIndagineImageView.getContext())
+                .load(mindaginiHeadList.getHeads().get(position).getImgUrl())
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
-                .signature(new ObjectKey(indaginiHeadList.getHeads().get(position).getultimaModifica()))
-                .into(holder.indagineImageView);
+                .signature(new ObjectKey(mindaginiHeadList.getHeads().get(position).getultimaModifica()))
+                .into(holder.mIndagineImageView);
     }
 
     @Override
@@ -59,25 +57,25 @@ public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.Indagi
     }
 
     public static class IndagineViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        CardView cv;
-        TextView titoloTextView;
-        TextView erogatoreTextView;
-        ImageView indagineImageView;
-        OnCardListener onCardListener;
+        CardView mCardView;
+        TextView mTitoloTextView;
+        TextView mErogatoreTextView;
+        ImageView mIndagineImageView;
+        OnCardListener mOnCardListener;
 
-        public IndagineViewHolder(View itemView, OnCardListener onCardListener) {
+        public IndagineViewHolder(View itemView, OnCardListener mOnCardListener) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.model_card);
-            titoloTextView = (TextView)itemView.findViewById(R.id.titoloTextView);
-            erogatoreTextView = (TextView)itemView.findViewById(R.id.erogatoreTextView);
-            indagineImageView = (ImageView)itemView.findViewById(R.id.indagineImageView);
-            this.onCardListener = onCardListener;
+            mCardView = (CardView)itemView.findViewById(R.id.model_card);
+            mTitoloTextView = (TextView)itemView.findViewById(R.id.titoloTextView);
+            mErogatoreTextView = (TextView)itemView.findViewById(R.id.erogatoreTextView);
+            mIndagineImageView = (ImageView)itemView.findViewById(R.id.indagineImageView);
+            this.mOnCardListener = mOnCardListener;
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            onCardListener.onCardClick(getAdapterPosition());
+            mOnCardListener.onCardClick(getAdapterPosition());
         }
     }
 

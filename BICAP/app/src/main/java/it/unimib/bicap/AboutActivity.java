@@ -19,11 +19,11 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void setVersionText(){
-        TextView versionAboutTextView = (TextView) findViewById(R.id.versionAboutTextView);
+        TextView mVersionAboutTextView = (TextView) findViewById(R.id.versionAboutTextView);
         try {
-            PackageInfo pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-            String version = pInfo.versionName;
-            versionAboutTextView.setText(versionAboutTextView.getText() + " " + version);
+            PackageInfo mPackageInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+            String mVersion = mPackageInfo.versionName;
+            mVersionAboutTextView.setText(mVersionAboutTextView.getText() + " " + mVersion);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

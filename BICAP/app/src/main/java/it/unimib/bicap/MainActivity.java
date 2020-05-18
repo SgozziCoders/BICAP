@@ -32,23 +32,21 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //https://code.tutsplus.com/it/tutorials/getting-started-with-recyclerview-and-cardview-on-android--cms-23465
-        RecyclerView rv = (RecyclerView)findViewById(R.id.indaginiRecycleView);
-        rv.setHasFixedSize(true); // Se si è certi che le dimensioni del RecyclerView non cambieranno, è possibile aggiungere la seguente stringa per migliorare le prestazioni:
+        RecyclerView mRecyclerView = (RecyclerView)findViewById(R.id.indaginiRecycleView);
+        mRecyclerView.setHasFixedSize(true);
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
-        rv.setLayoutManager(llm);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
-        IndaginiHeadList indaginiHeadList = getIndaginiHeadList();
+        IndaginiHeadList mIndaginiHeadList = getIndaginiHeadList();
 
-        IndagineAdapter adapter = new IndagineAdapter(indaginiHeadList, this);
-        rv.setAdapter(adapter);
+        IndagineAdapter mAdapter = new IndagineAdapter(mIndaginiHeadList, this);
+        mRecyclerView.setAdapter(mAdapter);
 
         verifyStoragePermissions(this);
     }
 
-    //https://stackoverflow.com/questions/8854359/exception-open-failed-eacces-permission-denied-on-android
     public static void verifyStoragePermissions(Activity activity) {
         final int REQUEST_EXTERNAL_STORAGE = 1;
         String[] PERMISSIONS_STORAGE = {
@@ -56,11 +54,11 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
 
-        // Check if we have write permission
+        //  Controllo se si hanno i permessi di scrittura
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
+            // Pompt per richiedere i permessi di scrittura
             ActivityCompat.requestPermissions(
                     activity,
                     PERMISSIONS_STORAGE,
@@ -68,32 +66,13 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
             );
         }
     }
-    //PROVVISORIO
+
     public IndaginiHeadList getIndaginiHeadList() {
-/*
-        IndaginiHeadList indaginiHeadList = new IndaginiHeadList();
-        List<IndagineHead> lista = new ArrayList<IndagineHead>();
-
-        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/avatars/default2.jpg", 830616));
-        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/avatars/default2.jpg", 829533));
-        lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/avatars/default2.jpg", 830075));
-        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/avatars/default2.jpg", 830616));
-        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/avatars/default2.jpg", 829533));
-        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/avatars/default2.jpg", 830616));
-        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/avatars/default2.jpg", 829533));
-        lista.add(new IndagineHead("Droghe","Alessio Villani", "https://mangadex.org/images/avatars/default2.jpg", 830075));
-        lista.add(new IndagineHead("Colori","Michele Rago", "https://mangadex.org/images/avatars/default2.jpg", 830616));
-        lista.add(new IndagineHead("Alimenti","Gianluca Quaglia", "https://mangadex.org/images/avatars/default2.jpg", 829533));
-
-
-        indaginiHeadList.setHeads(lista);
-*/
         try {
-            String PATH = getApplicationInfo().dataDir + "/listaIndagini.json";
-            Gson gson = new Gson();
-            BufferedReader br = new BufferedReader(new FileReader(PATH));
-            IndaginiHeadList indaginiHeadList = gson.fromJson(br, IndaginiHeadList.class);
-            return indaginiHeadList;
+            String mPath = getApplicationInfo().dataDir + "/listaIndagini.json";
+            BufferedReader mBufferedReader = new BufferedReader(new FileReader(mPath));
+            IndaginiHeadList mIndaginiHeadList = new Gson().fromJson(mBufferedReader, IndaginiHeadList.class);
+            return mIndaginiHeadList;
         } catch (Exception ex){
             return  null;
         }
@@ -101,16 +80,16 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
 
     @Override
     public void onCardClick(int position) {
-            IndagineHead indagineHead = getIndaginiHeadList().getHeads().get(position);
-            Intent intent = new Intent(MainActivity.this, IndagineActivity.class);
-            intent.putExtra("Indagine", indagineHead);
-            startActivity(intent);
+            IndagineHead mIndagineHead = getIndaginiHeadList().getHeads().get(position);
+            Intent mIntent = new Intent(MainActivity.this, IndagineActivity.class);
+            mIntent.putExtra("Indagine", mIndagineHead);
+            startActivity(mIntent);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.bicap_menu, menu);
+        MenuInflater mInflater = getMenuInflater();
+        mInflater.inflate(R.menu.bicap_menu, menu);
         return true;
     }
 
@@ -118,25 +97,24 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
-                PackageInfo pInfo = null;
+                PackageInfo mPackageInfo = null;
                 try {
-                    //https://stackoverflow.com/questions/42491652/send-mail-intent-extra-email-does-not-work
-                    pInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
-                    String version = pInfo.versionName;
+                    mPackageInfo = this.getPackageManager().getPackageInfo(getPackageName(), 0);
+                    String mVersion = mPackageInfo.versionName;
 
-                    Intent intent = new Intent(Intent.ACTION_SEND);
-                    intent.setType("message/rfc822");
-                    intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"bicap.unimib+support@gmail.com"});
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "[Bicap" + version + "]");
-                    startActivity(intent);
+                    Intent mIntent = new Intent(Intent.ACTION_SEND);
+                    mIntent.setType("message/rfc822");
+                    mIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"bicap.unimib+support@gmail.com"});
+                    mIntent.putExtra(Intent.EXTRA_SUBJECT, "[Bicap" + mVersion + "]");
+                    startActivity(mIntent);
                     return true;
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                     return false;
                 }
             case R.id.item2:
-                Intent about = new Intent(MainActivity.this, AboutActivity.class);
-                startActivity(about);
+                Intent mAbout = new Intent(MainActivity.this, AboutActivity.class);
+                startActivity(mAbout);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

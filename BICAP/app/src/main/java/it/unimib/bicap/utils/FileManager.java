@@ -20,19 +20,18 @@ import java.net.URLConnection;
 public class FileManager {
     public static boolean downloadFile(String url, String path){
         try {
-            URL u = new URL(url);
-            URLConnection urlcon = u.openConnection();
-            int contentLength = urlcon.getContentLength();
-            InputStream is = urlcon.getInputStream();
+            URL mUrl = new URL(url);
+            URLConnection mUrlCon = mUrl.openConnection();
+            int contentLength = mUrlCon.getContentLength();
+            InputStream is = mUrlCon.getInputStream();
 
-            DataInputStream dis = new DataInputStream(is);
+            DataInputStream mDataInputStream = new DataInputStream(is);
+            byte[] mBuffer = new byte[contentLength];
+            int mLength;
+            FileOutputStream mFileOutputStream = new FileOutputStream(new File( path ));
 
-            byte[] buffer = new byte[contentLength];
-            int length;
-
-            FileOutputStream fos = new FileOutputStream(new File( path ));
-            while ((length = dis.read(buffer))>0) {
-                fos.write(buffer, 0, length);
+            while ((mLength = mDataInputStream.read(mBuffer))>0) {
+                mFileOutputStream.write(mBuffer, 0, mLength);
             }
             return true;
         } catch (Exception ex) {
@@ -41,11 +40,11 @@ public class FileManager {
     }
 
     public static void openFile(String path, String mime, Context context){
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-        sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        sendIntent.setDataAndType(Uri.parse(path),mime);
+        Intent mSendIntent = new Intent(Intent.ACTION_VIEW);
+        mSendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        mSendIntent.setDataAndType(Uri.parse(path),mime);
         try{
-            context.startActivity(sendIntent);
+            context.startActivity(mSendIntent);
         }catch(ActivityNotFoundException e){
             e.printStackTrace();
         }
