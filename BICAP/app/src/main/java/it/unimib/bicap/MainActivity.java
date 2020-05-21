@@ -15,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.example.bicap.R;
+import it.unimib.bicap.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements IndagineAdapter.O
 
     public IndaginiHeadList getIndaginiHeadList() {
         try {
-            String mPath = getApplicationInfo().dataDir + "/listaIndagini.json";
+            String mPath = getApplicationInfo().dataDir + "/tmp/listaIndagini.json";
             BufferedReader mBufferedReader = new BufferedReader(new FileReader(mPath));
             IndaginiHeadList mIndaginiHeadList = new Gson().fromJson(mBufferedReader, IndaginiHeadList.class);
             return mIndaginiHeadList;

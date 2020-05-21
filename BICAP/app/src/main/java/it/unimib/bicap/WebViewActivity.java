@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.example.bicap.R;
+import it.unimib.bicap.R;
 
 import it.unimib.bicap.utils.Constants;
 

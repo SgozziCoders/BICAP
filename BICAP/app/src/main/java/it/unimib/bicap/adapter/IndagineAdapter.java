@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
-import com.example.bicap.R;
-
+import it.unimib.bicap.R;
 import it.unimib.bicap.model.IndaginiHeadList;
 
 
@@ -47,7 +46,7 @@ public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.Indagi
                 .load(mindaginiHeadList.getHeads().get(position).getImgUrl())
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
-                .signature(new ObjectKey(mindaginiHeadList.getHeads().get(position).getultimaModifica()))
+                .signature(new ObjectKey(mindaginiHeadList.getHeads().get(position).getUltimaModifica()))
                 .into(holder.mIndagineImageView);
     }
 

@@ -13,7 +13,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.bicap.R;
+import it.unimib.bicap.R;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -35,6 +35,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
         setSplashScreenAnimation();
         setVersionText();
+        FileManager.checkNeededFolders(this);
         new Asyn_SplashScreenDownLoadFile().execute(null, null, null);
     }
 
@@ -74,12 +75,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private class Asyn_SplashScreenDownLoadFile extends AsyncTask<Void, Void, Void> {
 
-
         @Override
         protected Void doInBackground(Void... voids) {
             //Controllare se il telefono è connesso ad internet
             String mUrl = "https://files.bicap.quarzo.stream/listaIndagini.json";
-            String mPath = getApplicationInfo().dataDir + "/listaIndagini.json";
+            String mPath = getApplicationInfo().dataDir + "/tmp/listaIndagini.json";
             FileManager.downloadFile(mUrl, mPath);
             return null;
         }
@@ -89,6 +89,5 @@ public class SplashScreenActivity extends AppCompatActivity {
             super.onPostExecute(result);
             openMainActivity();
         }
-
     }
 }

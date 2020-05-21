@@ -3,6 +3,8 @@ package it.unimib.bicap.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Date;
+
 public class IndagineHead implements Parcelable{
 
 	private String titoloIndagine;
@@ -10,9 +12,11 @@ public class IndagineHead implements Parcelable{
 	private String imgUrl;
 	private int idIndagine;
 	private String ultimaModifica;
-	
-	public IndagineHead() {
-	}
+	private Date dataDiScadenza;
+
+	private boolean indagineInCorso;
+
+	public IndagineHead() {}
 	
 	/**
 	* @brief constructor IndagineHead
@@ -96,12 +100,20 @@ public class IndagineHead implements Parcelable{
 		this.idIndagine = id;
 	}
 
-	public String getultimaModifica() {
+	public String getUltimaModifica() {
 		return ultimaModifica;
 	}
 
-	public void setEultimaModifica(String ultimaModifica) {
+	public void setUltimaModifica(String ultimaModifica) {
 		this.ultimaModifica = ultimaModifica;
+	}
+
+	public boolean getIndagineInCorso() {
+		return indagineInCorso;
+	}
+
+	public void setIndagineInCorso(boolean indagineInCorso) {
+		this.indagineInCorso = indagineInCorso;
 	}
 
 }

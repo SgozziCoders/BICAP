@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.bicap.R;
+import it.unimib.bicap.R;
 
 public class AboutActivity extends AppCompatActivity {
 

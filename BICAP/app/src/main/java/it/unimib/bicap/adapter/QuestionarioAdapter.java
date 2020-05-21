@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.AutoTransition;
 import androidx.transition.TransitionManager;
 
-import com.example.bicap.R;
+import it.unimib.bicap.R;
 
 import java.util.List;
 

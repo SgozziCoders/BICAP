@@ -5,8 +5,7 @@ public class IndaginiHeadList {
 
 	private List<IndagineHead> indagine;
 
-	public IndaginiHeadList() {
-	}
+	public IndaginiHeadList() {}
 
 	/**
 	* @brief constructor IndaginiHeadList

@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.bicap.R;
+import it.unimib.bicap.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -103,6 +103,11 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                         mSubmitAllButton.setEnabled(true);
                         mSubmitAllButton.setClickable(true);
                     }
+
+                    mIndagineBody.getHead().setIndagineInCorso(true);
+                    String mJsonIndagineBody = new  Gson().toJson(mIndagineBody);
+                    String path = this.getApplicationInfo().dataDir + "/indagini/in_corso/" + mIndagineBody.getHead().getId() + ".json";
+                    FileManager.writeToFile(mJsonIndagineBody, path);
                 }
         }
     }
