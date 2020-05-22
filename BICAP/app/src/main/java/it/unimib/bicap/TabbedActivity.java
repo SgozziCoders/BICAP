@@ -18,11 +18,16 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.unimib.bicap.adapter.ViewPagerAdapter;
 import it.unimib.bicap.fragment.FragmentDisponibili;
 import it.unimib.bicap.fragment.FragmentInCorso;
+import it.unimib.bicap.model.IndagineBody;
+import it.unimib.bicap.model.IndagineHead;
 import it.unimib.bicap.model.IndaginiHeadList;
 
 public class TabbedActivity extends AppCompatActivity {
@@ -39,9 +44,25 @@ public class TabbedActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.tabbedViewPager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        
+        IndaginiHeadList headsInCorso, headsDisponibili = getIndaginiHeadList();
 
-        viewPagerAdapter.AddFragment(new FragmentDisponibili(getIndaginiHeadList()), "Disponibili");
-        viewPagerAdapter.AddFragment(new FragmentInCorso(getIndaginiHeadList()), "In corso");
+        IndagineHead tmp;
+
+        headsInCorso = getIndaginiInCorso();
+        for(IndagineHead h : headsInCorso.getHeads()){
+            try{
+                tmp = headsDisponibili.getIndagineHeadFromId(h.getId());
+                headsDisponibili.getHeads().remove(tmp);
+            }catch(Exception e){
+                //h deve essere eliminata dal database locale
+            }
+
+        }
+
+
+        viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
+        viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -74,6 +95,23 @@ public class TabbedActivity extends AppCompatActivity {
             BufferedReader mBufferedReader = new BufferedReader(new FileReader(mPath));
             IndaginiHeadList mIndaginiHeadList = new Gson().fromJson(mBufferedReader, IndaginiHeadList.class);
             return mIndaginiHeadList;
+        } catch (Exception ex){
+            return  null;
+        }
+    }
+
+    public IndaginiHeadList getIndaginiInCorso() {
+        ArrayList<IndagineHead> mListaIndaginiHeadIncorso = new ArrayList<IndagineHead>();
+
+        File[] mListIndaginiIncorsoFile = new File(getApplicationInfo().dataDir+ "/indagini/in_corso").listFiles();
+        try {
+            for(int i=0; i<mListIndaginiIncorsoFile.length; i++) {
+                BufferedReader mBufferedReader = new BufferedReader(new FileReader(mListIndaginiIncorsoFile[i].getAbsolutePath()));
+                IndagineBody mIndagineBody = new Gson().fromJson(mBufferedReader, IndagineBody.class);
+                mListaIndaginiHeadIncorso.add(mIndagineBody.getHead());
+            }
+
+            return new IndaginiHeadList(mListaIndaginiHeadIncorso);
         } catch (Exception ex){
             return  null;
         }

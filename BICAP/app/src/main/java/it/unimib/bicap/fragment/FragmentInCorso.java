@@ -30,6 +30,7 @@ public class FragmentInCorso extends Fragment implements IndagineAdapter.OnCardL
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
         v = inflater.inflate(R.layout.in_corso_fragment, container, false);
         RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.inCorsoRecyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -51,4 +52,6 @@ public class FragmentInCorso extends Fragment implements IndagineAdapter.OnCardL
         mIntent.putExtra("Indagine", mIndagineHead);
         startActivity(mIntent);
     }
+
+
 }

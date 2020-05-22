@@ -13,7 +13,6 @@ public class IndagineHead implements Parcelable{
 	private int idIndagine;
 	private String ultimaModifica;
 	private Date dataDiScadenza;
-
 	private boolean indagineInCorso;
 
 	public IndagineHead() {}
@@ -39,21 +38,8 @@ public class IndagineHead implements Parcelable{
 		erogatore = in.readString();
 		imgUrl = in.readString();
 		idIndagine = in.readInt();
-	}
-
-	//Aggiunto da Android Studio
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeString(titoloIndagine);
-		dest.writeString(erogatore);
-		dest.writeString(imgUrl);
-		dest.writeInt(idIndagine);
-		dest.writeString(ultimaModifica);
-	}
-
-	@Override
-	public int describeContents() {
-		return 0;
+		ultimaModifica = in.readString();
+		indagineInCorso = in.readByte() != 0;
 	}
 
 	public static final Creator<IndagineHead> CREATOR = new Creator<IndagineHead>() {
@@ -108,7 +94,7 @@ public class IndagineHead implements Parcelable{
 		this.ultimaModifica = ultimaModifica;
 	}
 
-	public boolean getIndagineInCorso() {
+	public boolean isIndagineInCorso() {
 		return indagineInCorso;
 	}
 
@@ -116,4 +102,18 @@ public class IndagineHead implements Parcelable{
 		this.indagineInCorso = indagineInCorso;
 	}
 
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeString(titoloIndagine);
+		dest.writeString(erogatore);
+		dest.writeString(imgUrl);
+		dest.writeInt(idIndagine);
+		dest.writeString(ultimaModifica);
+		dest.writeByte((byte) (indagineInCorso ? 1 : 0));
+	}
 }

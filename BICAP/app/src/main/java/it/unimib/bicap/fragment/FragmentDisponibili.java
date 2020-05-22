@@ -30,6 +30,7 @@ public class FragmentDisponibili extends Fragment implements IndagineAdapter.OnC
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
         v = inflater.inflate(R.layout.disponibili_fragment, container, false);
         RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.disponibiliRecyclerView);
         mRecyclerView.setHasFixedSize(true);
@@ -51,4 +52,5 @@ public class FragmentDisponibili extends Fragment implements IndagineAdapter.OnC
         mIntent.putExtra("Indagine", mIndagineHead);
         startActivity(mIntent);
     }
+
 }

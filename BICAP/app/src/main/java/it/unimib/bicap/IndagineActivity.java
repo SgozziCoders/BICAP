@@ -20,6 +20,8 @@ import it.unimib.bicap.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -38,7 +40,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private IndagineBody mIndagineBody;
     private ArrayList<ParcelableBoolean> mQuestionariVisibilityList;
     private RecyclerView mQuestionariRecyclerView;
-    private static Bundle global_stat;
+    private Bundle global_stat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,9 +122,13 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             if(global_stat != null){
                 mIndagineBody = global_stat.getParcelable(Constants.INDAGINE_BODY_STATE);
             }else{
-                mIndagineBody = getIndagineBody(mIndagineHead);
+                if(mIndagineHead.isIndagineInCorso()){
+                    mIndagineBody = loadLocalIndagineBody(mIndagineHead);
+                }else{
+                    mIndagineBody = getIndagineBody(mIndagineHead);
+                    mIndagineBody.setHead(mIndagineHead);
+                }
             }
-            mIndagineBody.setHead(mIndagineHead);
             return null;
         }
 
@@ -144,6 +150,17 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             mSubmitAllButton.setBackgroundResource(R.color.colorPrimary);
             mSubmitAllButton.setEnabled(true);
             mSubmitAllButton.setClickable(true);
+        }
+    }
+
+    private IndagineBody loadLocalIndagineBody(IndagineHead indagineHead) {
+        try{
+            File mIndagineBodyFile = new File(getApplicationInfo().dataDir + "/indagini/in_corso/" + indagineHead.getId() + ".json");
+            IndagineBody mIndagineBodyLocal = new Gson().fromJson(new BufferedReader(new FileReader(mIndagineBodyFile.getAbsolutePath())), IndagineBody.class);
+            return mIndagineBodyLocal;
+        }catch(Exception ex){
+            //EH BHO .... come cazzo fa a non esistere ???
+            return null;
         }
     }
 
