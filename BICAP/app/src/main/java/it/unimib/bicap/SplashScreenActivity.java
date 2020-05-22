@@ -44,7 +44,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         mTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Intent mIntent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                Intent mIntent = new Intent(SplashScreenActivity.this, TabbedActivity.class);
                 startActivity(mIntent);
                 finish();
             }
