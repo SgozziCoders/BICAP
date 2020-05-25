@@ -68,7 +68,10 @@ public class TabbedActivity extends AppCompatActivity {
         }
 
         if(viewPagerAdapter.getCount() != 0){
-            //diocane
+            viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+            viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
+            viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
+            viewPager.setAdapter(viewPagerAdapter);
         }else{
             viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
             viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
