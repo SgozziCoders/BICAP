@@ -35,19 +35,27 @@ public class TabbedActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+    private IndaginiHeadList headsDisponibili;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed);
-
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.tabbedViewPager);
+        viewPager.setSaveEnabled(false);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        
-        IndaginiHeadList headsInCorso, headsDisponibili = getIndaginiHeadList();
+        headsDisponibili = getIndaginiHeadList();
 
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         IndagineHead tmp;
+        IndaginiHeadList  headsInCorso;
 
         headsInCorso = getIndaginiInCorso();
         for(IndagineHead h : headsInCorso.getHeads()){
@@ -57,16 +65,16 @@ public class TabbedActivity extends AppCompatActivity {
             }catch(Exception e){
                 //h deve essere eliminata dal database locale
             }
-
         }
 
-
-        viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
-        viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
-
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
-
+        if(viewPagerAdapter.getCount() != 0){
+            //diocane
+        }else{
+            viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
+            viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
+            viewPager.setAdapter(viewPagerAdapter);
+            tabLayout.setupWithViewPager(viewPager);
+        }
     }
 
     public static void verifyStoragePermissions(Activity activity) {
@@ -116,6 +124,8 @@ public class TabbedActivity extends AppCompatActivity {
             return  null;
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -71,6 +71,32 @@
                     app:layout_constraintStart_toStartOf="@+id/infoListRecyclerView"
                     app:layout_constraintTop_toBottomOf="@+id/infoListRecyclerView" />
 
+                <TextView
+                    android:id="@+id/compilatoTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="22dp"
+                    android:text="COMPILATO"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textSize="14sp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toEndOf="@+id/submitButton"
+                    app:layout_constraintTop_toBottomOf="@+id/infoListRecyclerView" />
+
+                <ImageView
+                    android:id="@+id/compilatoImageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toEndOf="@+id/compilatoTextView"
+                    app:layout_constraintTop_toBottomOf="@+id/infoListRecyclerView"
+                    app:srcCompat="@drawable/compilato_icon" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

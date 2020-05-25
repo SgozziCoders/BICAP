@@ -1,10 +1,12 @@
 package it.unimib.bicap.adapter;
 
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,7 +51,6 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         return new QuestionarioViewHolder(mView, mOnSubmitClickListener, mInformazioneRowReciver);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull QuestionarioViewHolder holder, int position) {
         holder.mTitoloQuestionarioTextView.setText(mQuestionarioList.get(position).getTitolo());
@@ -64,17 +65,28 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         holder.mInfoListRecyclerView.setLayoutManager(mInfoListLinearLayoutManager);
 
         if(position == 0){
-            holder.mSubmitButton.setEnabled(true);
-            holder.mSubmitButton.setTextAppearance(mContext, R.style.EnableSubmit);
-        }
-
-        if(position > 0){
-            if(mQuestionarioList.get(position - 1).isCompilato()){
+            if(mQuestionarioList.get(0).isCompilato()){
+                holder.mSubmitButton.setVisibility(View.GONE);
+                holder.mCompilatoTextView.setVisibility(View.VISIBLE);
+                holder.mCompilatoImageView.setVisibility(View.VISIBLE);
+            }else{
                 holder.mSubmitButton.setEnabled(true);
                 holder.mSubmitButton.setTextAppearance(mContext, R.style.EnableSubmit);
             }
         }
 
+        if(position > 0){
+            if(mQuestionarioList.get(position).isCompilato()){
+                holder.mSubmitButton.setVisibility(View.GONE);
+                holder.mCompilatoTextView.setVisibility(View.VISIBLE);
+                holder.mCompilatoImageView.setVisibility(View.VISIBLE);
+            }else{
+                if(mQuestionarioList.get(position - 1).isCompilato()){
+                    holder.mSubmitButton.setEnabled(true);
+                    holder.mSubmitButton.setTextAppearance(mContext, R.style.EnableSubmit);
+                }
+            }
+        }
         List<Informazione> mInformazioneList = mQuestionarioList.get(position).getInformazioni();
         if(mInformazioneList != null) {
             InformazioneRowAdapter informazioneRowAdapter = new InformazioneRowAdapter(mInformazioneList, holder);
@@ -96,13 +108,14 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
 
     public static class QuestionarioViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener, InformazioneRowAdapter.OnInformazioneRowListener{
-        TextView mTitoloQuestionarioTextView;
+        TextView mTitoloQuestionarioTextView, mCompilatoTextView;
         Button mExpandButton, mSubmitButton;
         CardView mCardView;
         ConstraintLayout mExpandableView;
         RecyclerView mInfoListRecyclerView;
         OnSubmitClickListener mOnSubmitClickListener;
         InformazioneRowReciver mInformazioneRowReciver;
+        ImageView mCompilatoImageView;
 
         public QuestionarioViewHolder(View itemView, OnSubmitClickListener mOnSubmitClickListener,
                                       InformazioneRowReciver mInformazioneRowReciver){
@@ -114,6 +127,8 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
             mTitoloQuestionarioTextView = (TextView) itemView.findViewById(R.id.titoloQuestionarioTextView);
             mExpandButton = (Button) itemView.findViewById(R.id.expandImageButton);
             mInfoListRecyclerView = (RecyclerView) itemView.findViewById(R.id.infoListRecyclerView);
+            mCompilatoImageView = (ImageView) itemView.findViewById(R.id.compilatoImageView);
+            mCompilatoTextView = (TextView) itemView.findViewById(R.id.compilatoTextView);
             this.mInformazioneRowReciver = mInformazioneRowReciver;
             mExpandButton.setOnClickListener(this);
             mSubmitButton.setOnClickListener(this);

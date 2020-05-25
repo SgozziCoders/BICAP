@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import it.unimib.bicap.R;
@@ -92,11 +93,18 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                     //Toast.makeText(this, "indagineBody.getInformazioni().get(position).getNomeFile()", Toast.LENGTH_LONG).show();
                     int mQuestionarioPosition = data.getExtras().getInt(Constants.QUESTIONARIO_POSITION);
                     mIndagineBody.getQuestionari().get(mQuestionarioPosition).setCompilato(true);
+                    View mViewCurrent =mQuestionariRecyclerView.findViewHolderForAdapterPosition(mQuestionarioPosition).itemView;
+                    TextView mCompilatoTextView = (TextView) mViewCurrent.findViewById(R.id.compilatoTextView);
+                    Button mSubmitButton = (Button) mViewCurrent.findViewById(R.id.submitButton);
+                    ImageView mCompilatoImageView = (ImageView) mViewCurrent.findViewById(R.id.compilatoImageView);
+                    mCompilatoTextView.setVisibility(View.VISIBLE);
+                    mCompilatoImageView.setVisibility(View.VISIBLE);
+                    mSubmitButton.setVisibility(View.GONE);
                     if(mQuestionariRecyclerView.getAdapter().getItemCount() != mQuestionarioPosition + 1){
-                        View mView = mQuestionariRecyclerView.findViewHolderForAdapterPosition(mQuestionarioPosition + 1).itemView;
-                        Button mSubmitButton = (Button) mView.findViewById(R.id.submitButton);
-                        mSubmitButton.setEnabled(true);
-                        mSubmitButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmit);
+                        View mViewNext = mQuestionariRecyclerView.findViewHolderForAdapterPosition(mQuestionarioPosition + 1).itemView;
+                        Button mSubmitButtonNext = (Button) mViewNext.findViewById(R.id.submitButton);
+                        mSubmitButtonNext.setEnabled(true);
+                        mSubmitButtonNext.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmit);
                     }else{
                         //Attiviamo termina indagine se è stato compilato l'ultimo questionario
                         Button mSubmitAllButton = (Button) findViewById(R.id.submitAllButton);

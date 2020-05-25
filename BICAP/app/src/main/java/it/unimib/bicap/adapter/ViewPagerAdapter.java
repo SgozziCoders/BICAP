@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,5 +39,17 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public void AddFragment(Fragment fragment, String title){
         listFragment.add(fragment);
         listTitles.add(title);
+    }
+
+    public void RemoveFragments(int position){
+        destroyItem(null, position, listFragment.get(position));
+        listFragment.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public void RemoveAllFragments(){
+        for(int i = 0; i< listFragment.size();i++){
+            RemoveFragments(listFragment.size()-1);
+        }
     }
 }
