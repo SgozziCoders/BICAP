@@ -109,11 +109,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                         mSubmitButtonNext.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmit);
                     }else{
                         //Attiviamo termina indagine se è stato compilato l'ultimo questionario
-                        Button mSubmitAllButton = (Button) findViewById(R.id.submitAllButton);
-                        mSubmitAllButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmitIndagine);
-                        mSubmitAllButton.setBackgroundResource(R.color.colorPrimary);
-                        mSubmitAllButton.setEnabled(true);
-                        mSubmitAllButton.setClickable(true);
+                        setEneableSubmitAll();
                     }
 
                     mIndagineBody.getHead().setIndagineInCorso(true);
@@ -176,10 +172,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.dismiss();
-                        new AlertDialog.Builder(getApplicationContext())
+                        new AlertDialog.Builder(IndagineActivity.this)
                                 .setMessage(R.string.dialog_submit_thank_you)
                                 .setCancelable(false)
-                                .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                                .setPositiveButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         Intent resultIntent = new Intent();
                                         /*

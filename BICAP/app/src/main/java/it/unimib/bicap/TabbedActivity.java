@@ -47,7 +47,7 @@ public class TabbedActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.tabbedViewPager);
         //viewPager.setSaveEnabled(false);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        headsDisponibili = getIndaginiHeadList();
+
     }
 
     @Override
@@ -56,6 +56,7 @@ public class TabbedActivity extends AppCompatActivity {
         IndagineHead tmp;
         IndaginiHeadList  headsInCorso;
 
+        headsDisponibili = getIndaginiHeadList();
         headsInCorso = getIndaginiInCorso();
         for(IndagineHead h : headsInCorso.getHeads()){
             try{
