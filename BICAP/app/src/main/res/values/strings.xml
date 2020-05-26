@@ -15,6 +15,9 @@
     <string name="informazioni">Informazioni</string>
     <string name="termina_button">Termina Indagine</string>
     <string name="dialog_message">Sei sicuro di voler uscire? Tutti i progressi non salvati andranno perduti</string>
+    <string name="dialog_submit_question">Sei sicuro di voler terminare l\'indagine?</string>
+    <string name="dialog_submit_thank_you">Grazie per aver partecipato all\'indagine</string>
+    <string name="dialog_close">Chiudi</string>
     <string name="dialog_yes">Sì</string>
     <string name="dialog_no">No</string>
 </resources>

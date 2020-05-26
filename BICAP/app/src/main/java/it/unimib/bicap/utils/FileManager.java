@@ -80,4 +80,11 @@ public class FileManager {
             Log.e("Exception", "File write failed: " + e.toString());
         }
     }
+
+    public static void deleteFile(String path){
+        File file = new File(path);
+        if(file.exists()){
+            file.delete();
+        }
+    }
 }

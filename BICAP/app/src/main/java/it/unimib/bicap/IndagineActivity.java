@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -158,7 +160,43 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             mSubmitAllButton.setBackgroundResource(R.color.colorPrimary);
             mSubmitAllButton.setEnabled(true);
             mSubmitAllButton.setClickable(true);
+            mSubmitAllButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    submitAll();
+                }
+            });
         }
+    }
+
+    private void submitAll(){
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.dialog_submit_question)
+                .setCancelable(false)
+                .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                        new AlertDialog.Builder(getApplicationContext())
+                                .setMessage(R.string.dialog_submit_thank_you)
+                                .setCancelable(false)
+                                .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Intent resultIntent = new Intent();
+                                        /*
+                                        * Si invia al server l'id dell'indagine e l'email dell'utente
+                                        * così che non venga più proposta all'utente nel momento
+                                        * della richiesta del file Json della lista indagini
+                                        * disponibili
+                                        * */
+                                        FileManager.deleteFile(getApplicationInfo().dataDir + "/indagini/in_corso/" + mIndagineBody.getHead().getId() + ".json");
+                                        finish();
+                                    }
+                                })
+                                .show();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_no, null)
+                .show();
     }
 
     private IndagineBody loadLocalIndagineBody(IndagineHead indagineHead) {

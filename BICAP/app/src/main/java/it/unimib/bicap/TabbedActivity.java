@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
@@ -37,18 +38,16 @@ public class TabbedActivity extends AppCompatActivity {
     private ViewPagerAdapter viewPagerAdapter;
     private IndaginiHeadList headsDisponibili;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.tabbedViewPager);
-        viewPager.setSaveEnabled(false);
+        //viewPager.setSaveEnabled(false);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         headsDisponibili = getIndaginiHeadList();
-
-
-
     }
 
     @Override
