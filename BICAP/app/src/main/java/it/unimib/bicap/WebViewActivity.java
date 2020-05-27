@@ -29,7 +29,7 @@ public class WebViewActivity extends AppCompatActivity{
         mWebview.getSettings().setJavaScriptEnabled(true); // enable javascript
         mWebview.setWebViewClient(new QuestionarioWebClient());
         mWebview.loadUrl(mQuestionarioUrl);
-        mWebview.loadUrl("http://www.google.com/");
+        //mWebview.loadUrl("http://www.google.com/");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class WebViewActivity extends AppCompatActivity{
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            if(url != mQuestionarioUrl){
+            if(!url.equals(mQuestionarioUrl)){
                 //Questionario terminato
                 Intent resultIntent = new Intent();
                 setResult(Activity.RESULT_OK, resultIntent);

@@ -277,7 +277,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     @Override
     public void OnSubmitClick(int position) {
         Intent mWebViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
-        mWebViewIntent.putExtra(Constants.URL, "https://psicologiaunimib.eu.qualtrics.com/jfe/form/SV_czRC4tlVKZDwbVr");
+        mWebViewIntent.putExtra(Constants.URL, mIndagineBody.getQuestionari().get(position).getQualtricsUrl());
         mWebViewIntent.putExtra(Constants.TITOLO_QUESTIONARIO, mIndagineBody.getQuestionari().get(position).getTitolo());
         mWebViewIntent.putExtra(Constants.QUESTIONARIO_POSITION, position);
         startActivityForResult(mWebViewIntent, Constants.WEB_ACTIVITY_REQUEST_CODE);

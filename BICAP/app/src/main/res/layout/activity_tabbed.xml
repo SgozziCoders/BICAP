@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:context="it.unimib.bicap.TabbedActivity">
 
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
@@ -16,7 +17,6 @@
         app:tabIndicator="@color/colorAccent"
         app:tabMode="fixed"
         app:tabTextColor="@android:color/white">
-
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
