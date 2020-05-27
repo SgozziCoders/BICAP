@@ -43,6 +43,7 @@ public class TabbedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tabbed);
+        verifyStoragePermissions(this);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.tabbedViewPager);
         //viewPager.setSaveEnabled(false);

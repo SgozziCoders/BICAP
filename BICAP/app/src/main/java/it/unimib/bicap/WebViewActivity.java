@@ -2,14 +2,19 @@ package it.unimib.bicap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,20 +25,114 @@ public class WebViewActivity extends AppCompatActivity{
     private static String mQuestionarioUrl;
     private static int mQuestionarioPosition;
 
+    private ValueCallback<Uri> mUploadMessage;
+    public ValueCallback<Uri[]> uploadMessage;
+    public static final int REQUEST_SELECT_FILE = 100;
+    private final static int FILECHOOSER_RESULTCODE = 1;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            if (requestCode == REQUEST_SELECT_FILE)
+            {
+                if (uploadMessage == null)
+                    return;
+                uploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, intent));
+                uploadMessage = null;
+            }
+        }
+        else if (requestCode == FILECHOOSER_RESULTCODE)
+        {
+            if (null == mUploadMessage)
+                return;
+            // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment
+            // Use RESULT_OK only if you're implementing WebView inside an Activity
+            Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
+            mUploadMessage.onReceiveValue(result);
+            mUploadMessage = null;
+        }
+        else
+            Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_LONG).show();
+    }
+
+    private void initzializeWebView(WebView mWebView){
+        mWebView.getSettings().setJavaScriptEnabled(true);
+        mWebView.getSettings().setSupportZoom(false);
+        mWebView.getSettings().setAllowFileAccess(true);
+        mWebView.getSettings().setAllowFileAccess(true);
+        mWebView.getSettings().setAllowContentAccess(true);
+
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            // For 3.0+ Devices (Start)
+            // onActivityResult attached before constructor
+            protected void openFileChooser(ValueCallback uploadMsg, String acceptType)
+            {
+                mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(Intent.createChooser(i, "File Browser"), FILECHOOSER_RESULTCODE);
+            }
+
+            // For Lollipop 5.0+ Devices
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams)
+            {
+                if (uploadMessage != null) {
+                    uploadMessage.onReceiveValue(null);
+                    uploadMessage = null;
+                }
+
+                uploadMessage = filePathCallback;
+
+                Intent intent = fileChooserParams.createIntent();
+                try
+                {
+                    startActivityForResult(intent, REQUEST_SELECT_FILE);
+                } catch (ActivityNotFoundException e)
+                {
+                    uploadMessage = null;
+                    Toast.makeText(getApplicationContext(), "Cannot Open File Chooser", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                return true;
+            }
+
+            //For Android 4.1 only
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture)
+            {
+                mUploadMessage = uploadMsg;
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(Intent.createChooser(intent, "File Browser"), FILECHOOSER_RESULTCODE);
+            }
+
+            protected void openFileChooser(ValueCallback<Uri> uploadMsg)
+            {
+                mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
+            }
+        });
+
+        mWebView.addJavascriptInterface(new MyJavaScriptInterface(), "INTERFACE");
+        mWebView.setWebViewClient(new QuestionarioWebClient());
+        mWebView.loadUrl(mQuestionarioUrl);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-        WebView mWebview = findViewById(R.id.qualtricsWebView);
+        WebView mWebView = findViewById(R.id.qualtricsWebView);
 
         mQuestionarioUrl = getIntent().getExtras().getString("url");
         this.setTitle(getIntent().getExtras().getString(Constants.TITOLO_QUESTIONARIO));
         mQuestionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION);
 
-        mWebview.getSettings().setJavaScriptEnabled(true);
-        mWebview.addJavascriptInterface(new MyJavaScriptInterface(), "INTERFACE");
-        mWebview.setWebViewClient(new QuestionarioWebClient());
-        mWebview.loadUrl(mQuestionarioUrl);
+        initzializeWebView(mWebView);
     }
 
     @Override
