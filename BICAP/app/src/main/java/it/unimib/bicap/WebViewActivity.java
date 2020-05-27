@@ -1,16 +1,18 @@
 package it.unimib.bicap;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import it.unimib.bicap.R;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import it.unimib.bicap.utils.Constants;
 
@@ -22,14 +24,16 @@ public class WebViewActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
+        WebView mWebview = findViewById(R.id.qualtricsWebView);
+
         mQuestionarioUrl = getIntent().getExtras().getString("url");
         this.setTitle(getIntent().getExtras().getString(Constants.TITOLO_QUESTIONARIO));
         mQuestionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION);
-        WebView mWebview = findViewById(R.id.qualtricsWebView);
-        mWebview.getSettings().setJavaScriptEnabled(true); // enable javascript
+
+        mWebview.getSettings().setJavaScriptEnabled(true);
+        mWebview.addJavascriptInterface(new MyJavaScriptInterface(), "INTERFACE");
         mWebview.setWebViewClient(new QuestionarioWebClient());
         mWebview.loadUrl(mQuestionarioUrl);
-        //mWebview.loadUrl("http://www.google.com/");
     }
 
     @Override
@@ -53,13 +57,19 @@ public class WebViewActivity extends AppCompatActivity{
         }
     }
 
-    public class QuestionarioWebClient extends WebViewClient{
+    /**
+     * Classe la cui istanza verrà registrata come un interfaccia JavaScript
+     */
+    private class MyJavaScriptInterface {
 
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            if(!url.equals(mQuestionarioUrl)){
-                //Questionario terminato
+        /**
+         * Metodo utilizzato per analizzare il contenuto della pagina per gestire il caso in cui
+         * il questionario è terminato.
+         */
+        @SuppressWarnings("unused")
+        @JavascriptInterface
+        public void processContent(String content)  {
+            if(content.contains("<div id=\"EndOfSurvey\"")) {
                 Intent resultIntent = new Intent();
                 setResult(Activity.RESULT_OK, resultIntent);
                 resultIntent.putExtra(Constants.QUESTIONARIO_POSITION, mQuestionarioPosition);
@@ -68,4 +78,42 @@ public class WebViewActivity extends AppCompatActivity{
         }
     }
 
+    private class QuestionarioWebClient extends WebViewClient{
+
+        /**
+         * Metodo che impedisce il caricamento di pagine che non facciano parte del questionario.
+         * api ≥ 21
+         */
+        @Override
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+        public boolean shouldOverrideUrlLoading (WebView view, WebResourceRequest request) {
+            return stopReindirizzamento(request.getUrl().toString());
+        }
+
+        /**
+         * Metodo che impedisce il caricamento di pagine che non facciano parte del questionario.
+         * api ≤ 21
+         */
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url){
+            return stopReindirizzamento(url);
+        }
+
+        /**
+         * Metodo di supporto per capire se bisogna stoppare il reindirizzamento
+         */
+        private boolean stopReindirizzamento(String url){
+            return !url.contains(mQuestionarioUrl);
+        }
+
+        /**
+         * Metodo che ad ogni caricamento di una risorsa ignetta un codice javascript per ottenere
+         * il conntenuro del body della pagina
+         */
+        @Override
+        public void  onLoadResource(WebView view, String url){
+            super.onLoadResource(view, url);
+            view.loadUrl("javascript:window.INTERFACE.processContent(document.body.innerHTML);");
+        }
+    }
 }
