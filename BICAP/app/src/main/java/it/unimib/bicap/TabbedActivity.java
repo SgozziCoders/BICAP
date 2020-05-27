@@ -1,6 +1,7 @@
 package it.unimib.bicap;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import com.google.android.material.tabs.TabLayout;
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.unimib.bicap.adapter.ViewPagerAdapter;
+import it.unimib.bicap.databinding.ActivityTabbedBinding;
 import it.unimib.bicap.fragment.FragmentDisponibili;
 import it.unimib.bicap.fragment.FragmentInCorso;
 import it.unimib.bicap.model.IndagineBody;
@@ -33,20 +36,21 @@ import it.unimib.bicap.model.IndaginiHeadList;
 
 public class TabbedActivity extends AppCompatActivity {
 
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+
     private ViewPagerAdapter viewPagerAdapter;
-    private IndaginiHeadList headsDisponibili;
+    ActivityTabbedBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tabbed);
+
+        binding = ActivityTabbedBinding.inflate(getLayoutInflater());
+        View v = binding.getRoot();
+        setContentView(v);
+
         verifyStoragePermissions(this);
-        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        viewPager = (ViewPager) findViewById(R.id.tabbedViewPager);
-        //viewPager.setSaveEnabled(false);
+        setSupportActionBar(binding.toolbar);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
     }
@@ -57,7 +61,7 @@ public class TabbedActivity extends AppCompatActivity {
         IndagineHead tmp;
         IndaginiHeadList  headsInCorso;
 
-        headsDisponibili = getIndaginiHeadList();
+        IndaginiHeadList headsDisponibili = getIndaginiHeadList();
         headsInCorso = getIndaginiInCorso();
         for(IndagineHead h : headsInCorso.getHeads()){
             try{
@@ -72,12 +76,12 @@ public class TabbedActivity extends AppCompatActivity {
             viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
             viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
             viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
-            viewPager.setAdapter(viewPagerAdapter);
+            binding.tabbedViewPager.setAdapter(viewPagerAdapter);
         }else{
             viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
             viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
-            viewPager.setAdapter(viewPagerAdapter);
-            tabLayout.setupWithViewPager(viewPager);
+            binding.tabbedViewPager.setAdapter(viewPagerAdapter);
+            binding.tabLayout.setupWithViewPager(binding.tabbedViewPager);
         }
     }
 

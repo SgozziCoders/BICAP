@@ -19,6 +19,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="LockedOrientationActivity">
         <activity android:name=".TabbedActivity"
+            android:theme="@style/TabbedTheme"
             android:label="Home"/>
         <activity
             android:name=".WebViewActivity"
@@ -27,9 +28,6 @@
             android:name=".AboutActivity"
             android:label="@string/about" />
         <activity android:name=".IndagineActivity" />
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/home" />
         <activity
             android:name=".SplashScreenActivity"
             android:screenOrientation="portrait"

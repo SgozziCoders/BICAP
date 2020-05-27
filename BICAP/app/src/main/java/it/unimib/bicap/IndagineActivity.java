@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,17 +18,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import it.unimib.bicap.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
 import it.unimib.bicap.adapter.InformazioneAdapter;
 import it.unimib.bicap.adapter.QuestionarioAdapter;
+import it.unimib.bicap.databinding.ActivityIndagineBinding;
 import it.unimib.bicap.model.IndagineBody;
 import it.unimib.bicap.model.IndagineHead;
 import it.unimib.bicap.model.Informazione;
@@ -41,19 +39,25 @@ import it.unimib.bicap.utils.ParcelableBoolean;
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver {
     private IndagineBody mIndagineBody;
+
+    //Array di booleani Parcelable per salvare lo stato delle card espanse
     private ArrayList<ParcelableBoolean> mQuestionariVisibilityList;
-    private RecyclerView mQuestionariRecyclerView;
     private Bundle global_stat;
+    private ActivityIndagineBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mQuestionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
+        binding = ActivityIndagineBinding.inflate(getLayoutInflater());
         if(savedInstanceState != null){
             global_stat = savedInstanceState;
         }else{
             mQuestionariVisibilityList = new ArrayList<ParcelableBoolean>();
         }
+        /*
+        * Permette di eseguire il downlaod del file su un thread separato, a fine esecuzione
+        * avvengono tutte le operazioni per il caricamento del layout
+        * */
         new Asyn_LoadAll().execute(null, null, null);
     }
 
@@ -70,11 +74,14 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         super.onSaveInstanceState(outState);
         outState.putParcelable(Constants.INDAGINE_BODY_STATE, mIndagineBody);
         mQuestionariVisibilityList.clear();
-        int mCount = mQuestionariRecyclerView.getAdapter().getItemCount();
+        int mCount = binding.questionariRecycleView.getAdapter().getItemCount();
         View mView;
         ConstraintLayout mConstraintLayout;
+        /*
+        * Vengono salvati gli stati delle card espanse
+        * */
         for(int i = 0; i < mCount; i++){
-            mView = mQuestionariRecyclerView.findViewHolderForAdapterPosition(i).itemView;
+            mView = binding.questionariRecycleView.findViewHolderForAdapterPosition(i).itemView;
             mConstraintLayout = (ConstraintLayout) mView.findViewById(R.id.expandableView);
             if(mConstraintLayout.getVisibility() == View.GONE){
                 mQuestionariVisibilityList.add(new ParcelableBoolean(false));
@@ -89,29 +96,36 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
+
+            /*
+            * Riceve il risultato della WebViewActivity, ovvero della compilazione del questionario:
+            * si occupa di aggiornare lo stato del modello (questionario corrente) e del layout
+            * */
             case(Constants.WEB_ACTIVITY_REQUEST_CODE) :
                 if(resultCode == Activity.RESULT_OK){
-                    //Aggiornamento dello stato del questionario x
-                    //Toast.makeText(this, "indagineBody.getInformazioni().get(position).getNomeFile()", Toast.LENGTH_LONG).show();
+                    //Modifiche al bottone del questionario corrente
                     int mQuestionarioPosition = data.getExtras().getInt(Constants.QUESTIONARIO_POSITION);
                     mIndagineBody.getQuestionari().get(mQuestionarioPosition).setCompilato(true);
-                    View mViewCurrent =mQuestionariRecyclerView.findViewHolderForAdapterPosition(mQuestionarioPosition).itemView;
+                    View mViewCurrent = binding.questionariRecycleView.findViewHolderForAdapterPosition(mQuestionarioPosition).itemView;
                     TextView mCompilatoTextView = (TextView) mViewCurrent.findViewById(R.id.compilatoTextView);
                     Button mSubmitButton = (Button) mViewCurrent.findViewById(R.id.submitButton);
                     ImageView mCompilatoImageView = (ImageView) mViewCurrent.findViewById(R.id.compilatoImageView);
                     mCompilatoTextView.setVisibility(View.VISIBLE);
                     mCompilatoImageView.setVisibility(View.VISIBLE);
                     mSubmitButton.setVisibility(View.GONE);
-                    if(mQuestionariRecyclerView.getAdapter().getItemCount() != mQuestionarioPosition + 1){
-                        View mViewNext = mQuestionariRecyclerView.findViewHolderForAdapterPosition(mQuestionarioPosition + 1).itemView;
+                    //Modifiche del layout del questionario successivo
+                    //Controllo che son sia l'uiltimo
+                    if(binding.questionariRecycleView.getAdapter().getItemCount() != mQuestionarioPosition + 1){
+                        View mViewNext = binding.questionariRecycleView.findViewHolderForAdapterPosition(mQuestionarioPosition + 1).itemView;
                         Button mSubmitButtonNext = (Button) mViewNext.findViewById(R.id.submitButton);
                         mSubmitButtonNext.setEnabled(true);
                         mSubmitButtonNext.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmit);
                     }else{
-                        //Attiviamo termina indagine se è stato compilato l'ultimo questionario
+                        //Attiviamo il bottone termina indagine se è stato compilato l'ultimo questionario
                         setEneableSubmitAll();
                     }
 
+                    //Viene salvato su disco lo stato dell'indagine Body
                     mIndagineBody.getHead().setIndagineInCorso(true);
                     String mJsonIndagineBody = new  Gson().toJson(mIndagineBody);
                     String path = this.getApplicationInfo().dataDir + "/indagini/in_corso/" + mIndagineBody.getHead().getId() + ".json";
@@ -122,6 +136,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     private class Asyn_LoadAll extends AsyncTask<Void, Void, Void> {
 
+        /*
+        * Scarica dal web server l'indagine body se questa non è in corso
+        * altrimenti la legge da file locale
+        * */
         @Override
         protected Void doInBackground(Void... voids) {
             IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
@@ -131,17 +149,19 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                 if(mIndagineHead.isIndagineInCorso()){
                     mIndagineBody = loadLocalIndagineBody(mIndagineHead);
                 }else{
-                    mIndagineBody = getIndagineBody(mIndagineHead);
+                    mIndagineBody = loadRemoteIndagineBody(mIndagineHead);
                     mIndagineBody.setHead(mIndagineHead);
                 }
             }
             return null;
         }
 
+        //Caricamento di tutti i layout una volta che è stato eseguito il download
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            setContentView(R.layout.activity_indagine);
+            View v = binding.getRoot();
+            setContentView(v);
             loadInformazioniScroll(mIndagineBody);
             loadQuestionari(mIndagineBody);
             setEneableSubmitAll();
@@ -151,12 +171,11 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private void setEneableSubmitAll(){
         int mCount = mIndagineBody.getQuestionari().size() - 1;
         if(mIndagineBody.getQuestionari().get(mCount).isCompilato()){
-            Button mSubmitAllButton = (Button) findViewById(R.id.submitAllButton);
-            mSubmitAllButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmitIndagine);
-            mSubmitAllButton.setBackgroundResource(R.color.colorPrimary);
-            mSubmitAllButton.setEnabled(true);
-            mSubmitAllButton.setClickable(true);
-            mSubmitAllButton.setOnClickListener(new View.OnClickListener() {
+            binding.submitAllButton.setTextAppearance(this.getApplicationContext(), R.style.EnableSubmitIndagine);
+            binding.submitAllButton.setBackgroundResource(R.color.colorPrimary);
+            binding.submitAllButton.setEnabled(true);
+            binding.submitAllButton.setClickable(true);
+            binding.submitAllButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     submitAll();
@@ -179,6 +198,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                                     public void onClick(DialogInterface dialog, int id) {
                                         Intent resultIntent = new Intent();
                                         /*
+                                        * Futuro update:
                                         * Si invia al server l'id dell'indagine e l'email dell'utente
                                         * così che non venga più proposta all'utente nel momento
                                         * della richiesta del file Json della lista indagini
@@ -208,38 +228,34 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     private void loadInformazioniScroll(IndagineBody indagineBody){
         this.setTitle(indagineBody.getHead().getTitoloIndagine());
-        TextView mTestoTematica = (TextView)findViewById(R.id.descrizioneTextView);
-        mTestoTematica.setText(indagineBody.getTematica());
+        binding.descrizioneTextView.setText(indagineBody.getTematica());
 
         if(indagineBody.getInformazioni() != null) {
-            RecyclerView mRecyclerView = (RecyclerView) findViewById(R.id.infoScrollRecycleView);
-            mRecyclerView.setHasFixedSize(true);
+            binding.infoScrollRecycleView.setHasFixedSize(true);
 
             LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
             mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            mRecyclerView.setLayoutManager(mLinearLayoutManager);
+            binding.infoScrollRecycleView.setLayoutManager(mLinearLayoutManager);
 
             InformazioneAdapter mAdapter = new InformazioneAdapter(indagineBody.getInformazioni(), this);
-            mRecyclerView.setAdapter(mAdapter);
+            binding.infoScrollRecycleView.setAdapter(mAdapter);
         }else{
-            TextView mInfoTextView = (TextView) findViewById(R.id.informazioniTextView);
-            mInfoTextView.setVisibility(View.GONE);
+            binding.informazioniTextView.setVisibility(View.GONE);
         }
     }
 
     private  void loadQuestionari(IndagineBody indagineBody){
-        mQuestionariRecyclerView = (RecyclerView) findViewById(R.id.questionariRecycleView);
-        mQuestionariRecyclerView.setNestedScrollingEnabled(false);
+        binding.questionariRecycleView.setNestedScrollingEnabled(false);
         LinearLayoutManager mLinearLayoutManagerQuestionari = new LinearLayoutManager(this);
         mLinearLayoutManagerQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
-        mQuestionariRecyclerView.setLayoutManager(mLinearLayoutManagerQuestionari);
+        binding.questionariRecycleView.setLayoutManager(mLinearLayoutManagerQuestionari);
 
         QuestionarioAdapter mQuestionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(),
                 this, this, this, mQuestionariVisibilityList);
-        mQuestionariRecyclerView.setAdapter(mQuestionarioAdapter);
+        binding.questionariRecycleView.setAdapter(mQuestionarioAdapter);
     }
 
-    private IndagineBody getIndagineBody(IndagineHead indagineHead) {
+    private IndagineBody loadRemoteIndagineBody(IndagineHead indagineHead) {
         int mId = indagineHead.getId();
         String mFileName = "Indagine" + mId + ".json";
         String mUrl = "https://files.bicap.quarzo.stream/"+ indagineHead.getId() + "/indagine.json";
@@ -265,6 +281,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         new Asyn_OpenFile(mUrl, mPath, mMime, this).execute();
     }
 
+    //Click ricevuto da un informazione all'interno di un questionario
     @Override
     public void OnReciveClick(final int questionarioPosition, final int infoPosition) {
         Informazione mInfo = mIndagineBody.getQuestionari().get(questionarioPosition).getInformazioni().get(infoPosition);

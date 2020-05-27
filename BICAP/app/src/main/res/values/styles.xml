@@ -32,6 +32,11 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="TabbedTheme" parent="AppTheme">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
     <style name="EnableSubmit" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
