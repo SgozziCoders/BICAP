@@ -74,12 +74,12 @@ public class TabbedActivity extends AppCompatActivity {
 
         if(viewPagerAdapter.getCount() != 0){
             viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-            viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
-            viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
+            viewPagerAdapter.AddFragment(FragmentDisponibili.newInstance(), "Disponibili", headsDisponibili);
+            viewPagerAdapter.AddFragment(FragmentInCorso.newInstance(), "In corso", headsInCorso);
             binding.tabbedViewPager.setAdapter(viewPagerAdapter);
         }else{
-            viewPagerAdapter.AddFragment(new FragmentDisponibili(headsDisponibili), "Disponibili");
-            viewPagerAdapter.AddFragment(new FragmentInCorso(headsInCorso), "In corso");
+            viewPagerAdapter.AddFragment(FragmentDisponibili.newInstance(), "Disponibili", headsDisponibili);
+            viewPagerAdapter.AddFragment(FragmentInCorso.newInstance(), "In corso", headsInCorso);
             binding.tabbedViewPager.setAdapter(viewPagerAdapter);
             binding.tabLayout.setupWithViewPager(binding.tabbedViewPager);
         }

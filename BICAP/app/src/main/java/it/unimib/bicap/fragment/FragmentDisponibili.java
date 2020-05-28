@@ -15,34 +15,47 @@ import androidx.recyclerview.widget.RecyclerView;
 import it.unimib.bicap.IndagineActivity;
 import it.unimib.bicap.R;
 import it.unimib.bicap.adapter.IndagineAdapter;
+import it.unimib.bicap.databinding.DisponibiliFragmentBinding;
 import it.unimib.bicap.model.IndagineHead;
 import it.unimib.bicap.model.IndaginiHeadList;
+import it.unimib.bicap.utils.Constants;
 
 public class FragmentDisponibili extends Fragment implements IndagineAdapter.OnCardListener{
-    View v;
-    IndaginiHeadList indaginiHeadList;
+    private IndaginiHeadList indaginiHeadList;
+    private DisponibiliFragmentBinding binding;
 
-    public FragmentDisponibili(IndaginiHeadList indaginiHeadList){
-        super();
-        this.indaginiHeadList = indaginiHeadList;
+    public FragmentDisponibili(){
+
+    }
+
+    public static FragmentDisponibili newInstance(){
+        return new FragmentDisponibili();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
-        v = inflater.inflate(R.layout.disponibili_fragment, container, false);
-        RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.disponibiliRecyclerView);
-        mRecyclerView.setHasFixedSize(true);
+        //setRetainInstance(true);
+        binding = DisponibiliFragmentBinding.inflate(getLayoutInflater());
+        return binding.getRoot();
 
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(getArguments() != null){
+            indaginiHeadList = getArguments().getParcelable(Constants.INDAGINI_HEAD_LIST_ARGS);
+        }
+
+        binding.disponibiliRecyclerView.setHasFixedSize(true);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        binding.disponibiliRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         IndagineAdapter mAdapter = new IndagineAdapter(indaginiHeadList, this);
-        mRecyclerView.setAdapter(mAdapter);
+        binding.disponibiliRecyclerView.setAdapter(mAdapter);
 
-        return v;
     }
 
     @Override

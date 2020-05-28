@@ -1,5 +1,7 @@
 package it.unimib.bicap.adapter;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -10,6 +12,9 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import java.sql.ClientInfoStatus;
 import java.util.ArrayList;
 import java.util.List;
+
+import it.unimib.bicap.model.IndaginiHeadList;
+import it.unimib.bicap.utils.Constants;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -37,8 +42,13 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         return listTitles.size();
     }
 
-    public void AddFragment(Fragment fragment, String title){
+
+    public void AddFragment(Fragment fragment, String title, IndaginiHeadList indaginiHeadList){
         listFragment.add(fragment);
+        Bundle args = new Bundle();
+        //args.putString("Prova", "prova");
+        args.putParcelable(Constants.INDAGINI_HEAD_LIST_ARGS, indaginiHeadList);
+        fragment.setArguments(args);
         listTitles.add(title);
     }
 

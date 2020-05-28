@@ -54,10 +54,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         }else{
             mQuestionariVisibilityList = new ArrayList<ParcelableBoolean>();
         }
-        /*
-        * Permette di eseguire il downlaod del file su un thread separato, a fine esecuzione
-        * avvengono tutte le operazioni per il caricamento del layout
-        * */
+        /**
+         * Permette di eseguire il downlaod del file su un thread separato, a fine esecuzione
+         * avvengono tutte le operazioni per il caricamento del layout
+         */
         new Asyn_LoadAll().execute(null, null, null);
     }
 
@@ -77,9 +77,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         int mCount = binding.questionariRecycleView.getAdapter().getItemCount();
         View mView;
         ConstraintLayout mConstraintLayout;
-        /*
-        * Vengono salvati gli stati delle card espanse
-        * */
+
+        // Vengono salvati gli stati delle card espanse
         for(int i = 0; i < mCount; i++){
             mView = binding.questionariRecycleView.findViewHolderForAdapterPosition(i).itemView;
             mConstraintLayout = (ConstraintLayout) mView.findViewById(R.id.expandableView);
@@ -97,10 +96,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
 
-            /*
-            * Riceve il risultato della WebViewActivity, ovvero della compilazione del questionario:
-            * si occupa di aggiornare lo stato del modello (questionario corrente) e del layout
-            * */
+            /**
+             * Riceve il risultato della WebViewActivity, ovvero della compilazione del questionario:
+             * si occupa di aggiornare lo stato del modello (questionario corrente) e del layout
+             */
             case(Constants.WEB_ACTIVITY_REQUEST_CODE) :
                 if(resultCode == Activity.RESULT_OK){
                     //Modifiche al bottone del questionario corrente
@@ -135,11 +134,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
     private class Asyn_LoadAll extends AsyncTask<Void, Void, Void> {
-
-        /*
-        * Scarica dal web server l'indagine body se questa non è in corso
-        * altrimenti la legge da file locale
-        * */
+        /**
+         * Scarica dal web server l'indagine body se questa non è in corso
+         * altrimenti la legge da file locale
+         */
         @Override
         protected Void doInBackground(Void... voids) {
             IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
@@ -156,7 +154,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             return null;
         }
 
-        //Caricamento di tutti i layout una volta che è stato eseguito il download
+        // Caricamento di tutti i layout una volta che è stato eseguito il download
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
@@ -197,13 +195,13 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                                 .setPositiveButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         Intent resultIntent = new Intent();
-                                        /*
-                                        * Futuro update:
-                                        * Si invia al server l'id dell'indagine e l'email dell'utente
-                                        * così che non venga più proposta all'utente nel momento
-                                        * della richiesta del file Json della lista indagini
-                                        * disponibili
-                                        * */
+                                        /**
+                                         * Futuro update:
+                                         * Si invia al server l'id dell'indagine e l'email dell'utente
+                                         * così che non venga più proposta all'utente nel momento
+                                         * della richiesta del file Json della lista indagini
+                                         * disponibili
+                                         */
                                         FileManager.deleteFile(getApplicationInfo().dataDir + "/indagini/in_corso/" + mIndagineBody.getHead().getId() + ".json");
                                         finish();
                                     }
@@ -281,7 +279,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         new Asyn_OpenFile(mUrl, mPath, mMime, this).execute();
     }
 
-    //Click ricevuto da un informazione all'interno di un questionario
+    // Click ricevuto da un informazione all'interno di un questionario
     @Override
     public void OnReciveClick(final int questionarioPosition, final int infoPosition) {
         Informazione mInfo = mIndagineBody.getQuestionari().get(questionarioPosition).getInformazioni().get(infoPosition);

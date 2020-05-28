@@ -64,6 +64,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         mInfoListLinearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         holder.mInfoListRecyclerView.setLayoutManager(mInfoListLinearLayoutManager);
 
+        // Formattazione del primo bottone submit
         if(position == 0){
             if(mQuestionarioList.get(0).isCompilato()){
                 holder.mSubmitButton.setVisibility(View.GONE);
@@ -75,6 +76,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
             }
         }
 
+        // Formattazione di tutti i bottoni submit
         if(position > 0){
             if(mQuestionarioList.get(position).isCompilato()){
                 holder.mSubmitButton.setVisibility(View.GONE);
@@ -87,8 +89,10 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
                 }
             }
         }
+        // Caricamento della recyclerView delle informazioni inerenti al questionario
         List<Informazione> mInformazioneList = mQuestionarioList.get(position).getInformazioni();
         if(mInformazioneList != null) {
+            // holder sarà il click Listener dell'informazione
             InformazioneRowAdapter informazioneRowAdapter = new InformazioneRowAdapter(mInformazioneList, holder);
             holder.mInfoListRecyclerView.setAdapter(informazioneRowAdapter);
         }
@@ -103,8 +107,6 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
-
 
     public static class QuestionarioViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener, InformazioneRowAdapter.OnInformazioneRowListener{
@@ -134,6 +136,10 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
             mSubmitButton.setOnClickListener(this);
         }
 
+        /**
+         * Un solo listener per il bottone dell'espansione della card e per il bottone submit;
+         * filtraggio attraverso lo switch.
+        */
         @Override
         public void onClick(View v) {
             int mId = v.getId();
@@ -161,15 +167,20 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         /** Richiama il metodo OnClickRecive passando la posizione del questionario */
         @Override
         public void OnInfoRowClick(int position) {
+            /**
+             * getAdapterPosition() per la posizione del questionario, position per la posizione
+             * dell'informazione
+             */
             mInformazioneRowReciver.OnReciveClick(getAdapterPosition(), position);
         }
     }
 
     public interface OnSubmitClickListener{
-        public void OnSubmitClick(int position);
+        void OnSubmitClick(int position);
     }
 
+    /** Riceve sia la posizione del questionario che dell'informazione */
     public interface InformazioneRowReciver{
-        public void OnReciveClick(int questionarioPosition, int infoPosition);
+        void OnReciveClick(int questionarioPosition, int infoPosition);
     }
 }

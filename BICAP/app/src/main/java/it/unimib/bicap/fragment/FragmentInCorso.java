@@ -14,36 +14,46 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import it.unimib.bicap.IndagineActivity;
 import it.unimib.bicap.adapter.IndagineAdapter;
+import it.unimib.bicap.databinding.InCorsoFragmentBinding;
 import it.unimib.bicap.model.IndagineHead;
 import it.unimib.bicap.model.IndaginiHeadList;
 import it.unimib.bicap.R;
+import it.unimib.bicap.utils.Constants;
 
 public class FragmentInCorso extends Fragment implements IndagineAdapter.OnCardListener{
-    View v;
-    IndaginiHeadList indaginiHeadList;
 
-    public FragmentInCorso(IndaginiHeadList indaginiHeadList){
-        super();
-        this.indaginiHeadList = indaginiHeadList;
+    private IndaginiHeadList indaginiHeadList;
+    private InCorsoFragmentBinding binding;
+
+    public FragmentInCorso(){
+
+    }
+
+    public static FragmentInCorso newInstance() {
+        return new FragmentInCorso();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setRetainInstance(true);
-        v = inflater.inflate(R.layout.in_corso_fragment, container, false);
-        RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.inCorsoRecyclerView);
-        mRecyclerView.setHasFixedSize(true);
-
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
-
-        IndagineAdapter mAdapter = new IndagineAdapter(indaginiHeadList, this);
-        mRecyclerView.setAdapter(mAdapter);
-        return v;
+        binding = InCorsoFragmentBinding.inflate(getLayoutInflater());
+        return binding.getRoot();
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if(getArguments() != null){
+            indaginiHeadList = getArguments().getParcelable(Constants.INDAGINI_HEAD_LIST_ARGS);
+        }
+        binding.inCorsoRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        binding.inCorsoRecyclerView.setLayoutManager(mLinearLayoutManager);
+        IndagineAdapter mAdapter = new IndagineAdapter(indaginiHeadList, this);
+        binding.inCorsoRecyclerView.setAdapter(mAdapter);
+    }
 
     @Override
     public void onCardClick(int position) {
