@@ -6,6 +6,9 @@
     <string name="rate">Votaci</string>
     <string name="mail">bicap.unimib+support@gmail.com</string>
     <string name="website">https://psicologia.unimib.it/</string>
+    <string name="description_about">
+        Quest\'applicazione permette di compilare questionari somministrati dal dipartimento di psicologia dell\'università degli studi di Milano Bicocca, secondo gli interessi dei singoli utenti intenzionati a partecipare alle indagini.\nLa scelta della mano nel logo di bicap, "B" nel linguaggio dei segni, avviene dopo un\'accurata ricerca stilistica che ci ha permesso di coadiuvare la capacità di espressione non vincolata dal contesto, ma anzi, libera di scorrere come un fiume di coscenza, con una rappresentazione visiva accattivante.\nCooperazione viene dopo comunicazione soltanto sul dizionario.
+    </string>
     <string name="description">
         By the same illusion which lifts the horizon of the sea to the level of the spectator on a
         hillside, the sable cloud beneath was dished out, and the car seemed to float in the middle
@@ -20,4 +23,13 @@
     <string name="dialog_close">Chiudi</string>
     <string name="dialog_yes">Sì</string>
     <string name="dialog_no">No</string>
+    <string name="title_activity_email">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>
