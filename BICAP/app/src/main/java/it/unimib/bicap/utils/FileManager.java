@@ -20,6 +20,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import androidx.core.content.FileProvider;
+
 public class FileManager {
     public static boolean downloadFile(String url, String path){
         try {
@@ -43,13 +45,24 @@ public class FileManager {
     }
 
     public static void openFile(String path, String mime, Context context){
-        Intent mSendIntent = new Intent(Intent.ACTION_VIEW);
-        mSendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        mSendIntent.setDataAndType(Uri.parse(path),mime);
-        try{
-            context.startActivity(mSendIntent);
-        }catch(ActivityNotFoundException e){
-            e.printStackTrace();
+
+        File file = new File(path);
+        Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file );
+
+        if (file.exists()) {
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri , mime);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Intent chooser = Intent.createChooser(intent, "Complete action using");
+
+            try {
+                context.startActivity(chooser);
+            }
+            catch (ActivityNotFoundException e) {
+                Log.e("error","error"+e);
+            }
         }
     }
 
