@@ -61,6 +61,7 @@ public class FragmentDisponibili extends Fragment implements IndagineAdapter.OnC
     @Override
     public void onCardClick(int position) {
         IndagineHead mIndagineHead = indaginiHeadList.getHeads().get(position);
+        mIndagineHead.setUltimaModifica("5/05/2020 15:37");
         Intent mIntent = new Intent(getContext(), IndagineActivity.class);
         mIntent.putExtra("Indagine", mIndagineHead);
         startActivity(mIntent);

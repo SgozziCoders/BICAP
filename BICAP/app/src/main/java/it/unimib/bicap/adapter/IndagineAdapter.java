@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.ObjectKey;
 import it.unimib.bicap.R;
 import it.unimib.bicap.model.IndaginiHeadList;
+import it.unimib.bicap.utils.Constants;
 
 
 public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.IndagineViewHolder>{
@@ -41,12 +42,13 @@ public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.Indagi
     public void onBindViewHolder(@NonNull IndagineViewHolder holder, int position) {
         holder.mTitoloTextView.setText(mindaginiHeadList.getHeads().get(position).getTitoloIndagine());
         holder.mErogatoreTextView.setText(mindaginiHeadList.getHeads().get(position).getErogatore());
+        String imgUrl = Constants.BACKEND_URL + mindaginiHeadList.getHeads().get(position).getImgUrl();
 
         Glide.with(holder.mIndagineImageView.getContext())
-                .load(mindaginiHeadList.getHeads().get(position).getImgUrl())
+                .load(imgUrl)
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
-                .signature(new ObjectKey(mindaginiHeadList.getHeads().get(position).getUltimaModifica()))
+                .signature(new ObjectKey("15/05/2020 15:37"))// DA MODIFICARE !!!!
                 .into(holder.mIndagineImageView);
     }
 

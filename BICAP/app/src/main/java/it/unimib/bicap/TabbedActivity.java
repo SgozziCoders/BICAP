@@ -1,13 +1,14 @@
 package it.unimib.bicap;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -15,16 +16,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
-import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.List;
 
 import it.unimib.bicap.adapter.ViewPagerAdapter;
 import it.unimib.bicap.databinding.ActivityTabbedBinding;
@@ -33,13 +31,14 @@ import it.unimib.bicap.fragment.FragmentInCorso;
 import it.unimib.bicap.model.IndagineBody;
 import it.unimib.bicap.model.IndagineHead;
 import it.unimib.bicap.model.IndaginiHeadList;
+import it.unimib.bicap.utils.Constants;
+import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
 
 public class TabbedActivity extends AppCompatActivity {
-
-
     private ViewPagerAdapter viewPagerAdapter;
-    ActivityTabbedBinding binding;
-
+    private ActivityTabbedBinding binding;
+    private IndagineHeadListViewModel viewModel;
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,29 +48,39 @@ public class TabbedActivity extends AppCompatActivity {
         View v = binding.getRoot();
         setContentView(v);
 
+        // Prendo la mail dalle SharedPreferences
+        getEmailFromPreferences();
+
         verifyStoragePermissions(this);
         setSupportActionBar(binding.toolbar);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
+        viewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
     }
 
+    /**
+     * Quando si torna sulla tabbed activity dall'indagineActivity gli elenchi devono essere
+     * aggiornati, vengono quindi ricreati totalmente i due fragment e le loro recyclerview
+     *
+     * NOTA: IndaginiHeadList headsDisponibili = viewModel.loadIndaginiHeadList(email).getValue();
+     *       passa un riferimento al viewmodel, di conseguenza i dati vengono aggiornati a livello
+     *       globale; in questo modo nonostante i dati non vengano riscaricati ad ogni chiamata
+     *       a .loadIndaginiHeadList() il view model resta aggiornato anche localmente.
+     */
     @Override
     protected void onResume() {
         super.onResume();
         IndagineHead tmp;
-        IndaginiHeadList  headsInCorso;
-
-        IndaginiHeadList headsDisponibili = getIndaginiHeadList();
+        IndaginiHeadList headsInCorso;
+        IndaginiHeadList headsDisponibili = viewModel.loadIndaginiHeadList(email).getValue();
         headsInCorso = getIndaginiInCorso();
         for(IndagineHead h : headsInCorso.getHeads()){
             try{
                 tmp = headsDisponibili.getIndagineHeadFromId(h.getId());
                 headsDisponibili.getHeads().remove(tmp);
             }catch(Exception e){
-                //h deve essere eliminata dal database locale
+                return;
             }
         }
-
         if(viewPagerAdapter.getCount() != 0){
             viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
             viewPagerAdapter.AddFragment(FragmentDisponibili.newInstance(), "Disponibili", headsDisponibili);
@@ -85,18 +94,21 @@ public class TabbedActivity extends AppCompatActivity {
         }
     }
 
+    private void getEmailFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
+        email = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
+    }
+
     public static void verifyStoragePermissions(Activity activity) {
         final int REQUEST_EXTERNAL_STORAGE = 1;
         String[] PERMISSIONS_STORAGE = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
-
         //  Controllo se si hanno i permessi di scrittura
         int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            // Pompt per richiedere i permessi di scrittura
+            // Prompt per richiedere i permessi di scrittura
             ActivityCompat.requestPermissions(
                     activity,
                     PERMISSIONS_STORAGE,
@@ -105,17 +117,7 @@ public class TabbedActivity extends AppCompatActivity {
         }
     }
 
-    public IndaginiHeadList getIndaginiHeadList() {
-        try {
-            String mPath = getApplicationInfo().dataDir + "/tmp/listaIndagini.json";
-            BufferedReader mBufferedReader = new BufferedReader(new FileReader(mPath));
-            IndaginiHeadList mIndaginiHeadList = new Gson().fromJson(mBufferedReader, IndaginiHeadList.class);
-            return mIndaginiHeadList;
-        } catch (Exception ex){
-            return  null;
-        }
-    }
-
+    // Legge i file Json delle indagini salvate sul dispositivo nell'apposita cartella
     public IndaginiHeadList getIndaginiInCorso() {
         ArrayList<IndagineHead> mListaIndaginiHeadIncorso = new ArrayList<IndagineHead>();
 
@@ -126,14 +128,11 @@ public class TabbedActivity extends AppCompatActivity {
                 IndagineBody mIndagineBody = new Gson().fromJson(mBufferedReader, IndagineBody.class);
                 mListaIndaginiHeadIncorso.add(mIndagineBody.getHead());
             }
-
             return new IndaginiHeadList(mListaIndaginiHeadIncorso);
         } catch (Exception ex){
             return  null;
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

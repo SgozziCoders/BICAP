@@ -10,7 +10,7 @@ public class IndagineHead implements Parcelable{
 	private String titoloIndagine;
 	private String erogatore;
 	private String imgUrl;
-	private int idIndagine;
+	private int id;
 	private String ultimaModifica;
 	private Date dataDiScadenza;
 	private boolean indagineInCorso;
@@ -24,12 +24,12 @@ public class IndagineHead implements Parcelable{
 	* @param imgUrl
 	* @param id
 	*/
-	public IndagineHead(String titoloIndagine, String erogatore, String imgUrl, int idIndagine, String ultimaModifica) {
+	public IndagineHead(String titoloIndagine, String erogatore, String imgUrl, int id, String ultimaModifica) {
 		super();
 		this.titoloIndagine = titoloIndagine;
 		this.erogatore = erogatore;
 		this.imgUrl = imgUrl;
-		this.idIndagine = idIndagine;
+		this.id = id;
 		this.ultimaModifica = ultimaModifica;
 	}
 
@@ -37,7 +37,7 @@ public class IndagineHead implements Parcelable{
 		titoloIndagine = in.readString();
 		erogatore = in.readString();
 		imgUrl = in.readString();
-		idIndagine = in.readInt();
+		id = in.readInt();
 		ultimaModifica = in.readString();
 		indagineInCorso = in.readByte() != 0;
 	}
@@ -79,11 +79,11 @@ public class IndagineHead implements Parcelable{
 	}
 	
 	public int getId() {
-		return idIndagine;
+		return id;
 	}
 
 	public void setId(int id) {
-		this.idIndagine = id;
+		this.id = id;
 	}
 
 	public String getUltimaModifica() {
@@ -112,7 +112,7 @@ public class IndagineHead implements Parcelable{
 		dest.writeString(titoloIndagine);
 		dest.writeString(erogatore);
 		dest.writeString(imgUrl);
-		dest.writeInt(idIndagine);
+		dest.writeInt(id);
 		dest.writeString(ultimaModifica);
 		dest.writeByte((byte) (indagineInCorso ? 1 : 0));
 	}

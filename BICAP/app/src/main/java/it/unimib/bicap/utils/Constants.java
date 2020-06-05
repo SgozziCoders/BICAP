@@ -8,4 +8,7 @@ public class Constants {
     public static final String TITOLO_QUESTIONARIO = "titolo_questionario";
     public static final String QUESTIONARIO_POSITION = "questionario_position";
     public static final String INDAGINI_HEAD_LIST_ARGS = "indagini_head_list_args";
+    public static final String BACKEND_URL = "http://home.rago.ovh:8001";
+    public static final String EMAIL_SHARED_PREF = "email_shared_pref";
+    public static final String EMAIL_SHARED_PREF_KEY = "Email";
 }

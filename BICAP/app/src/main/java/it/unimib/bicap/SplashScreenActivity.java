@@ -2,37 +2,36 @@ package it.unimib.bicap;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import it.unimib.bicap.R;
-
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import it.unimib.bicap.model.IndaginiHeadList;
+import it.unimib.bicap.utils.Constants;
 import it.unimib.bicap.utils.FileManager;
+import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
 
 public class SplashScreenActivity extends AppCompatActivity {
+
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +41,36 @@ public class SplashScreenActivity extends AppCompatActivity {
         setVersionText();
         FileManager.checkNeededFolders(this);
         checkConnection();
+
+        if(!getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE)
+                .contains(Constants.EMAIL_SHARED_PREF_KEY)){
+            openEmailActivity();
+        }else{
+            getEmailFromPreferences();
+            indagineHeadListAPI();
+        }
+    }
+    private void getEmailFromPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
+        email = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
     }
 
-    private void openMainActivity() {
+
+    // Utilizza il ViewModel per caricare la lista di indagini destinate all'utente
+    private void indagineHeadListAPI() {
+        IndagineHeadListViewModel indaginiHeadListViewModel;
+
+        indaginiHeadListViewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
+        final Observer<IndaginiHeadList> observer = new Observer<IndaginiHeadList>() {
+            @Override
+            public void onChanged(IndaginiHeadList indaginiHeadList) {
+                openTabbedActivity();
+            }
+        };
+        indaginiHeadListViewModel.loadIndaginiHeadList(email).observe(this,observer);
+    }
+
+    private void openTabbedActivity() {
         Timer mTimer = new Timer();
         mTimer.schedule(new TimerTask() {
             @Override
@@ -90,15 +116,10 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
     private void checkConnection(){
-        boolean connected = false;
         ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            //we are connected to a network
-            connected = true;
-            //Controllare se il telefono è connesso ad internet
-            new Asyn_SplashScreenDownLoadFile().execute(null, null, null);
-
+            return;
         }
         else {
             new AlertDialog.Builder(this)
@@ -110,30 +131,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                         }
                     })
                     .show();
-            connected = false;
         }
     }
-    private class Asyn_SplashScreenDownLoadFile extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            //Controllare se il telefono è connesso ad internet
-            String mUrl = "https://files.bicap.quarzo.stream/listaIndagini.json";
-            String mPath = getApplicationInfo().dataDir + "/tmp/listaIndagini.json";
-            FileManager.downloadFile(mUrl, mPath);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-
-            File email_file = new File(getApplicationInfo().dataDir + "/email.txt");
-            if(!email_file.exists())
-                openEmailActivity();
-            else
-                openMainActivity();
-        }
-    }
-
 }

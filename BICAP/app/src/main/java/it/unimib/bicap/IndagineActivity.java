@@ -1,16 +1,16 @@
 package it.unimib.bicap;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -35,6 +35,7 @@ import it.unimib.bicap.utils.Asyn_OpenFile;
 import it.unimib.bicap.utils.Constants;
 import it.unimib.bicap.utils.FileManager;
 import it.unimib.bicap.utils.ParcelableBoolean;
+import it.unimib.bicap.viewmodel.IndagineBodyViewModel;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver {
@@ -42,31 +43,53 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     //Array di booleani Parcelable per salvare lo stato delle card espanse
     private ArrayList<ParcelableBoolean> mQuestionariVisibilityList;
-    private Bundle global_stat;
     private ActivityIndagineBinding binding;
+    private IndagineBodyViewModel indagineBodyViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        indagineBodyViewModel = new ViewModelProvider(this).get(IndagineBodyViewModel.class);
         binding = ActivityIndagineBinding.inflate(getLayoutInflater());
+        View v = binding.getRoot();
+        setContentView(v);
+
+        IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
+        mIndagineHead.setUltimaModifica("5/05/2020 15:37"); // PROVVISORIO !!!!
+
         if(savedInstanceState != null){
-            global_stat = savedInstanceState;
+            mQuestionariVisibilityList = savedInstanceState.getParcelableArrayList(Constants.VISIBILITY_CARDS__STATE);
         }else{
             mQuestionariVisibilityList = new ArrayList<ParcelableBoolean>();
         }
-        /**
-         * Permette di eseguire il downlaod del file su un thread separato, a fine esecuzione
-         * avvengono tutte le operazioni per il caricamento del layout
-         */
-        new Asyn_LoadAll().execute(null, null, null);
+
+        if(mIndagineHead.isIndagineInCorso()){
+            final Observer<IndagineBody> observer = new Observer<IndagineBody>() {
+                @Override
+                public void onChanged(IndagineBody indagineBody) {
+                    mIndagineBody = indagineBody;
+                    mIndagineBody.setHead(mIndagineHead);
+                    loadUI();
+                }
+            };
+            indagineBodyViewModel.loadLoacalIndagineBody(mIndagineHead.getId(), getApplicationInfo().dataDir).observe(this, observer);
+        }else{
+            final Observer<IndagineBody> observer = new Observer<IndagineBody>() {
+                @Override
+                public void onChanged(IndagineBody indagineBody) {
+                    mIndagineBody = indagineBody;
+                    mIndagineBody.setHead(mIndagineHead);
+                    loadUI();
+                }
+            };
+            indagineBodyViewModel.loadRemoteIndagineBody(mIndagineHead.getId()).observe(this, observer);
+        }
     }
 
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        if(global_stat != null){
-            mQuestionariVisibilityList = global_stat.getParcelableArrayList(Constants.VISIBILITY_CARDS__STATE);
-        }
+    private void loadUI(){
+        loadInformazioniScroll(mIndagineBody);
+        loadQuestionari(mIndagineBody);
+        setEneableSubmitAll();
     }
 
     @Override
@@ -133,39 +156,6 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         }
     }
 
-    private class Asyn_LoadAll extends AsyncTask<Void, Void, Void> {
-        /**
-         * Scarica dal web server l'indagine body se questa non è in corso
-         * altrimenti la legge da file locale
-         */
-        @Override
-        protected Void doInBackground(Void... voids) {
-            IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
-            if(global_stat != null){
-                mIndagineBody = global_stat.getParcelable(Constants.INDAGINE_BODY_STATE);
-            }else{
-                if(mIndagineHead.isIndagineInCorso()){
-                    mIndagineBody = loadLocalIndagineBody(mIndagineHead);
-                }else{
-                    mIndagineBody = loadRemoteIndagineBody(mIndagineHead);
-                    mIndagineBody.setHead(mIndagineHead);
-                }
-            }
-            return null;
-        }
-
-        // Caricamento di tutti i layout una volta che è stato eseguito il download
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            View v = binding.getRoot();
-            setContentView(v);
-            loadInformazioniScroll(mIndagineBody);
-            loadQuestionari(mIndagineBody);
-            setEneableSubmitAll();
-        }
-    }
-
     private void setEneableSubmitAll(){
         int mCount = mIndagineBody.getQuestionari().size() - 1;
         if(mIndagineBody.getQuestionari().get(mCount).isCompilato()){
@@ -213,22 +203,11 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                 .show();
     }
 
-    private IndagineBody loadLocalIndagineBody(IndagineHead indagineHead) {
-        try{
-            File mIndagineBodyFile = new File(getApplicationInfo().dataDir + "/indagini/in_corso/" + indagineHead.getId() + ".json");
-            IndagineBody mIndagineBodyLocal = new Gson().fromJson(new BufferedReader(new FileReader(mIndagineBodyFile.getAbsolutePath())), IndagineBody.class);
-            return mIndagineBodyLocal;
-        }catch(Exception ex){
-            //EH BHO .... come cazzo fa a non esistere ???
-            return null;
-        }
-    }
-
     private void loadInformazioniScroll(IndagineBody indagineBody){
         this.setTitle(indagineBody.getHead().getTitoloIndagine());
         binding.descrizioneTextView.setText(indagineBody.getTematica());
 
-        if(indagineBody.getInformazioni() != null) {
+        if(indagineBody.getInformazioni().size() != 0) {
             binding.infoScrollRecycleView.setHasFixedSize(true);
 
             LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
@@ -251,24 +230,6 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         QuestionarioAdapter mQuestionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(),
                 this, this, this, mQuestionariVisibilityList);
         binding.questionariRecycleView.setAdapter(mQuestionarioAdapter);
-    }
-
-    private IndagineBody loadRemoteIndagineBody(IndagineHead indagineHead) {
-        int mId = indagineHead.getId();
-        String mFileName = "Indagine" + mId + ".json";
-        String mUrl = "https://files.bicap.quarzo.stream/"+ indagineHead.getId() + "/indagine.json";
-        String mPath = getApplicationInfo().dataDir + "/" +mFileName;
-
-        FileManager.downloadFile(mUrl, mPath);
-
-        try {
-            BufferedReader mBufferedReader = new BufferedReader(new FileReader(mPath));
-            IndagineBody mIndagineBody = new Gson().fromJson(mBufferedReader, IndagineBody.class);
-            return mIndagineBody;
-        }catch (Exception ex){
-            ex.printStackTrace();
-            return null;
-        }
     }
 
     @Override
