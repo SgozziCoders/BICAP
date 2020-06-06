@@ -1,7 +1,6 @@
 package it.unimib.bicap.adapter;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,41 +20,44 @@ import it.unimib.bicap.R;
 
 import java.util.List;
 
-import it.unimib.bicap.utils.ParcelableBoolean;
 import it.unimib.bicap.model.Informazione;
 import it.unimib.bicap.model.Questionario;
 
 public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapter.QuestionarioViewHolder> {
 
     private List<Questionario> mQuestionarioList;
-    private List<ParcelableBoolean> mCardsVisibility;
+    private List<Boolean> mCardsVisibility;
     private Context mContext;
     private InformazioneRowReciver mInformazioneRowReciver;
     private OnSubmitClickListener mOnSubmitClickListener;
+    private VisibilityListener mVisibilityListener;
 
     public QuestionarioAdapter(List<Questionario> mQuestionarioList, Context mContext,
                                OnSubmitClickListener mOnSubmitClickListener,
                                InformazioneRowReciver mInformazioneRowReciver,
-                               List<ParcelableBoolean> mCardsVisibility){
+                               List<Boolean> mCardsVisibility,
+                               VisibilityListener mVisibilityListener){
         this.mQuestionarioList = mQuestionarioList;
         this.mContext = mContext;
         this.mOnSubmitClickListener = mOnSubmitClickListener;
         this.mInformazioneRowReciver = mInformazioneRowReciver;
         this.mCardsVisibility = mCardsVisibility;
+        this.mVisibilityListener = mVisibilityListener;
     }
 
     @NonNull
     @Override
     public QuestionarioViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View mView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.questionario_card, viewGroup, false);
-        return new QuestionarioViewHolder(mView, mOnSubmitClickListener, mInformazioneRowReciver);
+        return new QuestionarioViewHolder(mView, mOnSubmitClickListener,
+                mInformazioneRowReciver, mVisibilityListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull QuestionarioViewHolder holder, int position) {
         holder.mTitoloQuestionarioTextView.setText(mQuestionarioList.get(position).getTitolo());
         holder.mInfoListRecyclerView.setNestedScrollingEnabled(false);
-        if(mCardsVisibility.size() > 0 && mCardsVisibility.get(position).getKey()){
+        if(mCardsVisibility.size() > 0 && mCardsVisibility.get(position)){
             holder.mExpandableView.setVisibility(View.VISIBLE);
             holder.mExpandButton.setBackgroundResource(R.drawable.ic_expand_less);
         }
@@ -118,9 +120,11 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
         OnSubmitClickListener mOnSubmitClickListener;
         InformazioneRowReciver mInformazioneRowReciver;
         ImageView mCompilatoImageView;
+        VisibilityListener mVisibilityListener;
 
         public QuestionarioViewHolder(View itemView, OnSubmitClickListener mOnSubmitClickListener,
-                                      InformazioneRowReciver mInformazioneRowReciver){
+                                      InformazioneRowReciver mInformazioneRowReciver,
+                                      VisibilityListener mVisibilityListener){
             super(itemView);
             this.mOnSubmitClickListener = mOnSubmitClickListener;
             mCardView = (CardView) itemView.findViewById(R.id.questionarioCardView);
@@ -132,6 +136,7 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
             mCompilatoImageView = (ImageView) itemView.findViewById(R.id.compilatoImageView);
             mCompilatoTextView = (TextView) itemView.findViewById(R.id.compilatoTextView);
             this.mInformazioneRowReciver = mInformazioneRowReciver;
+            this.mVisibilityListener = mVisibilityListener;
             mExpandButton.setOnClickListener(this);
             mSubmitButton.setOnClickListener(this);
         }
@@ -152,11 +157,12 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
                         TransitionManager.beginDelayedTransition(mCardView, new AutoTransition());
                         mExpandableView.setVisibility(View.VISIBLE);
                         mExpandButton.setBackgroundResource(R.drawable.ic_expand_less);
-
+                        mVisibilityListener.OnExpandClick(getAdapterPosition(), true);
                     } else {
                         TransitionManager.beginDelayedTransition(mCardView, new AutoTransition());
                         mExpandableView.setVisibility(View.GONE);
                         mExpandButton.setBackgroundResource(R.drawable.ic_expand_more);
+                        mVisibilityListener.OnExpandClick(getAdapterPosition(), false);
                     }
                     break;
                 default:
@@ -182,5 +188,13 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
     /** Riceve sia la posizione del questionario che dell'informazione */
     public interface InformazioneRowReciver{
         void OnReciveClick(int questionarioPosition, int infoPosition);
+    }
+
+    /**
+     * Ci si occupa del mantenimento dello stato della lista di visibilità delle cards;
+     * nel nostro caso sarà il vewmodel
+     */
+    public interface VisibilityListener{
+        void OnExpandClick(int position, Boolean visibility);
     }
 }

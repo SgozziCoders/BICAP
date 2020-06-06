@@ -2,7 +2,6 @@ package it.unimib.bicap;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,10 +19,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
 
 import it.unimib.bicap.adapter.InformazioneAdapter;
 import it.unimib.bicap.adapter.QuestionarioAdapter;
@@ -34,22 +32,21 @@ import it.unimib.bicap.model.Informazione;
 import it.unimib.bicap.utils.Asyn_OpenFile;
 import it.unimib.bicap.utils.Constants;
 import it.unimib.bicap.utils.FileManager;
-import it.unimib.bicap.utils.ParcelableBoolean;
+import it.unimib.bicap.viewmodel.CardsViewModel;
 import it.unimib.bicap.viewmodel.IndagineBodyViewModel;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver {
-    private IndagineBody mIndagineBody;
 
-    //Array di booleani Parcelable per salvare lo stato delle card espanse
-    private ArrayList<ParcelableBoolean> mQuestionariVisibilityList;
+    private IndagineBody mIndagineBody;
     private ActivityIndagineBinding binding;
-    private IndagineBodyViewModel indagineBodyViewModel;
+    private CardsViewModel cardsViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        indagineBodyViewModel = new ViewModelProvider(this).get(IndagineBodyViewModel.class);
+        cardsViewModel = new ViewModelProvider(this).get(CardsViewModel.class);
+        IndagineBodyViewModel indagineBodyViewModel = new ViewModelProvider(this).get(IndagineBodyViewModel.class);
         binding = ActivityIndagineBinding.inflate(getLayoutInflater());
         View v = binding.getRoot();
         setContentView(v);
@@ -57,61 +54,21 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
         mIndagineHead.setUltimaModifica("5/05/2020 15:37"); // PROVVISORIO !!!!
 
-        if(savedInstanceState != null){
-            mQuestionariVisibilityList = savedInstanceState.getParcelableArrayList(Constants.VISIBILITY_CARDS__STATE);
-        }else{
-            mQuestionariVisibilityList = new ArrayList<ParcelableBoolean>();
-        }
-
+        /** Observer unico, cambia come vengono ottenuti i dati */
+        final IndagineBodyObserver indagineBodyObserver = new IndagineBodyObserver(mIndagineHead);
         if(mIndagineHead.isIndagineInCorso()){
-            final Observer<IndagineBody> observer = new Observer<IndagineBody>() {
-                @Override
-                public void onChanged(IndagineBody indagineBody) {
-                    mIndagineBody = indagineBody;
-                    mIndagineBody.setHead(mIndagineHead);
-                    loadUI();
-                }
-            };
-            indagineBodyViewModel.loadLoacalIndagineBody(mIndagineHead.getId(), getApplicationInfo().dataDir).observe(this, observer);
+            indagineBodyViewModel.loadLoacalIndagineBody(mIndagineHead.getId(),
+                    getApplicationInfo().dataDir).observe(this, indagineBodyObserver);
         }else{
-            final Observer<IndagineBody> observer = new Observer<IndagineBody>() {
-                @Override
-                public void onChanged(IndagineBody indagineBody) {
-                    mIndagineBody = indagineBody;
-                    mIndagineBody.setHead(mIndagineHead);
-                    loadUI();
-                }
-            };
-            indagineBodyViewModel.loadRemoteIndagineBody(mIndagineHead.getId()).observe(this, observer);
+            indagineBodyViewModel.loadRemoteIndagineBody(mIndagineHead.getId())
+                    .observe(this, indagineBodyObserver);
         }
     }
 
     private void loadUI(){
         loadInformazioniScroll(mIndagineBody);
-        loadQuestionari(mIndagineBody);
+        loadQuestionari(mIndagineBody, cardsViewModel.getVisibilityList(mIndagineBody.getQuestionari().size()));
         setEneableSubmitAll();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(Constants.INDAGINE_BODY_STATE, mIndagineBody);
-        mQuestionariVisibilityList.clear();
-        int mCount = binding.questionariRecycleView.getAdapter().getItemCount();
-        View mView;
-        ConstraintLayout mConstraintLayout;
-
-        // Vengono salvati gli stati delle card espanse
-        for(int i = 0; i < mCount; i++){
-            mView = binding.questionariRecycleView.findViewHolderForAdapterPosition(i).itemView;
-            mConstraintLayout = (ConstraintLayout) mView.findViewById(R.id.expandableView);
-            if(mConstraintLayout.getVisibility() == View.GONE){
-                mQuestionariVisibilityList.add(new ParcelableBoolean(false));
-            }else{
-                mQuestionariVisibilityList.add(new ParcelableBoolean(true));
-            }
-        }
-        outState.putParcelableArrayList(Constants.VISIBILITY_CARDS__STATE, mQuestionariVisibilityList);
     }
 
     @Override
@@ -192,7 +149,9 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                                          * della richiesta del file Json della lista indagini
                                          * disponibili
                                          */
-                                        FileManager.deleteFile(getApplicationInfo().dataDir + "/indagini/in_corso/" + mIndagineBody.getHead().getId() + ".json");
+                                        FileManager.deleteFile(getApplicationInfo().dataDir +
+                                                "/indagini/in_corso/" +
+                                                mIndagineBody.getHead().getId() + ".json");
                                         finish();
                                     }
                                 })
@@ -221,14 +180,15 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         }
     }
 
-    private  void loadQuestionari(IndagineBody indagineBody){
+    private  void loadQuestionari(IndagineBody indagineBody, List<Boolean> viewModelVisibilityList){
         binding.questionariRecycleView.setNestedScrollingEnabled(false);
         LinearLayoutManager mLinearLayoutManagerQuestionari = new LinearLayoutManager(this);
         mLinearLayoutManagerQuestionari.setOrientation(LinearLayoutManager.VERTICAL);
         binding.questionariRecycleView.setLayoutManager(mLinearLayoutManagerQuestionari);
 
         QuestionarioAdapter mQuestionarioAdapter = new QuestionarioAdapter(indagineBody.getQuestionari(),
-                this, this, this, mQuestionariVisibilityList);
+                this, this, this, viewModelVisibilityList,
+                cardsViewModel);
         binding.questionariRecycleView.setAdapter(mQuestionarioAdapter);
     }
 
@@ -257,5 +217,27 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         mWebViewIntent.putExtra(Constants.TITOLO_QUESTIONARIO, mIndagineBody.getQuestionari().get(position).getTitolo());
         mWebViewIntent.putExtra(Constants.QUESTIONARIO_POSITION, position);
         startActivityForResult(mWebViewIntent, Constants.WEB_ACTIVITY_REQUEST_CODE);
+    }
+
+    /**
+     * Observer custom per gestire i dati del ViewModel: creato per evitare duplicate code,
+     * le azioni da eseguire con i dati sono le stesse, cambia solo come ottenerli (se localmente
+     * o da remoto), ovvero la chiamata all' .observe(...)
+     */
+    private class IndagineBodyObserver implements Observer<IndagineBody> {
+
+        private IndagineHead mIndagineHead;
+
+        public IndagineBodyObserver(IndagineHead mIndagineHead){
+            super();
+            this.mIndagineHead = mIndagineHead;
+        }
+
+        @Override
+        public void onChanged(IndagineBody indagineBody) {
+            mIndagineBody = indagineBody;
+            mIndagineBody.setHead(mIndagineHead);
+            loadUI();
+        }
     }
 }
