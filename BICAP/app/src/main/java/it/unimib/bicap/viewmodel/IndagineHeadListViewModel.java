@@ -17,4 +17,9 @@ public class IndagineHeadListViewModel extends ViewModel {
         }
         return indaginiHeadList;
     }
+
+    public void RemoveById(int idIndagine){
+        indaginiHeadList.getValue().getHeads().remove(indaginiHeadList.getValue().
+                getIndagineHeadFromId(idIndagine));
+    }
 }

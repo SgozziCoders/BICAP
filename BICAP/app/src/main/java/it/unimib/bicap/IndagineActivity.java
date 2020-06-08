@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.MenuItem;
@@ -29,12 +30,15 @@ import it.unimib.bicap.databinding.ActivityIndagineBinding;
 import it.unimib.bicap.dialog.LoadingDialog;
 import it.unimib.bicap.model.IndagineBody;
 import it.unimib.bicap.model.IndagineHead;
+import it.unimib.bicap.model.IndaginiHeadList;
 import it.unimib.bicap.model.Informazione;
+import it.unimib.bicap.repository.IndaginiRepository;
 import it.unimib.bicap.utils.Asyn_OpenFile;
 import it.unimib.bicap.utils.Constants;
 import it.unimib.bicap.utils.FileManager;
 import it.unimib.bicap.viewmodel.CardsViewModel;
 import it.unimib.bicap.viewmodel.IndagineBodyViewModel;
+import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver,
@@ -43,7 +47,9 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private IndagineBody mIndagineBody;
     private ActivityIndagineBinding binding;
     private CardsViewModel cardsViewModel;
+    private IndagineHeadListViewModel indaginiHeadListViewModel;
     private LoadingDialog mLoadingDialog;
+    private String mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +59,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         binding = ActivityIndagineBinding.inflate(getLayoutInflater());
         View v = binding.getRoot();
         setContentView(v);
+        indaginiHeadListViewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
+        mEmail = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
 
         IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
         mIndagineHead.setUltimaModifica("5/05/2020 15:37"); // PROVVISORIO !!!!
@@ -147,12 +156,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                                     public void onClick(DialogInterface dialog, int id) {
                                         Intent resultIntent = new Intent();
                                         /**
-                                         * Futuro update:
-                                         * Si invia al server l'id dell'indagine e l'email dell'utente
-                                         * così che non venga più proposta all'utente nel momento
-                                         * della richiesta del file Json della lista indagini
-                                         * disponibili
+                                         * Viene eseguito il put sul backend dell'indagine terminata
+                                         * e viene rimossa l'indagine dai LiveData del ViewModel
+                                         * delle indaginiHeadList
                                          */
+                                        IndaginiRepository.getInstance().putIndagineTerminata(mEmail, mIndagineBody.getHead().getId());
+                                        indaginiHeadListViewModel.RemoveById(mIndagineBody.getHead().getId());
                                         FileManager.deleteFile(getApplicationInfo().dataDir +
                                                 Constants.INDAGINI_IN_CORSO_PATH +
                                                 mIndagineBody.getHead().getId() + ".json");

@@ -10,8 +10,10 @@ import java.io.FileReader;
 
 import it.unimib.bicap.model.IndagineBody;
 import it.unimib.bicap.model.IndaginiHeadList;
+import it.unimib.bicap.model.Post;
 import it.unimib.bicap.service.IndaginiService;
 import it.unimib.bicap.utils.Constants;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,14 +67,30 @@ public class IndaginiRepository {
         });
     }
 
+    public void putIndagineTerminata(String email, int idIndagine){
+        Call<ResponseBody> call = indaginiService.putIndagineTerminata(email, idIndagine, new Post(true));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Gestione fallimento della richiesta al server (Non comprende il 404 Not Found)
+            }
+        });
+    }
+
     public void getLocalIndagineBody(final MutableLiveData<IndagineBody> indagineBodyMutableLiveData, int indagineId, String dataDir){
         try{
             File mIndagineBodyFile = new File(dataDir + Constants.INDAGINI_IN_CORSO_PATH + indagineId + ".json");
             IndagineBody mIndagineBodyLocal = new Gson().fromJson(new BufferedReader(new FileReader(mIndagineBodyFile.getAbsolutePath())), IndagineBody.class);
             indagineBodyMutableLiveData.postValue(mIndagineBodyLocal);
         }catch(Exception ex){
-            //EH BHO .... come cazzo fa a non esistere ???
             return;
         }
     }
+
+
 }
