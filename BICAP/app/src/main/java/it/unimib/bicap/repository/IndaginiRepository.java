@@ -51,7 +51,7 @@ public class IndaginiRepository {
     }
 
     public void getRemoteIndagineBody(final MutableLiveData<IndagineBody> indagineBodyMutableLiveData, int indagineId){
-        Call<IndagineBody> call = indaginiService.getIndagineBodyJson("indaginebody/by-id/" + indagineId);
+        Call<IndagineBody> call = indaginiService.getIndagineBodyJson(Constants.INDAGINE_BODY_API_URL + indagineId);
         call.enqueue(new Callback<IndagineBody>() {
             @Override
             public void onResponse(Call<IndagineBody> call, Response<IndagineBody> response) {
@@ -67,7 +67,7 @@ public class IndaginiRepository {
 
     public void getLocalIndagineBody(final MutableLiveData<IndagineBody> indagineBodyMutableLiveData, int indagineId, String dataDir){
         try{
-            File mIndagineBodyFile = new File(dataDir + "/indagini/in_corso/" + indagineId + ".json");
+            File mIndagineBodyFile = new File(dataDir + Constants.INDAGINI_IN_CORSO_PATH + indagineId + ".json");
             IndagineBody mIndagineBodyLocal = new Gson().fromJson(new BufferedReader(new FileReader(mIndagineBodyFile.getAbsolutePath())), IndagineBody.class);
             indagineBodyMutableLiveData.postValue(mIndagineBodyLocal);
         }catch(Exception ex){

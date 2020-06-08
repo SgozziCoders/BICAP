@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import it.unimib.bicap.adapter.ViewPagerAdapter;
 import it.unimib.bicap.databinding.ActivityTabbedBinding;
+import it.unimib.bicap.fragment.EmptyListFragment;
 import it.unimib.bicap.fragment.FragmentDisponibili;
 import it.unimib.bicap.fragment.FragmentInCorso;
 import it.unimib.bicap.model.IndagineBody;
@@ -81,17 +82,36 @@ public class TabbedActivity extends AppCompatActivity {
                 return;
             }
         }
+        /**
+         * Al ritorno su quest'activity bisogna aggiornare i fragment con le recycler view; si
+         * controlla quindi se l'adapter è già popolato, in questo caso viene ricreato da zero;
+         * se invece non è ancora popolato viene popolato e viene eseguito il set-up del
+         * tabLayout;
+         * */
         if(viewPagerAdapter.getCount() != 0){
             viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-            viewPagerAdapter.AddFragment(FragmentDisponibili.newInstance(), "Disponibili", headsDisponibili);
-            viewPagerAdapter.AddFragment(FragmentInCorso.newInstance(), "In corso", headsInCorso);
-            binding.tabbedViewPager.setAdapter(viewPagerAdapter);
+            loadTabbedLayout(headsDisponibili, headsInCorso);
         }else{
-            viewPagerAdapter.AddFragment(FragmentDisponibili.newInstance(), "Disponibili", headsDisponibili);
-            viewPagerAdapter.AddFragment(FragmentInCorso.newInstance(), "In corso", headsInCorso);
-            binding.tabbedViewPager.setAdapter(viewPagerAdapter);
+            loadTabbedLayout(headsDisponibili, headsInCorso);
             binding.tabLayout.setupWithViewPager(binding.tabbedViewPager);
         }
+    }
+
+    private void loadTabbedLayout(IndaginiHeadList headsDisponibili, IndaginiHeadList headsInCorso){
+        String disponibili = getString(R.string.tab_disponibili),
+                inCorso = getString(R.string.tab_in_corso);
+        if(headsDisponibili.getHeads().size() > 0){
+            viewPagerAdapter.AddFragment(FragmentDisponibili.newInstance(), disponibili, headsDisponibili);
+        }else{
+            viewPagerAdapter.AddFragment(EmptyListFragment.newInstance(), disponibili, getString(R.string.no_indagini_disponibili));
+        }
+
+        if(headsInCorso.getHeads().size() > 0){
+            viewPagerAdapter.AddFragment(FragmentInCorso.newInstance(), inCorso, headsInCorso);
+        }else{
+            viewPagerAdapter.AddFragment(EmptyListFragment.newInstance(), inCorso, getString(R.string.no_indagini_in_corso));
+        }
+        binding.tabbedViewPager.setAdapter(viewPagerAdapter);
     }
 
     private void getEmailFromPreferences() {

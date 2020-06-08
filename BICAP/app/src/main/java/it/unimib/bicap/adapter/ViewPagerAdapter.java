@@ -52,6 +52,14 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         listTitles.add(title);
     }
 
+    public void AddFragment(Fragment fragment, String title, String message){
+        listFragment.add(fragment);
+        Bundle args = new Bundle();
+        args.putString(Constants.EMPTY_FRAGMENT_MESSAGE, message);
+        fragment.setArguments(args);
+        listTitles.add(title);
+    }
+
     public void RemoveFragments(int position){
         destroyItem(null, position, listFragment.get(position));
         listFragment.remove(position);

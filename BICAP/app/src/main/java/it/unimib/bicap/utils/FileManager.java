@@ -23,6 +23,7 @@ import java.net.URLConnection;
 import androidx.core.content.FileProvider;
 
 public class FileManager {
+
     public static boolean downloadFile(String url, String path){
         try {
             URL mUrl = new URL(url);
@@ -55,7 +56,7 @@ public class FileManager {
             intent.setDataAndType(uri , mime);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Intent chooser = Intent.createChooser(intent, "Complete action using");
+            Intent chooser = Intent.createChooser(intent, "Open with");
 
             try {
                 context.startActivity(chooser);
@@ -73,9 +74,9 @@ public class FileManager {
     }
 
     public static void checkNeededFolders(Context context){
-        checkFolder(context.getApplicationInfo().dataDir + "/tmp");
-        checkFolder(context.getApplicationInfo().dataDir + "/indagini");
-        checkFolder(context.getApplicationInfo().dataDir + "/indagini/in_corso");
+        checkFolder(context.getApplicationInfo().dataDir + Constants.TMP_PATH);
+        checkFolder(context.getApplicationInfo().dataDir + Constants.INDAGINI_PATH);
+        checkFolder(context.getApplicationInfo().dataDir + Constants.INDAGINI_IN_CORSO_PATH);
     }
 
     public static void writeToFile(String data, String path) {

@@ -1,5 +1,6 @@
 package it.unimib.bicap;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -12,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,13 +21,12 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 import it.unimib.bicap.adapter.InformazioneAdapter;
 import it.unimib.bicap.adapter.QuestionarioAdapter;
 import it.unimib.bicap.databinding.ActivityIndagineBinding;
+import it.unimib.bicap.dialog.LoadingDialog;
 import it.unimib.bicap.model.IndagineBody;
 import it.unimib.bicap.model.IndagineHead;
 import it.unimib.bicap.model.Informazione;
@@ -36,11 +37,13 @@ import it.unimib.bicap.viewmodel.CardsViewModel;
 import it.unimib.bicap.viewmodel.IndagineBodyViewModel;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
-        QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver {
+        QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver,
+        Asyn_OpenFile.OnPostListener {
 
     private IndagineBody mIndagineBody;
     private ActivityIndagineBinding binding;
     private CardsViewModel cardsViewModel;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         binding = ActivityIndagineBinding.inflate(getLayoutInflater());
         View v = binding.getRoot();
         setContentView(v);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
         mIndagineHead.setUltimaModifica("5/05/2020 15:37"); // PROVVISORIO !!!!
@@ -107,7 +111,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                     //Viene salvato su disco lo stato dell'indagine Body
                     mIndagineBody.getHead().setIndagineInCorso(true);
                     String mJsonIndagineBody = new  Gson().toJson(mIndagineBody);
-                    String path = this.getApplicationInfo().dataDir + "/indagini/in_corso/" + mIndagineBody.getHead().getId() + ".json";
+                    String path = this.getApplicationInfo().dataDir + Constants.INDAGINI_IN_CORSO_PATH + mIndagineBody.getHead().getId() + ".json";
                     FileManager.writeToFile(mJsonIndagineBody, path);
                 }
         }
@@ -150,7 +154,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                                          * disponibili
                                          */
                                         FileManager.deleteFile(getApplicationInfo().dataDir +
-                                                "/indagini/in_corso/" +
+                                                Constants.INDAGINI_IN_CORSO_PATH +
                                                 mIndagineBody.getHead().getId() + ".json");
                                         finish();
                                     }
@@ -193,21 +197,35 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onInfoCardClick(final int position) {
         String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mIndagineBody.getInformazioni().get(position).getNomeFile();
         String mUrl = mIndagineBody.getInformazioni().get(position).getFileUrl();
         String mMime = mIndagineBody.getInformazioni().get(position).getTipoFile();
-        new Asyn_OpenFile(mUrl, mPath, mMime, this).execute();
+        mLoadingDialog = new LoadingDialog(this);
+        mLoadingDialog.startDialog();
+        new Asyn_OpenFile(mUrl, mPath, mMime, this, this ).execute();
     }
 
-    // Click ricevuto da un informazione all'interno di un questionario
+    /** Click ricevuto da un' informazione all'interno di un questionario */
     @Override
     public void OnReciveClick(final int questionarioPosition, final int infoPosition) {
         Informazione mInfo = mIndagineBody.getQuestionari().get(questionarioPosition).getInformazioni().get(infoPosition);
         String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mInfo.getNomeFile();
         String mUrl = mInfo.getFileUrl();
         String mMime = mInfo.getTipoFile();
-        new Asyn_OpenFile(mUrl, mPath, mMime, this).execute();
+        mLoadingDialog = new LoadingDialog(this);
+        mLoadingDialog.startDialog();
+        new Asyn_OpenFile(mUrl, mPath, mMime, this, this).execute();
     }
 
     @Override
@@ -219,10 +237,16 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         startActivityForResult(mWebViewIntent, Constants.WEB_ACTIVITY_REQUEST_CODE);
     }
 
+    /** Evento di avvenuto download dell' Asyn_OpenFile */
+    @Override
+    public void onFinished() {
+        mLoadingDialog.dismissDialog();
+    }
+
     /**
      * Observer custom per gestire i dati del ViewModel: creato per evitare duplicate code,
      * le azioni da eseguire con i dati sono le stesse, cambia solo come ottenerli (se localmente
-     * o da remoto), ovvero la chiamata all' .observe(...)
+     * o da remoto), ovvero la chiamata al metodo .observe(...)
      */
     private class IndagineBodyObserver implements Observer<IndagineBody> {
 

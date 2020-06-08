@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:context="it.unimib.bicap.MainActivity">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/questionarioCardView"
@@ -64,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:enabled="false"
-                    android:text="Compila"
+                    android:text="@string/button_compila"
                     android:textColorHighlight="@color/colorAccent"
                     android:textColorLink="@color/colorAccent"
                     android:textCursorDrawable="@color/colorPrimaryDark"
@@ -78,7 +77,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="22dp"
-                    android:text="COMPILATO"
+                    android:text="@string/button_compilato"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textSize="14sp"
                     android:visibility="gone"

@@ -8,12 +8,11 @@
 
     <EditText
         android:id="@+id/email_edit"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="45dp"
         android:layout_marginTop="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
         android:ems="10"
+        android:gravity="center"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

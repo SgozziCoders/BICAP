@@ -7,7 +7,13 @@
     <string name="mail">bicap.unimib+support@gmail.com</string>
     <string name="website">https://psicologia.unimib.it/</string>
     <string name="description_about">
-        Quest\'applicazione permette di compilare questionari somministrati dal dipartimento di psicologia dell\'università degli studi di Milano Bicocca, secondo gli interessi dei singoli utenti intenzionati a partecipare alle indagini.\nLa scelta della mano nel logo di bicap, "B" nel linguaggio dei segni, avviene dopo un\'accurata ricerca stilistica che ci ha permesso di coadiuvare la capacità di espressione non vincolata dal contesto, ma anzi, libera di scorrere come un fiume di coscenza, con una rappresentazione visiva accattivante.\nCooperazione viene dopo comunicazione soltanto sul dizionario.
+        Quest\'applicazione permette di compilare questionari somministrati dal dipartimento di
+        psicologia dell\'università degli studi di Milano Bicocca, secondo gli interessi dei
+        singoli utenti intenzionati a partecipare alle indagini.\nLa scelta della mano nel logo di
+        bicap, "B" nel linguaggio dei segni, avviene dopo un\'accurata ricerca stilistica che ci ha
+        permesso di coadiuvare la capacità di espressione non vincolata dal contesto, ma anzi,
+        libera di scorrere come un fiume di coscenza, con una rappresentazione visiva accattivante.\n
+        Cooperazione viene dopo comunicazione soltanto sul dizionario.
     </string>
     <string name="description">
         By the same illusion which lifts the horizon of the sea to the level of the spectator on a
@@ -16,20 +22,23 @@
     </string>
     <string name="tematica">Tematica</string>
     <string name="informazioni">Informazioni</string>
-    <string name="termina_button">Termina Indagine</string>
+    <string name="button_termina">Termina Indagine</string>
+    <string name="button_compila">Compila</string>
+    <string name="button_compilato">COMPILATO</string>
+    <string name="tab_in_corso">In corso</string>
+    <string name="tab_disponibili">Disponibili</string>
+    <string name="dialog_error">Errore</string>
     <string name="dialog_message">Sei sicuro di voler uscire? Tutti i progressi non salvati andranno perduti</string>
     <string name="dialog_submit_question">Sei sicuro di voler terminare l\'indagine?</string>
     <string name="dialog_submit_thank_you">Grazie per aver partecipato all\'indagine</string>
     <string name="dialog_close">Chiudi</string>
     <string name="dialog_yes">Sì</string>
     <string name="dialog_no">No</string>
+    <string name="dialog_email">Inserisci la tua mail per proseguire</string>
+    <string name="dialog_roger">Capito</string>
     <string name="title_activity_email">Sign in</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="download_in_corso">Download in corso...</string>
+    <string name="no_indagini_in_corso">Non ci sono indagini in fase di compilazione</string>
+    <string name="no_indagini_disponibili">Non ci sono indagini disponibili per la compilazione</string>
 </resources>
