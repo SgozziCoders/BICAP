@@ -100,7 +100,7 @@ public class TabbedActivity extends AppCompatActivity {
     private void loadTabbedLayout(IndaginiHeadList headsDisponibili, IndaginiHeadList headsInCorso){
         String disponibili = getString(R.string.tab_disponibili),
                 inCorso = getString(R.string.tab_in_corso);
-        if(headsDisponibili.getHeads().size() > 0){
+        if(headsDisponibili != null && headsDisponibili.getHeads().size() > 0){
             viewPagerAdapter.AddFragment(FragmentDisponibili.newInstance(), disponibili, headsDisponibili);
         }else{
             viewPagerAdapter.AddFragment(EmptyListFragment.newInstance(), disponibili, getString(R.string.no_indagini_disponibili));
