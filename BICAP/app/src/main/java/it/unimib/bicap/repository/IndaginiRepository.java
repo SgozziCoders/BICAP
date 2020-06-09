@@ -38,7 +38,7 @@ public class IndaginiRepository {
     }
 
     public void getIndaginiHeadList(final MutableLiveData<IndaginiHeadList> indaginiHeadListMutableLiveData, String email){
-        Call<IndaginiHeadList> call = indaginiService.getIndaginiHeadJson(email);
+        Call<IndaginiHeadList> call = indaginiService.getIndaginiHeadJson(email, Constants.API_AUTHORIZATION_TOKEN);
         call.enqueue(new Callback<IndaginiHeadList>() {
             @Override
             public void onResponse(Call<IndaginiHeadList> call, Response<IndaginiHeadList> response) {
@@ -53,7 +53,7 @@ public class IndaginiRepository {
     }
 
     public void getRemoteIndagineBody(final MutableLiveData<IndagineBody> indagineBodyMutableLiveData, int indagineId){
-        Call<IndagineBody> call = indaginiService.getIndagineBodyJson(Constants.INDAGINE_BODY_API_URL + indagineId);
+        Call<IndagineBody> call = indaginiService.getIndagineBodyJson(Constants.INDAGINE_BODY_API_URL + indagineId, Constants.API_AUTHORIZATION_TOKEN);
         call.enqueue(new Callback<IndagineBody>() {
             @Override
             public void onResponse(Call<IndagineBody> call, Response<IndagineBody> response) {
@@ -68,7 +68,7 @@ public class IndaginiRepository {
     }
 
     public void putIndagineTerminata(String email, int idIndagine, OnCallBackListener onCallBackListener) {
-        Call<ResponseBody> call = indaginiService.putIndagineTerminata(email, idIndagine, new Post(true));
+        Call<ResponseBody> call = indaginiService.putIndagineTerminata(email, idIndagine, new Post(true), Constants.API_AUTHORIZATION_TOKEN);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

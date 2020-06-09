@@ -45,10 +45,10 @@ public class IndagineAdapter extends RecyclerView.Adapter<IndagineAdapter.Indagi
         String imgUrl = Constants.BACKEND_URL + mindaginiHeadList.getHeads().get(position).getImgUrl();
 
         Glide.with(holder.mIndagineImageView.getContext())
-                .load(imgUrl)
+                .load(mindaginiHeadList.getHeads().get(position).getImgUrl())
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
-                .signature(new ObjectKey("15/05/2020 15:37"))// DA MODIFICARE !!!!
+                .signature(new ObjectKey(mindaginiHeadList.getHeads().get(position).getUltimaModifica()))
                 .into(holder.mIndagineImageView);
     }
 

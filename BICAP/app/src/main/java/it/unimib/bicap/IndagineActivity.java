@@ -61,9 +61,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         mEmail = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
         mLoadingDialog = new LoadingDialog(this);
         mLoadingDialog.startDialog();
-
         IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
-        mIndagineHead.setUltimaModifica("5/05/2020 15:37"); // PROVVISORIO !!!!
 
         /** Observer unico, cambia come vengono ottenuti i dati */
         final IndagineBodyObserver indagineBodyObserver = new IndagineBodyObserver(mIndagineHead);

@@ -44,7 +44,7 @@ public class InformazioneAdapter extends RecyclerView.Adapter<InformazioneAdapte
                 .load(mInformazioneList.get(position).getThumbnailUrl())
                 .centerCrop()
                 .placeholder(R.drawable.square_avatar_rounded)
-                .signature(new ObjectKey("15/05/2020 15:37"))// DA MODIFICARE !!!!
+                .signature(new ObjectKey(mInformazioneList.get(position).getultimaModifica()))
                 .into(holder.mInformazioneImageView);
     }
 

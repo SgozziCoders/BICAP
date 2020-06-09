@@ -13,14 +13,16 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -37,10 +39,33 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        setSplashScreenAnimation();
+        //setSplashScreenAnimation();
         setVersionText();
         FileManager.checkNeededFolders(this);
         checkConnection();
+
+        float bDistance = getResources().getDimensionPixelSize(R.dimen.mano_x);
+        float icapDistance = getResources().getDimensionPixelSize(R.dimen.icap_x);
+        TranslateAnimation animation = new TranslateAnimation(
+                Animation.ABSOLUTE, 0,
+                Animation.ABSOLUTE, bDistance,
+                Animation.ABSOLUTE, 0,
+                Animation.ABSOLUTE, 0
+        );
+
+        View vB = findViewById(R.id.bImageView);
+        vB.animate().translationX(bDistance).setDuration(1500).start();
+        View vIcap = findViewById(R.id.icapImageView);
+        vIcap.animate().translationX(icapDistance).setDuration(1500).start();
+
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ProgressBar pb = (ProgressBar) findViewById(R.id.loadingProgressBar);
+                pb.setVisibility(View.VISIBLE);
+            }
+        }, 3000);
 
         if(!getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE)
                 .contains(Constants.EMAIL_SHARED_PREF_KEY)){
@@ -123,9 +148,9 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
         else {
             new AlertDialog.Builder(this)
-                    .setTitle("Errore di Connessione")
-                    .setMessage("Sembra tu non sia connesso ad Internet, perfavore apri l'applicazione solamente in presenza di una connessione stabile")
-                    .setPositiveButton("Chiudi", new DialogInterface.OnClickListener() {
+                    .setTitle(R.string.dialog_error)
+                    .setMessage(R.string.dialog_connection_required_message)
+                    .setPositiveButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             finish();
                         }

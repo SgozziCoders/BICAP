@@ -28,6 +28,11 @@
     <string name="tab_in_corso">In corso</string>
     <string name="tab_disponibili">Disponibili</string>
     <string name="dialog_error">Errore</string>
+    <string name="dialog_connect_required">Errore di connessione</string>
+    <string name="dialog_connection_required_message">
+        Sembra tu non sia connesso ad Internet, perfavore apri l\'applicazione solamente
+        in presenza di una connessione stabile
+    </string>
     <string name="dialog_message">Sei sicuro di voler uscire? Tutti i progressi non salvati andranno perduti</string>
     <string name="dialog_submit_question">Sei sicuro di voler terminare l\'indagine?</string>
     <string name="dialog_submit_thank_you">Grazie per aver partecipato all\'indagine</string>
