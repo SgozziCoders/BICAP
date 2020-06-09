@@ -36,9 +36,12 @@
     <string name="dialog_no">No</string>
     <string name="dialog_email">Inserisci la tua mail per proseguire</string>
     <string name="dialog_roger">Capito</string>
+    <string name="dialog_connection_error">
+        Non è stato possibile comunicare con il server\nAssicurati di essere connesso ad internet.
+    </string>
     <string name="title_activity_email">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="download_in_corso">Download in corso...</string>
+    <string name="download_in_corso">Caricamento in corso...</string>
     <string name="no_indagini_in_corso">Non ci sono indagini in fase di compilazione</string>
     <string name="no_indagini_disponibili">Non ci sono indagini disponibili per la compilazione</string>
 </resources>

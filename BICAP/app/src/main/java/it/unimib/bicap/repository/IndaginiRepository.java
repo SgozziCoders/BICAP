@@ -47,7 +47,7 @@ public class IndaginiRepository {
 
             @Override
             public void onFailure(Call<IndaginiHeadList> call, Throwable t) {
-                // Gestione fallimento della richiesta al server (Non comprende il 404 Not Found)
+
             }
         });
     }
@@ -62,22 +62,22 @@ public class IndaginiRepository {
 
             @Override
             public void onFailure(Call<IndagineBody> call, Throwable t) {
-                // Gestione fallimento della richiesta al server (Non comprende il 404 Not Found)
+
             }
         });
     }
 
-    public void putIndagineTerminata(String email, int idIndagine){
+    public void putIndagineTerminata(String email, int idIndagine, OnCallBackListener onCallBackListener) {
         Call<ResponseBody> call = indaginiService.putIndagineTerminata(email, idIndagine, new Post(true));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                onCallBackListener.onPutFinished();
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                // Gestione fallimento della richiesta al server (Non comprende il 404 Not Found)
+                onCallBackListener.onPutFail(t.getMessage());
             }
         });
     }
@@ -92,5 +92,9 @@ public class IndaginiRepository {
         }
     }
 
+    public interface OnCallBackListener {
+        public void onPutFinished();
+        public void onPutFail(String error);
+    }
 
 }

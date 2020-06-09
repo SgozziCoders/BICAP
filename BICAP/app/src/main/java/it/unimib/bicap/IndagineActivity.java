@@ -30,7 +30,6 @@ import it.unimib.bicap.databinding.ActivityIndagineBinding;
 import it.unimib.bicap.dialog.LoadingDialog;
 import it.unimib.bicap.model.IndagineBody;
 import it.unimib.bicap.model.IndagineHead;
-import it.unimib.bicap.model.IndaginiHeadList;
 import it.unimib.bicap.model.Informazione;
 import it.unimib.bicap.repository.IndaginiRepository;
 import it.unimib.bicap.utils.Asyn_OpenFile;
@@ -42,7 +41,7 @@ import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver,
-        Asyn_OpenFile.OnPostListener {
+        Asyn_OpenFile.OnDownloadListener, IndaginiRepository.OnCallBackListener {
 
     private IndagineBody mIndagineBody;
     private ActivityIndagineBinding binding;
@@ -56,13 +55,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         super.onCreate(savedInstanceState);
         cardsViewModel = new ViewModelProvider(this).get(CardsViewModel.class);
         IndagineBodyViewModel indagineBodyViewModel = new ViewModelProvider(this).get(IndagineBodyViewModel.class);
-        binding = ActivityIndagineBinding.inflate(getLayoutInflater());
-        View v = binding.getRoot();
-        setContentView(v);
         indaginiHeadListViewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
         mEmail = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
+        mLoadingDialog = new LoadingDialog(this);
+        mLoadingDialog.startDialog();
 
         IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
         mIndagineHead.setUltimaModifica("5/05/2020 15:37"); // PROVVISORIO !!!!
@@ -79,6 +77,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     }
 
     private void loadUI(){
+        mLoadingDialog.dismissDialog();
+        binding = ActivityIndagineBinding.inflate(getLayoutInflater());
+        View v = binding.getRoot();
+        setContentView(v);
         loadInformazioniScroll(mIndagineBody);
         loadQuestionari(mIndagineBody, cardsViewModel.getVisibilityList(mIndagineBody.getQuestionari().size()));
         setEneableSubmitAll();
@@ -160,12 +162,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                                          * e viene rimossa l'indagine dai LiveData del ViewModel
                                          * delle indaginiHeadList
                                          */
-                                        IndaginiRepository.getInstance().putIndagineTerminata(mEmail, mIndagineBody.getHead().getId());
-                                        indaginiHeadListViewModel.RemoveById(mIndagineBody.getHead().getId());
-                                        FileManager.deleteFile(getApplicationInfo().dataDir +
-                                                Constants.INDAGINI_IN_CORSO_PATH +
-                                                mIndagineBody.getHead().getId() + ".json");
-                                        finish();
+                                        IndaginiRepository.getInstance().putIndagineTerminata(mEmail, mIndagineBody.getHead().getId(), IndagineActivity.this);
+                                        mLoadingDialog.startDialog();
                                     }
                                 })
                                 .show();
@@ -232,7 +230,6 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mInfo.getNomeFile();
         String mUrl = mInfo.getFileUrl();
         String mMime = mInfo.getTipoFile();
-        mLoadingDialog = new LoadingDialog(this);
         mLoadingDialog.startDialog();
         new Asyn_OpenFile(mUrl, mPath, mMime, this, this).execute();
     }
@@ -250,6 +247,42 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     @Override
     public void onFinished() {
         mLoadingDialog.dismissDialog();
+    }
+
+    @Override
+    public void onDownloadFailed(String error) {
+        mLoadingDialog.dismissDialog();
+        new AlertDialog.Builder(IndagineActivity.this)
+                .setMessage(R.string.dialog_connection_error)
+                .setCancelable(false)
+                .setPositiveButton(R.string.dialog_close, null)
+                .show();
+    }
+
+    /**
+     * Evento di avvenuta cancellazione dell'indagine lato server: utilizzato per essere sicuri di
+     * eliminare l'indagine localmente solo se lo stato della distribuzione è stato correttamente
+     * aggiornato lato server, in modo da essere sicuri che non ricompaia nelle indagini disponibili
+     **/
+    @Override
+    public void onPutFinished() {
+        indaginiHeadListViewModel.RemoveById(mIndagineBody.getHead().getId());
+        FileManager.deleteFile(getApplicationInfo().dataDir +
+                Constants.INDAGINI_IN_CORSO_PATH +
+                mIndagineBody.getHead().getId() + ".json");
+        mLoadingDialog.dismissDialog();
+        finish();
+    }
+
+    /** Evento di fallimento di comunicazione con il server **/
+    @Override
+    public void onPutFail(String error) {
+        mLoadingDialog.dismissDialog();
+        new AlertDialog.Builder(IndagineActivity.this)
+                .setMessage(R.string.dialog_connection_error)
+                .setCancelable(false)
+                .setPositiveButton(R.string.dialog_close, null)
+                .show();
     }
 
     /**

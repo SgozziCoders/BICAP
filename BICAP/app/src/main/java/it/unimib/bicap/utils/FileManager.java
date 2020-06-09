@@ -24,10 +24,11 @@ import androidx.core.content.FileProvider;
 
 public class FileManager {
 
-    public static boolean downloadFile(String url, String path){
+    public static boolean downloadFile(String url, String path) throws IOException {
         try {
             URL mUrl = new URL(url);
             URLConnection mUrlCon = mUrl.openConnection();
+            mUrlCon.setConnectTimeout(5000);
             int contentLength = mUrlCon.getContentLength();
             InputStream is = mUrlCon.getInputStream();
 
@@ -41,7 +42,7 @@ public class FileManager {
             }
             return true;
         } catch (Exception ex) {
-            return false;
+            throw ex;
         }
     }
 

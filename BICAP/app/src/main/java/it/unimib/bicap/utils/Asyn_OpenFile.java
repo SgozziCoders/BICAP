@@ -6,28 +6,38 @@ import android.os.AsyncTask;
 public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
     private String mUrl, mPath, mMime;
     private Context mContext;
-    private OnPostListener mOnPostListener;
+    private OnDownloadListener mOnDownloadListener;
+    private String error;
 
-    public Asyn_OpenFile(String mUrl, String mPath, String mMime, Context mContext, OnPostListener mOnPostListener){
+    public Asyn_OpenFile(String mUrl, String mPath, String mMime, Context mContext, OnDownloadListener mOnDownloadListener){
         super();
         this.mUrl = mUrl;
         this.mPath = mPath;
         this.mMime = mMime;
         this.mContext = mContext;
-        this.mOnPostListener = mOnPostListener;
+        this.mOnDownloadListener = mOnDownloadListener;
+        this.error = null;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-        FileManager.downloadFile(mUrl, mPath);
+        try{
+            FileManager.downloadFile(mUrl, mPath);
+        }catch (Exception ex){
+            error = ex.getMessage();
+        }
         return null;
     }
 
     @Override
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
-        FileManager.openFile(mPath, mMime, mContext);
-        mOnPostListener.onFinished();
+        if(error != null){
+            mOnDownloadListener.onDownloadFailed(error);
+        }else{
+            FileManager.openFile(mPath, mMime, mContext);
+            mOnDownloadListener.onFinished();
+        }
     }
 
     /**
@@ -38,7 +48,8 @@ public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
      *       presenza di un thread, il quale impedisce di utilizzare un handler;
      *
      * */
-    public interface OnPostListener {
+    public interface OnDownloadListener {
         public void onFinished();
+        public void onDownloadFailed(String errorMessage);
     }
 }

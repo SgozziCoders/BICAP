@@ -25,4 +25,5 @@ public class IndagineBodyViewModel extends ViewModel {
         }
         return indagineBody;
     }
+
 }
