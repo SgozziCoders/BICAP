@@ -44,28 +44,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         FileManager.checkNeededFolders(this);
         checkConnection();
 
+        /** Nuova animazione : da fixare **/
         float bDistance = getResources().getDimensionPixelSize(R.dimen.mano_x);
         float icapDistance = getResources().getDimensionPixelSize(R.dimen.icap_x);
-        TranslateAnimation animation = new TranslateAnimation(
-                Animation.ABSOLUTE, 0,
-                Animation.ABSOLUTE, bDistance,
-                Animation.ABSOLUTE, 0,
-                Animation.ABSOLUTE, 0
-        );
-
         View vB = findViewById(R.id.bImageView);
         vB.animate().translationX(bDistance).setDuration(1500).start();
         View vIcap = findViewById(R.id.icapImageView);
         vIcap.animate().translationX(icapDistance).setDuration(1500).start();
 
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ProgressBar pb = (ProgressBar) findViewById(R.id.loadingProgressBar);
-                pb.setVisibility(View.VISIBLE);
-            }
-        }, 3000);
+        showSpinnerWithDelay();
 
         if(!getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE)
                 .contains(Constants.EMAIL_SHARED_PREF_KEY)){
@@ -75,11 +62,21 @@ public class SplashScreenActivity extends AppCompatActivity {
             indagineHeadListAPI();
         }
     }
+    
     private void getEmailFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
         email = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
     }
 
+    private void showSpinnerWithDelay(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ProgressBar pb = (ProgressBar) findViewById(R.id.loadingProgressBar);
+                pb.setVisibility(View.VISIBLE);
+            }
+        }, 3000);
+    }
 
     // Utilizza il ViewModel per caricare la lista di indagini destinate all'utente
     private void indagineHeadListAPI() {
