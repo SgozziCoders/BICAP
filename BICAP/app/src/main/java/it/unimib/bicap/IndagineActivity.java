@@ -60,7 +60,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
         mEmail = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
         mLoadingDialog = new LoadingDialog(this);
-        mLoadingDialog.startDialog();
+        mLoadingDialog.startDialog(getString(R.string.dialog_loading_generic));
         IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
 
         /** Observer unico, cambia come vengono ottenuti i dati */
@@ -161,7 +161,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                                          * delle indaginiHeadList
                                          */
                                         IndaginiRepository.getInstance().putIndagineTerminata(mEmail, mIndagineBody.getHead().getId(), IndagineActivity.this);
-                                        mLoadingDialog.startDialog();
+                                        mLoadingDialog.startDialog(getString(R.string.dialog_sending));
                                     }
                                 })
                                 .show();
@@ -217,7 +217,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         String mUrl = mIndagineBody.getInformazioni().get(position).getFileUrl();
         String mMime = mIndagineBody.getInformazioni().get(position).getTipoFile();
         mLoadingDialog = new LoadingDialog(this);
-        mLoadingDialog.startDialog();
+        mLoadingDialog.startDialog(getString(R.string.dialog_downloading));
         new Asyn_OpenFile(mUrl, mPath, mMime, this, this ).execute();
     }
 
@@ -228,7 +228,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mInfo.getNomeFile();
         String mUrl = mInfo.getFileUrl();
         String mMime = mInfo.getTipoFile();
-        mLoadingDialog.startDialog();
+        mLoadingDialog.startDialog(getString(R.string.dialog_downloading));
         new Asyn_OpenFile(mUrl, mPath, mMime, this, this).execute();
     }
 
@@ -249,6 +249,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     @Override
     public void onDownloadFailed(String error) {
+        /**
+         * Possibile futuro utilizzo della string error per analizzare l'errore e notificare
+         * l'utente della causa
+         */
         mLoadingDialog.dismissDialog();
         new AlertDialog.Builder(IndagineActivity.this)
                 .setMessage(R.string.dialog_connection_error)
@@ -275,6 +279,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     /** Evento di fallimento di comunicazione con il server **/
     @Override
     public void onPutFail(String error) {
+        /**
+         * Possibile futuro utilizzo della string error per analizzare l'errore e notificare
+         * l'utente della causa
+         */
         mLoadingDialog.dismissDialog();
         new AlertDialog.Builder(IndagineActivity.this)
                 .setMessage(R.string.dialog_connection_error)

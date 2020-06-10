@@ -42,8 +42,12 @@
     <string name="dialog_email">Inserisci la tua mail per proseguire</string>
     <string name="dialog_roger">Capito</string>
     <string name="dialog_connection_error">
-        Non è stato possibile comunicare con il server\nAssicurati di essere connesso ad internet.
+        Non è stato possibile comunicare con il server. Assicurati che il telefono
+        sia connesso ad internet. Se il problema persiste non esitare a contattarci
     </string>
+    <string name="dialog_loading_generic">Caricamento in corso</string>
+    <string name="dialog_downloading">Download dell\'informazione in corso</string>
+    <string name="dialog_sending">Invio dei dati al server in corso</string>
     <string name="title_activity_email">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="download_in_corso">Caricamento in corso...</string>

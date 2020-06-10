@@ -62,7 +62,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             indagineHeadListAPI();
         }
     }
-    
+
     private void getEmailFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
         email = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);

@@ -29,6 +29,7 @@ public class FileManager {
             URL mUrl = new URL(url);
             URLConnection mUrlCon = mUrl.openConnection();
             mUrlCon.setConnectTimeout(5000);
+            mUrlCon.setReadTimeout(5000);
             int contentLength = mUrlCon.getContentLength();
             InputStream is = mUrlCon.getInputStream();
 
