@@ -38,6 +38,7 @@ import it.unimib.bicap.utils.FileManager;
 import it.unimib.bicap.viewmodel.CardsViewModel;
 import it.unimib.bicap.viewmodel.IndagineBodyViewModel;
 import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
+import it.unimib.bicap.wrapper.DataWrapper;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
         QuestionarioAdapter.OnSubmitClickListener, QuestionarioAdapter.InformazioneRowReciver,
@@ -296,7 +297,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
      * le azioni da eseguire con i dati sono le stesse, cambia solo come ottenerli (se localmente
      * o da remoto), ovvero la chiamata al metodo .observe(...)
      */
-    private class IndagineBodyObserver implements Observer<IndagineBody> {
+    private class IndagineBodyObserver implements Observer<DataWrapper<IndagineBody>> {
 
         private IndagineHead mIndagineHead;
 
@@ -306,10 +307,28 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         }
 
         @Override
-        public void onChanged(IndagineBody indagineBody) {
-            mIndagineBody = indagineBody;
-            mIndagineBody.setHead(mIndagineHead);
-            loadUI();
+        public void onChanged(DataWrapper<IndagineBody> indagineBodyDataWrapper) {
+            if(indagineBodyDataWrapper.getData() != null){
+                mIndagineBody = indagineBodyDataWrapper.getData();
+                mIndagineBody.setHead(mIndagineHead);
+                loadUI();
+            }else{
+                /**
+                 * Possibile analisi dell'errore (classe Exception):
+                 * controllare se l'eccezione viene dalla richiesta http di retrofit o da una
+                 * lettura dei file locale non andata a buon fine
+                 * **/
+                new android.app.AlertDialog.Builder(IndagineActivity.this)
+                        .setMessage(R.string.dialog_connection_error)
+                        .setCancelable(false)
+                        .setPositiveButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .show();
+            }
         }
     }
 }

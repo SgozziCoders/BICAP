@@ -18,7 +18,6 @@ import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,6 +29,7 @@ import it.unimib.bicap.model.IndaginiHeadList;
 import it.unimib.bicap.utils.Constants;
 import it.unimib.bicap.utils.FileManager;
 import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
+import it.unimib.bicap.wrapper.DataWrapper;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -42,7 +42,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         //setSplashScreenAnimation();
         setVersionText();
         FileManager.checkNeededFolders(this);
-        checkConnection();
+        //checkConnection();
 
         /** Nuova animazione : da fixare **/
         float bDistance = getResources().getDimensionPixelSize(R.dimen.mano_x);
@@ -83,10 +83,26 @@ public class SplashScreenActivity extends AppCompatActivity {
         IndagineHeadListViewModel indaginiHeadListViewModel;
 
         indaginiHeadListViewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
-        final Observer<IndaginiHeadList> observer = new Observer<IndaginiHeadList>() {
+        final Observer<DataWrapper<IndaginiHeadList>> observer = new Observer<DataWrapper<IndaginiHeadList>>() {
             @Override
-            public void onChanged(IndaginiHeadList indaginiHeadList) {
-                openTabbedActivity();
+            public void onChanged(DataWrapper<IndaginiHeadList> indaginiHeadListDataWrapper) {
+                /** Se l'errore è nullo la chiamata è andata a buon fine **/
+                if(indaginiHeadListDataWrapper.getError() == null){
+                    openTabbedActivity();
+                }else{
+                    /** Possibile analisi dell'errore (classe Exception) **/
+                    indaginiHeadListViewModel.Clear();
+                    new android.app.AlertDialog.Builder(SplashScreenActivity.this)
+                            .setMessage(R.string.dialog_connection_error)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.dialog_close, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                            .show();
+                }
             }
         };
         indaginiHeadListViewModel.loadIndaginiHeadList(email).observe(this,observer);

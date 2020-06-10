@@ -13,6 +13,7 @@ import it.unimib.bicap.model.IndaginiHeadList;
 import it.unimib.bicap.model.Post;
 import it.unimib.bicap.service.IndaginiService;
 import it.unimib.bicap.utils.Constants;
+import it.unimib.bicap.wrapper.DataWrapper;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,32 +38,36 @@ public class IndaginiRepository {
         return instance;
     }
 
-    public void getIndaginiHeadList(final MutableLiveData<IndaginiHeadList> indaginiHeadListMutableLiveData, String email){
+    public void getIndaginiHeadList(final MutableLiveData<DataWrapper<IndaginiHeadList>> indaginiHeadListWrapperMLD, String email){
         Call<IndaginiHeadList> call = indaginiService.getIndaginiHeadJson(email, Constants.API_AUTHORIZATION_TOKEN);
         call.enqueue(new Callback<IndaginiHeadList>() {
             @Override
             public void onResponse(Call<IndaginiHeadList> call, Response<IndaginiHeadList> response) {
-                indaginiHeadListMutableLiveData.postValue(response.body());
+                indaginiHeadListWrapperMLD.postValue(new DataWrapper<>(null, response.body()));
             }
 
             @Override
             public void onFailure(Call<IndaginiHeadList> call, Throwable t) {
-
+                indaginiHeadListWrapperMLD.postValue(new DataWrapper<>(new Exception(t), null));
             }
         });
     }
 
-    public void getRemoteIndagineBody(final MutableLiveData<IndagineBody> indagineBodyMutableLiveData, int indagineId){
+    public void getRemoteIndagineBody(final MutableLiveData<DataWrapper<IndagineBody>> indagineBodyWrapperMLD, int indagineId){
         Call<IndagineBody> call = indaginiService.getIndagineBodyJson(Constants.INDAGINE_BODY_API_URL + indagineId, Constants.API_AUTHORIZATION_TOKEN);
         call.enqueue(new Callback<IndagineBody>() {
             @Override
             public void onResponse(Call<IndagineBody> call, Response<IndagineBody> response) {
-                indagineBodyMutableLiveData.postValue(response.body());
+                /**
+                 * Prima di postare i valori bisogna controllare se la response.body() è null;
+                 * in caso positivo siamo in stato di errore da parte del backend
+                 **/
+                indagineBodyWrapperMLD.postValue(new DataWrapper<>(null, response.body()));
             }
 
             @Override
             public void onFailure(Call<IndagineBody> call, Throwable t) {
-
+                indagineBodyWrapperMLD.postValue(new DataWrapper<>(new Exception(t), null));
             }
         });
     }
@@ -82,13 +87,13 @@ public class IndaginiRepository {
         });
     }
 
-    public void getLocalIndagineBody(final MutableLiveData<IndagineBody> indagineBodyMutableLiveData, int indagineId, String dataDir){
+    public void getLocalIndagineBody(final MutableLiveData<DataWrapper<IndagineBody>> indagineBodyWrapperMLD, int indagineId, String dataDir){
         try{
             File mIndagineBodyFile = new File(dataDir + Constants.INDAGINI_IN_CORSO_PATH + indagineId + ".json");
             IndagineBody mIndagineBodyLocal = new Gson().fromJson(new BufferedReader(new FileReader(mIndagineBodyFile.getAbsolutePath())), IndagineBody.class);
-            indagineBodyMutableLiveData.postValue(mIndagineBodyLocal);
+            indagineBodyWrapperMLD.postValue(new DataWrapper<>(null, mIndagineBodyLocal));
         }catch(Exception ex){
-            return;
+            indagineBodyWrapperMLD.postValue(new DataWrapper<>(ex, null));
         }
     }
 

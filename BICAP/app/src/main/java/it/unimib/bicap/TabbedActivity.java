@@ -72,7 +72,7 @@ public class TabbedActivity extends AppCompatActivity {
         super.onResume();
         IndagineHead tmp;
         IndaginiHeadList headsInCorso;
-        IndaginiHeadList headsDisponibili = viewModel.loadIndaginiHeadList(email).getValue();
+        IndaginiHeadList headsDisponibili = viewModel.loadIndaginiHeadList(email).getValue().getData();
         headsInCorso = getIndaginiInCorso();
         for(IndagineHead h : headsInCorso.getHeads()){
             try{

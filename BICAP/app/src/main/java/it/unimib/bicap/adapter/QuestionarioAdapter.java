@@ -159,7 +159,6 @@ public class QuestionarioAdapter extends RecyclerView.Adapter<QuestionarioAdapte
                         mExpandButton.setBackgroundResource(R.drawable.ic_expand_less);
                         mVisibilityListener.OnExpandClick(getAdapterPosition(), true);
                     } else {
-                        TransitionManager.beginDelayedTransition(mCardView, new AutoTransition());
                         mExpandableView.setVisibility(View.GONE);
                         mExpandButton.setBackgroundResource(R.drawable.ic_expand_more);
                         mVisibilityListener.OnExpandClick(getAdapterPosition(), false);
