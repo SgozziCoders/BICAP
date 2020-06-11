@@ -2,6 +2,7 @@ package it.unimib.bicap.utils;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.FileUtils;
 
 public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
     private String mUrl, mPath, mMime;
@@ -22,7 +23,7 @@ public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         try{
-            FileManager.downloadFile(mUrl, mPath);
+            FileManager.downloadFile(mUrl, mPath, mOnDownloadListener);
         }catch (Exception ex){
             error = ex.getMessage();
         }
@@ -36,7 +37,7 @@ public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
             mOnDownloadListener.onDownloadFailed(error);
         }else{
             FileManager.openFile(mPath, mMime, mContext);
-            mOnDownloadListener.onFinished();
+            mOnDownloadListener.onDownloadFinished();
         }
     }
 
@@ -49,7 +50,8 @@ public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
      *
      * */
     public interface OnDownloadListener {
-        public void onFinished();
+        public void onDownloadFinished();
         public void onDownloadFailed(String errorMessage);
+        public void onDownloadProgress(int value);
     }
 }

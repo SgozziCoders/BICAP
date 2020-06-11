@@ -50,7 +50,6 @@
     <string name="dialog_sending">Invio dei dati al server in corso</string>
     <string name="title_activity_email">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="download_in_corso">Caricamento in corso...</string>
     <string name="no_indagini_in_corso">Non ci sono indagini in fase di compilazione</string>
     <string name="no_indagini_disponibili">Non ci sono indagini disponibili per la compilazione</string>
 </resources>

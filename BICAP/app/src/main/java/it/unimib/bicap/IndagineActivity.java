@@ -27,6 +27,7 @@ import java.util.List;
 import it.unimib.bicap.adapter.InformazioneAdapter;
 import it.unimib.bicap.adapter.QuestionarioAdapter;
 import it.unimib.bicap.databinding.ActivityIndagineBinding;
+import it.unimib.bicap.dialog.DownloadingDialog;
 import it.unimib.bicap.dialog.LoadingDialog;
 import it.unimib.bicap.model.IndagineBody;
 import it.unimib.bicap.model.IndagineHead;
@@ -49,6 +50,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private CardsViewModel cardsViewModel;
     private IndagineHeadListViewModel indaginiHeadListViewModel;
     private LoadingDialog mLoadingDialog;
+    private DownloadingDialog mDownloadingDialog;
     private String mEmail;
 
     @Override
@@ -62,6 +64,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         mEmail = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
         mLoadingDialog = new LoadingDialog(this);
         mLoadingDialog.startDialog(getString(R.string.dialog_loading_generic));
+        mDownloadingDialog = new DownloadingDialog(this);
         IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
 
         /** Observer unico, cambia come vengono ottenuti i dati */
@@ -217,8 +220,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mIndagineBody.getInformazioni().get(position).getNomeFile();
         String mUrl = mIndagineBody.getInformazioni().get(position).getFileUrl();
         String mMime = mIndagineBody.getInformazioni().get(position).getTipoFile();
-        mLoadingDialog = new LoadingDialog(this);
-        mLoadingDialog.startDialog(getString(R.string.dialog_downloading));
+        mDownloadingDialog.startDialog(getString(R.string.dialog_downloading));
         new Asyn_OpenFile(mUrl, mPath, mMime, this, this ).execute();
     }
 
@@ -244,8 +246,8 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     /** Evento di avvenuto download dell' Asyn_OpenFile */
     @Override
-    public void onFinished() {
-        mLoadingDialog.dismissDialog();
+    public void onDownloadFinished() {
+        mDownloadingDialog.dismissDialog();
     }
 
     @Override
@@ -260,6 +262,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_close, null)
                 .show();
+    }
+
+    /** Viene aumentato lo stato della barra di progresso **/
+    @Override
+    public void onDownloadProgress(int value) {
+        mDownloadingDialog.setProgress(value);
     }
 
     /**

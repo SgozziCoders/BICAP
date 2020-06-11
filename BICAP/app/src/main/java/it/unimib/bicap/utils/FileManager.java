@@ -24,7 +24,8 @@ import androidx.core.content.FileProvider;
 
 public class FileManager {
 
-    public static boolean downloadFile(String url, String path) throws IOException {
+    public static boolean downloadFile(String url, String path,
+                                       Asyn_OpenFile.OnDownloadListener onDownloadListener) throws IOException {
         try {
             URL mUrl = new URL(url);
             URLConnection mUrlCon = mUrl.openConnection();
@@ -36,9 +37,12 @@ public class FileManager {
             DataInputStream mDataInputStream = new DataInputStream(is);
             byte[] mBuffer = new byte[contentLength];
             int mLength;
+            long total = 0;
             FileOutputStream mFileOutputStream = new FileOutputStream(new File( path ));
 
             while ((mLength = mDataInputStream.read(mBuffer))>0) {
+                total += mLength;
+                onDownloadListener.onDownloadProgress((int) (total*100/contentLength));
                 mFileOutputStream.write(mBuffer, 0, mLength);
             }
             return true;
