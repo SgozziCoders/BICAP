@@ -37,6 +37,8 @@
     <string name="dialog_submit_question">Sei sicuro di voler terminare l\'indagine?</string>
     <string name="dialog_submit_thank_you">Grazie per aver partecipato all\'indagine</string>
     <string name="dialog_close">Chiudi</string>
+    <string name="dialog_download_cancel">Annulla il downlaod</string>
+    <string name="dialog_cancel">Annulla</string>
     <string name="dialog_yes">Sì</string>
     <string name="dialog_no">No</string>
     <string name="dialog_email">Inserisci la tua mail per proseguire</string>

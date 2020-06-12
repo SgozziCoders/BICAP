@@ -3,9 +3,12 @@ package it.unimib.bicap.utils;
 public class Constants {
     public static final int WEB_ACTIVITY_REQUEST_CODE = 1;
     public static final String URL = "url";
-    public static final String TITOLO_QUESTIONARIO = "titolo_questionario";
-    public static final String QUESTIONARIO_POSITION = "questionario_position";
-    public static final String INDAGINI_HEAD_LIST_ARGS = "indagini_head_list_args";
+    public static final String BICAP_SUPPORT_EMAIL = "bicap.unimib+support@gmail.com";
+    public static final String MESSAGE_RFC_822 = "message/rfc822";
+    public static final String TITOLO_QUESTIONARIO_ARG = "titolo_questionario";
+    public static final String QUESTIONARIO_POSITION_ARG = "questionario_position";
+    public static final String INDAGINE_HEAD_ARG = "Indagine";
+    public static final String INDAGINI_HEAD_LIST_ARG = "indagini_head_list_args";
     public static final String INDAGINI_PATH = "/indagini";
     public static final String INDAGINI_IN_CORSO_PATH = "/indagini/in_corso/";
     public static final String TMP_PATH = "/tmp";
@@ -15,4 +18,6 @@ public class Constants {
     public static final String EMAIL_SHARED_PREF = "email_shared_pref";
     public static final String EMAIL_SHARED_PREF_KEY = "Email";
     public static final String EMPTY_FRAGMENT_MESSAGE = "empty_fragment_message";
+    public static final String SELECTED_TAB = "selected_tab";
+
 }

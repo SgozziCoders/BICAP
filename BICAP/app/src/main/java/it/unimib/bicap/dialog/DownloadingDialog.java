@@ -2,6 +2,8 @@ package it.unimib.bicap.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -21,7 +23,7 @@ public class DownloadingDialog {
         this.activity = activity;
     }
 
-    public void startDialog(String loadingMessage){
+    public void startDialog(String loadingMessage, DialogInterface.OnClickListener cancelListener){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         LayoutInflater inflater = activity.getLayoutInflater();
         View v = inflater.inflate(R.layout.downloading_progress_dialog, null);
@@ -32,6 +34,7 @@ public class DownloadingDialog {
         loadingTextview.setText(loadingMessage);
         builder.setView(v);
         builder.setCancelable(false);
+        builder.setNegativeButton(activity.getString(R.string.dialog_download_cancel), cancelListener);
         dialog = builder.create();
         dialog.show();
     }

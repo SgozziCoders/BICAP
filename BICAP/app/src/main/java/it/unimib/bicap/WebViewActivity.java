@@ -129,8 +129,8 @@ public class WebViewActivity extends AppCompatActivity{
         WebView mWebView = findViewById(R.id.qualtricsWebView);
 
         mQuestionarioUrl = getIntent().getExtras().getString("url");
-        this.setTitle(getIntent().getExtras().getString(Constants.TITOLO_QUESTIONARIO));
-        mQuestionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION);
+        this.setTitle(getIntent().getExtras().getString(Constants.TITOLO_QUESTIONARIO_ARG));
+        mQuestionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION_ARG);
 
         initzializeWebView(mWebView);
     }
@@ -171,7 +171,7 @@ public class WebViewActivity extends AppCompatActivity{
             if(content.contains("<div id=\"EndOfSurvey\"")) {
                 Intent resultIntent = new Intent();
                 setResult(Activity.RESULT_OK, resultIntent);
-                resultIntent.putExtra(Constants.QUESTIONARIO_POSITION, mQuestionarioPosition);
+                resultIntent.putExtra(Constants.QUESTIONARIO_POSITION_ARG, mQuestionarioPosition);
                 finish();
             }
         }

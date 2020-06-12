@@ -52,20 +52,35 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private LoadingDialog mLoadingDialog;
     private DownloadingDialog mDownloadingDialog;
     private String mEmail;
+    private Asyn_OpenFile asyn_openFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cardsViewModel = new ViewModelProvider(this).get(CardsViewModel.class);
-        IndagineBodyViewModel indagineBodyViewModel = new ViewModelProvider(this).get(IndagineBodyViewModel.class);
-        indaginiHeadListViewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
-        mEmail = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
+        gloabalInit();
+        getEmailFromPreferences();
+        viewModelInit();
+    }
+
+
+    private void gloabalInit(){
+        binding = ActivityIndagineBinding.inflate(getLayoutInflater());
+        indaginiHeadListViewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
+        cardsViewModel = new ViewModelProvider(this).get(CardsViewModel.class);
         mLoadingDialog = new LoadingDialog(this);
-        mLoadingDialog.startDialog(getString(R.string.dialog_loading_generic));
+        mLoadingDialog.startDialog(getString(R.string.dialog_loading_generic), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
         mDownloadingDialog = new DownloadingDialog(this);
-        IndagineHead mIndagineHead = getIntent().getParcelableExtra("Indagine");
+    }
+
+    private void viewModelInit(){
+        IndagineBodyViewModel indagineBodyViewModel = new ViewModelProvider(this).get(IndagineBodyViewModel.class);
+        IndagineHead mIndagineHead = getIntent().getParcelableExtra(Constants.INDAGINE_HEAD_ARG);
 
         /** Observer unico, cambia come vengono ottenuti i dati */
         final IndagineBodyObserver indagineBodyObserver = new IndagineBodyObserver(mIndagineHead);
@@ -78,9 +93,14 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         }
     }
 
+    /** In questa acrivity l'Email viene utilizzata per il PUT (submit dell'indagine) **/
+    private void getEmailFromPreferences(){
+        SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
+        mEmail = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
+    }
+
     private void loadUI(){
         mLoadingDialog.dismissDialog();
-        binding = ActivityIndagineBinding.inflate(getLayoutInflater());
         View v = binding.getRoot();
         setContentView(v);
         loadInformazioniScroll(mIndagineBody);
@@ -100,7 +120,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             case(Constants.WEB_ACTIVITY_REQUEST_CODE) :
                 if(resultCode == Activity.RESULT_OK){
                     //Modifiche al bottone del questionario corrente
-                    int mQuestionarioPosition = data.getExtras().getInt(Constants.QUESTIONARIO_POSITION);
+                    int mQuestionarioPosition = data.getExtras().getInt(Constants.QUESTIONARIO_POSITION_ARG);
                     mIndagineBody.getQuestionari().get(mQuestionarioPosition).setCompilato(true);
                     View mViewCurrent = binding.questionariRecycleView.findViewHolderForAdapterPosition(mQuestionarioPosition).itemView;
                     TextView mCompilatoTextView = (TextView) mViewCurrent.findViewById(R.id.compilatoTextView);
@@ -165,7 +185,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                                          * delle indaginiHeadList
                                          */
                                         IndaginiRepository.getInstance().putIndagineTerminata(mEmail, mIndagineBody.getHead().getId(), IndagineActivity.this);
-                                        mLoadingDialog.startDialog(getString(R.string.dialog_sending));
+                                        mLoadingDialog.startDialog(getString(R.string.dialog_sending), null);
                                     }
                                 })
                                 .show();
@@ -220,8 +240,14 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mIndagineBody.getInformazioni().get(position).getNomeFile();
         String mUrl = mIndagineBody.getInformazioni().get(position).getFileUrl();
         String mMime = mIndagineBody.getInformazioni().get(position).getTipoFile();
-        mDownloadingDialog.startDialog(getString(R.string.dialog_downloading));
-        new Asyn_OpenFile(mUrl, mPath, mMime, this, this ).execute();
+        mDownloadingDialog.startDialog(getString(R.string.dialog_downloading), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                asyn_openFile.cancel(true);
+            }
+        });
+        asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this );
+        asyn_openFile.execute();
     }
 
     /** Click ricevuto da un' informazione all'interno di un questionario */
@@ -231,16 +257,22 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mInfo.getNomeFile();
         String mUrl = mInfo.getFileUrl();
         String mMime = mInfo.getTipoFile();
-        mLoadingDialog.startDialog(getString(R.string.dialog_downloading));
-        new Asyn_OpenFile(mUrl, mPath, mMime, this, this).execute();
+        mDownloadingDialog.startDialog(getString(R.string.dialog_downloading), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                asyn_openFile.cancel(true);
+            }
+        });
+        asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this );
+        asyn_openFile.execute();
     }
 
     @Override
     public void OnSubmitClick(int position) {
         Intent mWebViewIntent = new Intent(IndagineActivity.this, WebViewActivity.class);
         mWebViewIntent.putExtra(Constants.URL, mIndagineBody.getQuestionari().get(position).getQualtricsUrl());
-        mWebViewIntent.putExtra(Constants.TITOLO_QUESTIONARIO, mIndagineBody.getQuestionari().get(position).getTitolo());
-        mWebViewIntent.putExtra(Constants.QUESTIONARIO_POSITION, position);
+        mWebViewIntent.putExtra(Constants.TITOLO_QUESTIONARIO_ARG, mIndagineBody.getQuestionari().get(position).getTitolo());
+        mWebViewIntent.putExtra(Constants.QUESTIONARIO_POSITION_ARG, position);
         startActivityForResult(mWebViewIntent, Constants.WEB_ACTIVITY_REQUEST_CODE);
     }
 
@@ -326,6 +358,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
                  * controllare se l'eccezione viene dalla richiesta http di retrofit o da una
                  * lettura dei file locale non andata a buon fine
                  * **/
+                mLoadingDialog.dismissDialog();
                 new android.app.AlertDialog.Builder(IndagineActivity.this)
                         .setMessage(R.string.dialog_connection_error)
                         .setCancelable(false)

@@ -1,5 +1,6 @@
 package it.unimib.bicap;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -36,10 +37,13 @@ import it.unimib.bicap.utils.Constants;
 import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
 
 public class TabbedActivity extends AppCompatActivity {
+    public static final String BICAP_SUPPORT_EMAIL = "bicap.unimib+support@gmail.com";
+    public static final String MESSAGE_RFC_822 = "message/rfc822";
     private ViewPagerAdapter viewPagerAdapter;
     private ActivityTabbedBinding binding;
     private IndagineHeadListViewModel viewModel;
     private String email;
+    private int selectedTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +101,11 @@ public class TabbedActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gestisce il caso in cui non ci siano indagini da mostrare, a questo punto sostituisce
+     * i fragment con le recyclerView con un semplice fragment avente una label al centro
+     * che mostra il messaggio informativo
+     **/
     private void loadTabbedLayout(IndaginiHeadList headsDisponibili, IndaginiHeadList headsInCorso){
         String disponibili = getString(R.string.tab_disponibili),
                 inCorso = getString(R.string.tab_in_corso);
@@ -112,6 +121,7 @@ public class TabbedActivity extends AppCompatActivity {
             viewPagerAdapter.AddFragment(EmptyListFragment.newInstance(), inCorso, getString(R.string.no_indagini_in_corso));
         }
         binding.tabbedViewPager.setAdapter(viewPagerAdapter);
+        binding.tabbedViewPager.setCurrentItem(selectedTab, false);
     }
 
     private void getEmailFromPreferences() {
@@ -137,11 +147,11 @@ public class TabbedActivity extends AppCompatActivity {
         }
     }
 
-    // Legge i file Json delle indagini salvate sul dispositivo nell'apposita cartella
+    /** Legge i file Json delle indagini salvate sul dispositivo nell'apposita cartella **/
     public IndaginiHeadList getIndaginiInCorso() {
         ArrayList<IndagineHead> mListaIndaginiHeadIncorso = new ArrayList<IndagineHead>();
 
-        File[] mListIndaginiIncorsoFile = new File(getApplicationInfo().dataDir+ "/indagini/in_corso").listFiles();
+        File[] mListIndaginiIncorsoFile = new File(getApplicationInfo().dataDir+ Constants.INDAGINI_IN_CORSO_PATH).listFiles();
         try {
             for(int i=0; i<mListIndaginiIncorsoFile.length; i++) {
                 BufferedReader mBufferedReader = new BufferedReader(new FileReader(mListIndaginiIncorsoFile[i].getAbsolutePath()));
@@ -154,6 +164,30 @@ public class TabbedActivity extends AppCompatActivity {
         }
     }
 
+    /** Salvataggio per quando l'activity viene distrutta e ricreata (l'utente gira lo schermo) **/
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Constants.SELECTED_TAB, binding.tabbedViewPager.getCurrentItem());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        selectedTab = savedInstanceState.getInt(Constants.SELECTED_TAB);
+    }
+
+    /**
+     * Salvataggio per il ciclo di passaggio di stato tra onPause e onResume; in questo caso
+     * possiamo semplicemente assegnare il valore alla variabile prima che l'activity passi nello
+     * stato di pausa
+     * **/
+    @Override
+    protected void onPause() {
+        super.onPause();
+        selectedTab = binding.tabbedViewPager.getCurrentItem();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater mInflater = getMenuInflater();
@@ -164,6 +198,7 @@ public class TabbedActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            // Contattaci
             case R.id.item1:
                 PackageInfo mPackageInfo = null;
                 try {
@@ -171,8 +206,8 @@ public class TabbedActivity extends AppCompatActivity {
                     String mVersion = mPackageInfo.versionName;
 
                     Intent mIntent = new Intent(Intent.ACTION_SEND);
-                    mIntent.setType("message/rfc822");
-                    mIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"bicap.unimib+support@gmail.com"});
+                    mIntent.setType(Constants.MESSAGE_RFC_822);
+                    mIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{Constants.BICAP_SUPPORT_EMAIL});
                     mIntent.putExtra(Intent.EXTRA_SUBJECT, "[Bicap" + mVersion + "]");
                     startActivity(mIntent);
                     return true;
@@ -180,6 +215,7 @@ public class TabbedActivity extends AppCompatActivity {
                     e.printStackTrace();
                     return false;
                 }
+            // About
             case R.id.item2:
                 Intent mAbout = new Intent(TabbedActivity.this, AboutActivity.class);
                 startActivity(mAbout);

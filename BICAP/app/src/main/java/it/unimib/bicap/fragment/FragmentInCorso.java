@@ -10,14 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import it.unimib.bicap.IndagineActivity;
 import it.unimib.bicap.adapter.IndagineAdapter;
 import it.unimib.bicap.databinding.InCorsoFragmentBinding;
 import it.unimib.bicap.model.IndagineHead;
 import it.unimib.bicap.model.IndaginiHeadList;
-import it.unimib.bicap.R;
 import it.unimib.bicap.utils.Constants;
 
 public class FragmentInCorso extends Fragment implements IndagineAdapter.OnCardListener{
@@ -45,7 +43,7 @@ public class FragmentInCorso extends Fragment implements IndagineAdapter.OnCardL
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if(getArguments() != null){
-            indaginiHeadList = getArguments().getParcelable(Constants.INDAGINI_HEAD_LIST_ARGS);
+            indaginiHeadList = getArguments().getParcelable(Constants.INDAGINI_HEAD_LIST_ARG);
         }
         binding.inCorsoRecyclerView.setHasFixedSize(true);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -58,9 +56,8 @@ public class FragmentInCorso extends Fragment implements IndagineAdapter.OnCardL
     @Override
     public void onCardClick(int position) {
         IndagineHead mIndagineHead = indaginiHeadList.getHeads().get(position);
-        mIndagineHead.setUltimaModifica("5/05/2020 15:37");
         Intent mIntent = new Intent(getContext(), IndagineActivity.class);
-        mIntent.putExtra("Indagine", mIndagineHead);
+        mIntent.putExtra(Constants.INDAGINE_HEAD_ARG, mIndagineHead);
         startActivity(mIntent);
     }
 
