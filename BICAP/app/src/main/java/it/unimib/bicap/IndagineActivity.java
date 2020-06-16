@@ -63,7 +63,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(savedInstanceState != null){
-            downloadingDialogVisibilityState = savedInstanceState.getBoolean("DOWNLOADING_DIALOG_VISIBILITY");
+            downloadingDialogVisibilityState = savedInstanceState.getBoolean(Constants.DOWNLOADING_DIALOG_VISIBILITY_ARG);
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         gloabalInit();
@@ -144,7 +144,7 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean("DOWNLOADING_DIALOG_VISIBILITY", mDownloadingDialog.isVisible());
+        outState.putBoolean(Constants.DOWNLOADING_DIALOG_VISIBILITY_ARG, mDownloadingDialog.isVisible());
         super.onSaveInstanceState(outState);
     }
 

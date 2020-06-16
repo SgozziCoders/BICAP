@@ -18,6 +18,7 @@ public class DownloadingDialog {
     private Activity activity;
     private AlertDialog dialog;
     private ProgressBar progressBar;
+    private TextView percentageTextView, fractionTextView;
     private boolean visibility;
 
     public DownloadingDialog(Activity activity){
@@ -33,6 +34,8 @@ public class DownloadingDialog {
         progressBar = (ProgressBar) v.findViewById(R.id.horizontalProgressBar);
         progressBar.setIndeterminate(false);
         progressBar.setMax(100);
+        percentageTextView = (TextView) v.findViewById(R.id.percentageTextView);
+        fractionTextView = (TextView) v.findViewById(R.id.fractionTextView);
         loadingTextview.setText(loadingMessage);
         builder.setView(v);
         builder.setCancelable(false);
@@ -57,6 +60,8 @@ public class DownloadingDialog {
 
     public void setProgress(int value){
         progressBar.setProgress(value);
+        percentageTextView.setText(value + "%");
+        fractionTextView.setText(value + "/100");
     }
 
     public int getProgress(){

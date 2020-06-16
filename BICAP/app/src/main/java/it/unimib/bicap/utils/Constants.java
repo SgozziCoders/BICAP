@@ -9,6 +9,7 @@ public class Constants {
     public static final String QUESTIONARIO_POSITION_ARG = "questionario_position";
     public static final String INDAGINE_HEAD_ARG = "Indagine";
     public static final String INDAGINI_HEAD_LIST_ARG = "indagini_head_list_args";
+    public static final String DOWNLOADING_DIALOG_VISIBILITY_ARG = "DOWNLOADING_DIALOG_VISIBILITY";
     public static final String INDAGINI_PATH = "/indagini";
     public static final String INDAGINI_IN_CORSO_PATH = "/indagini/in_corso/";
     public static final String TMP_PATH = "/tmp";
