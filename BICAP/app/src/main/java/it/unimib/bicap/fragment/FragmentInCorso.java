@@ -34,7 +34,6 @@ public class FragmentInCorso extends Fragment implements IndagineAdapter.OnCardL
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
         binding = InCorsoFragmentBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }

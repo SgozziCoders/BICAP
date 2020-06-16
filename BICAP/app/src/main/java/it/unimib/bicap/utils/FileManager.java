@@ -21,11 +21,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import androidx.core.content.FileProvider;
+import androidx.lifecycle.MutableLiveData;
 
 public class FileManager {
 
     public static boolean downloadFile(String url, String path,
-                                       Asyn_OpenFile.OnDownloadListener onDownloadListener) throws IOException {
+                                       MutableLiveData<Integer> progress) throws IOException {
         try {
             URL mUrl = new URL(url);
             URLConnection mUrlCon = mUrl.openConnection();
@@ -42,7 +43,7 @@ public class FileManager {
 
             while ((mLength = mDataInputStream.read(mBuffer))>0) {
                 total += mLength;
-                onDownloadListener.onDownloadProgress((int) (total*100/contentLength));
+                progress.postValue((int) (total*100/contentLength));
                 mFileOutputStream.write(mBuffer, 0, mLength);
             }
             return true;

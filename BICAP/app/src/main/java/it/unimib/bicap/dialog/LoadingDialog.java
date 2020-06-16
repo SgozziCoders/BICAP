@@ -30,7 +30,11 @@ public class LoadingDialog {
         dialog.show();
     }
 
+    // Previene nullPointerException nel caso di chiamata a dismiss non preceduta da start
     public void dismissDialog(){
-        dialog.dismiss();
+        if(dialog != null)
+            dialog.dismiss();
     }
+
+
 }

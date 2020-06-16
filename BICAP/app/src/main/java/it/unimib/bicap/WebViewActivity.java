@@ -16,19 +16,56 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import it.unimib.bicap.utils.Constants;
 
 public class WebViewActivity extends AppCompatActivity{
-    private static String mQuestionarioUrl;
-    private static int mQuestionarioPosition;
+    private  String mQuestionarioUrl;
+    private int mQuestionarioPosition;
+    private WebView mWebView;
 
     private ValueCallback<Uri> mUploadMessage;
     public ValueCallback<Uri[]> uploadMessage;
     public static final int REQUEST_SELECT_FILE = 100;
     private final static int FILECHOOSER_RESULTCODE = 1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_web_view);
+        mWebView = findViewById(R.id.qualtricsWebView);
+
+        mQuestionarioUrl = getIntent().getExtras().getString("url");
+        this.setTitle(getIntent().getExtras().getString(Constants.TITOLO_QUESTIONARIO_ARG));
+        mQuestionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION_ARG);
+
+        webViewInit(mWebView);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        WebView mWebview = findViewById(R.id.qualtricsWebView);
+        if (mWebview.canGoBack()) {
+            mWebview.goBack();
+        }else{
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.dialog_message)
+                    .setCancelable(false)
+                    .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent resultIntent = new Intent();
+                            setResult(Activity.RESULT_CANCELED, resultIntent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(R.string.dialog_no, null)
+                    .show();
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -47,8 +84,6 @@ public class WebViewActivity extends AppCompatActivity{
         {
             if (null == mUploadMessage)
                 return;
-            // Use MainActivity.RESULT_OK if you're implementing WebView inside Fragment
-            // Use RESULT_OK only if you're implementing WebView inside an Activity
             Uri result = intent == null || resultCode != RESULT_OK ? null : intent.getData();
             mUploadMessage.onReceiveValue(result);
             mUploadMessage = null;
@@ -57,7 +92,7 @@ public class WebViewActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), "Failed to Upload", Toast.LENGTH_LONG).show();
     }
 
-    private void initzializeWebView(WebView mWebView){
+    private void webViewInit(WebView mWebView){
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setSupportZoom(false);
         mWebView.getSettings().setAllowFileAccess(true);
@@ -65,8 +100,7 @@ public class WebViewActivity extends AppCompatActivity{
         mWebView.getSettings().setAllowContentAccess(true);
 
         mWebView.setWebChromeClient(new WebChromeClient() {
-            // For 3.0+ Devices (Start)
-            // onActivityResult attached before constructor
+
             protected void openFileChooser(ValueCallback uploadMsg, String acceptType)
             {
                 mUploadMessage = uploadMsg;
@@ -122,39 +156,7 @@ public class WebViewActivity extends AppCompatActivity{
         mWebView.loadUrl(mQuestionarioUrl);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web_view);
-        WebView mWebView = findViewById(R.id.qualtricsWebView);
 
-        mQuestionarioUrl = getIntent().getExtras().getString("url");
-        this.setTitle(getIntent().getExtras().getString(Constants.TITOLO_QUESTIONARIO_ARG));
-        mQuestionarioPosition = getIntent().getExtras().getInt(Constants.QUESTIONARIO_POSITION_ARG);
-
-        initzializeWebView(mWebView);
-    }
-
-    @Override
-    public void onBackPressed() {
-        WebView mWebview = findViewById(R.id.qualtricsWebView);
-        if (mWebview.canGoBack()) {
-            mWebview.goBack();
-        }else{
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.dialog_message)
-                    .setCancelable(false)
-                    .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            Intent resultIntent = new Intent();
-                            setResult(Activity.RESULT_CANCELED, resultIntent);
-                            finish();
-                        }
-                    })
-                    .setNegativeButton(R.string.dialog_no, null)
-                    .show();
-        }
-    }
 
     /**
      * Classe la cui istanza verrà registrata come un interfaccia JavaScript

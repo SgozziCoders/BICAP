@@ -33,7 +33,6 @@ public class FragmentDisponibili extends Fragment implements IndagineAdapter.OnC
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        //setRetainInstance(true);
         binding = DisponibiliFragmentBinding.inflate(getLayoutInflater());
         return binding.getRoot();
 

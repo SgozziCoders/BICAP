@@ -44,7 +44,6 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public void AddFragment(Fragment fragment, String title, IndaginiHeadList indaginiHeadList){
         listFragment.add(fragment);
         Bundle args = new Bundle();
-        //args.putString("Prova", "prova");
         args.putParcelable(Constants.INDAGINI_HEAD_LIST_ARG, indaginiHeadList);
         fragment.setArguments(args);
         listTitles.add(title);

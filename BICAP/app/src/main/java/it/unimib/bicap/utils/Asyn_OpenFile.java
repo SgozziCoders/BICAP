@@ -4,13 +4,17 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.FileUtils;
 
+import androidx.lifecycle.MutableLiveData;
+
 public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
     private String mUrl, mPath, mMime;
     private Context mContext;
     private OnDownloadListener mOnDownloadListener;
     private String error;
+    private MutableLiveData<Integer> progress;
 
-    public Asyn_OpenFile(String mUrl, String mPath, String mMime, Context mContext, OnDownloadListener mOnDownloadListener){
+    public Asyn_OpenFile(String mUrl, String mPath, String mMime, Context mContext, OnDownloadListener mOnDownloadListener,
+                         MutableLiveData<Integer> progress){
         super();
         this.mUrl = mUrl;
         this.mPath = mPath;
@@ -18,12 +22,18 @@ public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
         this.mContext = mContext;
         this.mOnDownloadListener = mOnDownloadListener;
         this.error = null;
+        this.progress = progress;
+    }
+
+    public void restoreListenerAndContext(Context context, OnDownloadListener onDownloadListener){
+        this.mContext = context;
+        this.mOnDownloadListener = onDownloadListener;
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
         try{
-            FileManager.downloadFile(mUrl, mPath, mOnDownloadListener);
+            FileManager.downloadFile(mUrl, mPath, progress);
         }catch (Exception ex){
             error = ex.getMessage();
         }
@@ -52,6 +62,5 @@ public class Asyn_OpenFile extends AsyncTask<Void, Void, Void> {
     public interface OnDownloadListener {
         public void onDownloadFinished();
         public void onDownloadFailed(String errorMessage);
-        public void onDownloadProgress(int value);
     }
 }

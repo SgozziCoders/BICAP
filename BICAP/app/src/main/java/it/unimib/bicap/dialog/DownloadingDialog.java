@@ -18,9 +18,11 @@ public class DownloadingDialog {
     private Activity activity;
     private AlertDialog dialog;
     private ProgressBar progressBar;
+    private boolean visibility;
 
     public DownloadingDialog(Activity activity){
         this.activity = activity;
+        this.visibility = false;
     }
 
     public void startDialog(String loadingMessage, DialogInterface.OnClickListener cancelListener){
@@ -37,14 +39,34 @@ public class DownloadingDialog {
         builder.setNegativeButton(activity.getString(R.string.dialog_download_cancel), cancelListener);
         dialog = builder.create();
         dialog.show();
+        visibility = true;
     }
 
+    public void startDialog(String loadingMessage, int startProgressValue, DialogInterface.OnClickListener cancelListener){
+        startDialog(loadingMessage, cancelListener);
+        setProgress(startProgressValue);
+    }
+
+    // Previene nullPointerException nel caso di chiamata a dismiss non preceduta da start
     public void dismissDialog(){
-        dialog.dismiss();
+        if(dialog != null){
+            dialog.dismiss();
+            visibility = false;
+        }
     }
 
     public void setProgress(int value){
         progressBar.setProgress(value);
+    }
+
+    public int getProgress(){
+        if(dialog != null)
+            return progressBar.getProgress();
+        return 0;
+    }
+
+    public boolean isVisible(){
+        return visibility;
     }
 
 }

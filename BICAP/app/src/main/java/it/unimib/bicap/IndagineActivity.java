@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -39,6 +40,7 @@ import it.unimib.bicap.utils.FileManager;
 import it.unimib.bicap.viewmodel.CardsViewModel;
 import it.unimib.bicap.viewmodel.IndagineBodyViewModel;
 import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
+import it.unimib.bicap.viewmodel.ProgressBarViewModel;
 import it.unimib.bicap.wrapper.DataWrapper;
 
 public class IndagineActivity extends AppCompatActivity implements InformazioneAdapter.OnInfoCardListener,
@@ -52,33 +54,54 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
     private LoadingDialog mLoadingDialog;
     private DownloadingDialog mDownloadingDialog;
     private String mEmail;
-    private Asyn_OpenFile asyn_openFile;
+    // static perchè erve accedervi anche dopo la distruzione dell'activity
+    private static Asyn_OpenFile asyn_openFile;
+    private boolean downloadingDialogVisibilityState;
+    private ProgressBarViewModel progressBarViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null){
+            downloadingDialogVisibilityState = savedInstanceState.getBoolean("DOWNLOADING_DIALOG_VISIBILITY");
+        }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         gloabalInit();
         getEmailFromPreferences();
         viewModelInit();
     }
 
-
     private void gloabalInit(){
         binding = ActivityIndagineBinding.inflate(getLayoutInflater());
         indaginiHeadListViewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
         cardsViewModel = new ViewModelProvider(this).get(CardsViewModel.class);
         mLoadingDialog = new LoadingDialog(this);
-        mLoadingDialog.startDialog(getString(R.string.dialog_loading_generic), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
-            }
-        });
         mDownloadingDialog = new DownloadingDialog(this);
+        if(downloadingDialogVisibilityState){
+            /**
+             * Se non si aggiorna il context e il listener viene generato un crash causato dalla
+             * ricerca del vecchio context
+             **/
+            asyn_openFile.restoreListenerAndContext(this, this);
+            mDownloadingDialog.startDialog(getString(R.string.dialog_downloading), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    asyn_openFile.cancel(true);
+                    mDownloadingDialog.dismissDialog();
+                }
+            });
+        }else{
+            mLoadingDialog.startDialog(getString(R.string.dialog_loading_generic), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+        }
     }
 
     private void viewModelInit(){
+        /** Indagini ViewModel **/
         IndagineBodyViewModel indagineBodyViewModel = new ViewModelProvider(this).get(IndagineBodyViewModel.class);
         IndagineHead mIndagineHead = getIntent().getParcelableExtra(Constants.INDAGINE_HEAD_ARG);
 
@@ -91,6 +114,17 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             indagineBodyViewModel.loadRemoteIndagineBody(mIndagineHead.getId())
                     .observe(this, indagineBodyObserver);
         }
+
+        /** ProgressBarViewModel **/
+        progressBarViewModel = new ViewModelProvider(this).get(ProgressBarViewModel.class);
+        progressBarViewModel.getProgressValue().observe(this, new Observer<Integer>(){
+            @Override
+            public void onChanged(Integer integer) {
+                if(mDownloadingDialog.isVisible())
+                    mDownloadingDialog.setProgress(integer);
+            }
+        });
+
     }
 
     /** In questa acrivity l'Email viene utilizzata per il PUT (submit dell'indagine) **/
@@ -106,6 +140,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
         loadInformazioniScroll(mIndagineBody);
         loadQuestionari(mIndagineBody, cardsViewModel.getVisibilityList(mIndagineBody.getQuestionari().size()));
         setEneableSubmitAll();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean("DOWNLOADING_DIALOG_VISIBILITY", mDownloadingDialog.isVisible());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -244,9 +284,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 asyn_openFile.cancel(true);
+                mDownloadingDialog.dismissDialog();
             }
         });
-        asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this );
+        asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this, progressBarViewModel.getProgressValue() );
         asyn_openFile.execute();
     }
 
@@ -261,9 +302,10 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 asyn_openFile.cancel(true);
+                mDownloadingDialog.dismissDialog();
             }
         });
-        asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this );
+        asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this, progressBarViewModel.getProgressValue());
         asyn_openFile.execute();
     }
 
@@ -288,18 +330,12 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
          * Possibile futuro utilizzo della string error per analizzare l'errore e notificare
          * l'utente della causa
          */
-        mLoadingDialog.dismissDialog();
+        mDownloadingDialog.dismissDialog();
         new AlertDialog.Builder(IndagineActivity.this)
                 .setMessage(R.string.dialog_connection_error)
                 .setCancelable(false)
                 .setPositiveButton(R.string.dialog_close, null)
                 .show();
-    }
-
-    /** Viene aumentato lo stato della barra di progresso **/
-    @Override
-    public void onDownloadProgress(int value) {
-        mDownloadingDialog.setProgress(value);
     }
 
     /**
