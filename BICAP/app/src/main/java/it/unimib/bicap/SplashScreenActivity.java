@@ -1,5 +1,6 @@
 package it.unimib.bicap;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -11,10 +12,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Point;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Display;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -39,21 +43,10 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        //setSplashScreenAnimation();
+        setSplashScreenAnimation();
         setVersionText();
         FileManager.checkNeededFolders(this);
-        //checkConnection();
-
-        /** Nuova animazione : da fixare **/
-        float bDistance = getResources().getDimensionPixelSize(R.dimen.mano_x);
-        float icapDistance = getResources().getDimensionPixelSize(R.dimen.icap_x);
-        View vB = findViewById(R.id.bImageView);
-        vB.animate().translationX(bDistance).setDuration(1500).start();
-        View vIcap = findViewById(R.id.icapImageView);
-        vIcap.animate().translationX(icapDistance).setDuration(1500).start();
-
         showSpinnerWithDelay();
-
         if(!getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE)
                 .contains(Constants.EMAIL_SHARED_PREF_KEY)){
             openEmailActivity();
@@ -61,6 +54,16 @@ public class SplashScreenActivity extends AppCompatActivity {
             getEmailFromPreferences();
             indagineHeadListAPI();
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        /** Il contentView viene risettato per evitare glitch grafici dovuti alla rotazione **/
+        setContentView(R.layout.activity_splash_screen);
+        setVersionText();
+        /** "Completa" l'animazione e porta il logo in posizione finale**/
+        freezeAnimation();
     }
 
     private void getEmailFromPreferences() {
@@ -78,7 +81,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         }, 3000);
     }
 
-    // Utilizza il ViewModel per caricare la lista di indagini destinate all'utente
+    /** Utilizza il ViewModel per caricare la lista di indagini destinate all'utente **/
     private void indagineHeadListAPI() {
         IndagineHeadListViewModel indaginiHeadListViewModel;
 
@@ -117,7 +120,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(mIntent);
                 finish();
             }
-        }, 1500);
+        }, 2000);
     }
 
     private void openEmailActivity() {
@@ -129,15 +132,27 @@ public class SplashScreenActivity extends AppCompatActivity {
                 startActivity(mIntent);
                 finish();
             }
-        }, 1500);
+        }, 2000);
     }
 
     private void setSplashScreenAnimation() {
         ImageView mBImageView = (ImageView) findViewById(R.id.bImageView);
         ImageView mIcapImageView = (ImageView) findViewById(R.id.icapImageView);
-        Animation mBAnimation = AnimationUtils.loadAnimation(this, R.anim.b_animation);
+        Animation mBAnimation = AnimationUtils.loadAnimation(this, R.anim.b_animation_start);
         mBAnimation.setFillAfter(true);
-        Animation mIcapAnimation = AnimationUtils.loadAnimation(this, R.anim.icap_animation);
+        Animation mIcapAnimation = AnimationUtils.loadAnimation(this, R.anim.icap_animation_start);
+        mIcapAnimation.setFillAfter(true);
+        mBImageView.setAnimation(mBAnimation);
+        mIcapImageView.setAnimation(mIcapAnimation);
+    }
+
+    /** Posiziona la mano e la scritta nelle posizioni finali dell'animazione **/
+    private void freezeAnimation(){
+        ImageView mBImageView = (ImageView) findViewById(R.id.bImageView);
+        ImageView mIcapImageView = (ImageView) findViewById(R.id.icapImageView);
+        Animation mBAnimation = AnimationUtils.loadAnimation(this, R.anim.b_animation_freeze);
+        mBAnimation.setFillAfter(true);
+        Animation mIcapAnimation = AnimationUtils.loadAnimation(this, R.anim.icap_animation_freeze);
         mIcapAnimation.setFillAfter(true);
         mBImageView.setAnimation(mBAnimation);
         mIcapImageView.setAnimation(mIcapAnimation);

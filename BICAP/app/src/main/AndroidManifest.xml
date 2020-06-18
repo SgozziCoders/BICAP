@@ -31,7 +31,7 @@
         <activity android:name=".IndagineActivity" />
         <activity
             android:name=".SplashScreenActivity"
-
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
