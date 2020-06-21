@@ -34,6 +34,7 @@ import it.unimib.bicap.model.IndagineBody;
 import it.unimib.bicap.model.IndagineHead;
 import it.unimib.bicap.model.IndaginiHeadList;
 import it.unimib.bicap.utils.Constants;
+import it.unimib.bicap.utils.FileManager;
 import it.unimib.bicap.viewmodel.IndagineHeadListViewModel;
 
 public class TabbedActivity extends AppCompatActivity {
@@ -56,7 +57,7 @@ public class TabbedActivity extends AppCompatActivity {
         // Prendo la mail dalle SharedPreferences
         getEmailFromPreferences();
 
-        verifyStoragePermissions(this);
+        FileManager.verifyStoragePermissions(this);
         setSupportActionBar(binding.toolbar);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewModel = new ViewModelProvider(this).get(IndagineHeadListViewModel.class);
@@ -127,24 +128,6 @@ public class TabbedActivity extends AppCompatActivity {
     private void getEmailFromPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences(Constants.EMAIL_SHARED_PREF, MODE_PRIVATE);
         email = sharedPreferences.getString(Constants.EMAIL_SHARED_PREF_KEY, null);
-    }
-
-    public static void verifyStoragePermissions(Activity activity) {
-        final int REQUEST_EXTERNAL_STORAGE = 1;
-        String[] PERMISSIONS_STORAGE = {
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
-        //  Controllo se si hanno i permessi di scrittura
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // Prompt per richiedere i permessi di scrittura
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
     }
 
     /** Legge i file Json delle indagini salvate sul dispositivo nell'apposita cartella **/

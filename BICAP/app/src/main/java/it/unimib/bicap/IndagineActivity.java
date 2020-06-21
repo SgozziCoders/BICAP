@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -277,36 +276,45 @@ public class IndagineActivity extends AppCompatActivity implements InformazioneA
 
     @Override
     public void onInfoCardClick(final int position) {
-        String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mIndagineBody.getInformazioni().get(position).getNomeFile();
-        String mUrl = mIndagineBody.getInformazioni().get(position).getFileUrl();
-        String mMime = mIndagineBody.getInformazioni().get(position).getTipoFile();
-        mDownloadingDialog.startDialog(getString(R.string.dialog_downloading), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                asyn_openFile.cancel(true);
-                mDownloadingDialog.dismissDialog();
-            }
-        });
-        asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this, progressBarViewModel.getProgressValue() );
-        asyn_openFile.execute();
+        if(FileManager.hasStoragePermissions(this)) {
+            FileManager.verifyStoragePermissions(this);
+            String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mIndagineBody.getInformazioni().get(position).getNomeFile();
+            String mUrl = mIndagineBody.getInformazioni().get(position).getFileUrl();
+            String mMime = mIndagineBody.getInformazioni().get(position).getTipoFile();
+            mDownloadingDialog.startDialog(getString(R.string.dialog_downloading), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    asyn_openFile.cancel(true);
+                    mDownloadingDialog.dismissDialog();
+                }
+            });
+            asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this, progressBarViewModel.getProgressValue() );
+            asyn_openFile.execute();
+        } else {
+            FileManager.verifyStoragePermissions(this);
+        }
     }
 
     /** Click ricevuto da un' informazione all'interno di un questionario */
     @Override
     public void OnReciveClick(final int questionarioPosition, final int infoPosition) {
-        Informazione mInfo = mIndagineBody.getQuestionari().get(questionarioPosition).getInformazioni().get(infoPosition);
-        String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mInfo.getNomeFile();
-        String mUrl = mInfo.getFileUrl();
-        String mMime = mInfo.getTipoFile();
-        mDownloadingDialog.startDialog(getString(R.string.dialog_downloading), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                asyn_openFile.cancel(true);
-                mDownloadingDialog.dismissDialog();
-            }
-        });
-        asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this, progressBarViewModel.getProgressValue());
-        asyn_openFile.execute();
+        if(FileManager.hasStoragePermissions(this)) {
+            Informazione mInfo = mIndagineBody.getQuestionari().get(questionarioPosition).getInformazioni().get(infoPosition);
+            String mPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + mInfo.getNomeFile();
+            String mUrl = mInfo.getFileUrl();
+            String mMime = mInfo.getTipoFile();
+            mDownloadingDialog.startDialog(getString(R.string.dialog_downloading), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    asyn_openFile.cancel(true);
+                    mDownloadingDialog.dismissDialog();
+                }
+            });
+            asyn_openFile = new Asyn_OpenFile(mUrl, mPath, mMime, this, this, progressBarViewModel.getProgressValue());
+            asyn_openFile.execute();
+        } else {
+            FileManager.verifyStoragePermissions(this);
+        }
     }
 
     @Override
