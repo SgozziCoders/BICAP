@@ -1,0 +1,27 @@
+{
+    "tematica": "",
+    "informazioni": [
+      {
+        "nomeFile": "",
+        "fileUrl": "",
+        "tipoFile": "",
+        "thumbnailUrl":  "",
+        "ultimaModifica": ""
+      }
+    ],
+    "questionari": [
+      {
+        "titolo": "",
+        "qualtricsUrl": "",
+        "informazioni": [
+          {
+            "nomeFile": "",
+            "fileUrl": "",
+            "tipoFile": "",
+            "thumbnailUrl": "",
+            "ultimaModifica": ""
+          }
+        ]
+      }
+    ]
+}
